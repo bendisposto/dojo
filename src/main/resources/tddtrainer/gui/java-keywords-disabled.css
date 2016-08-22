@@ -1,0 +1,40 @@
+/**
+ * Source: Similar to java-keywords.css from GitHub RichTextFX Repository
+ * 
+ * @author Antonia
+ *
+ */
+
+.annotation {
+    -fx-fill: grey;
+}
+.keyword {
+    -fx-fill: grey;
+    -fx-font-weight: bold;
+}
+.semicolon {
+    -fx-font-weight: bold;
+}
+.paren {
+    -fx-fill: grey;
+    -fx-font-weight: bold;
+}
+.bracket {
+    -fx-fill: grey;
+    -fx-font-weight: bold;
+}
+.brace {
+    -fx-fill: grey;
+    -fx-font-weight: bold;
+}
+.string {
+    -fx-fill: grey;
+}
+
+.comment {
+	-fx-fill: grey;
+}
+
+.paragraph-box:has-caret {
+    -fx-background-color: #f2f9fc;
+}

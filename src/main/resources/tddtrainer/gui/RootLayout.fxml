@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckMenuItem?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane fx:id="root" minHeight="100.0" minWidth="500.0" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tddtrainer.gui.RootLayoutController">
+	<top>
+      <AnchorPane BorderPane.alignment="CENTER">
+         <children>
+      		<MenuBar AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      			<menus>
+      				<Menu mnemonicParsing="false" text="%menu.exercise">
+      					<items>
+      						<MenuItem mnemonicParsing="false" onAction="#selectExercise" text="%menu.exercise.openexercise" />
+      						<MenuItem fx:id="showDescription" mnemonicParsing="false" onAction="#showExerciseDescription" text="%menu.exercise.showDescription" />
+      						<MenuItem mnemonicParsing="false" onAction="#showProgress" text="%menu.exercise.tracking" />
+      					</items>
+      				</Menu>
+      				<Menu mnemonicParsing="false" text="%menu.settings">
+      					<items>
+      						<MenuItem mnemonicParsing="false" onAction="#changeLanguage" text="%menu.settings.language" />
+      					</items>
+      				</Menu>
+      				<Menu mnemonicParsing="false" text="%menu.help">
+      					<items>
+      						<CheckMenuItem mnemonicParsing="false" onAction="#handleTutorialMode" selected="true" text="%menu.help.tutorialMode" />
+      						<MenuItem mnemonicParsing="false" onAction="#showHandbook" text="%menu.help.handbook" />
+      					</items>
+      				</Menu>
+      			</menus>
+      		</MenuBar>
+            <HBox alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <ImageView fx:id="timerImage" fitHeight="15.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true" visible="false">
+                     <image>
+                        <Image url="@timer_icon.png" />
+                     </image>
+                     <effect>
+                        <ColorAdjust brightness="0.43" />
+                     </effect>
+                  </ImageView>
+      				<Label fx:id="timeLabel" minWidth="40.0" prefHeight="30.0" prefWidth="40.0" textAlignment="RIGHT">
+      					<font>
+      						<Font size="15.0" />
+      					</font>
+      				</Label>
+               </children>
+            </HBox>
+         </children>
+      </AnchorPane>
+	</top>
+	<center>
+		<AnchorPane fx:id="rootPane" prefHeight="200.0" prefWidth="200.0" stylesheets="@tddtrainer.css" BorderPane.alignment="CENTER">
+			<children>
+            <HBox alignment="CENTER_LEFT" layoutX="815.0" layoutY="5.0" spacing="5.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="5.0">
+               <children>
+      				<Label text="STATUS:" textFill="#6f8391">
+      					<font>
+      						<Font name="System Bold" size="18.0" />
+      					</font>
+      				</Label>
+      				<Label fx:id="statusLabel" minHeight="36.0" minWidth="85.0" prefHeight="36.0" stylesheets="@tddtrainer.css" textFill="#6f8391">
+      					<font>
+      						<Font name="System Bold" size="25.0" />
+      					</font>
+      				</Label>
+                  <Button fx:id="reset" disable="true" mnemonicParsing="false" onAction="#reset" text="%backToRed" textFill="WHITE">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Button>
+      				<Button fx:id="nextStepButton" disable="true" mnemonicParsing="false" onAction="#handleNextStep" text="%nextStep" textFill="WHITE">
+      					<font>
+      						<Font name="System Bold" size="12.0" />
+      					</font>
+      				</Button>
+               </children>
+            </HBox>
+				<HBox fx:id="iRedBox" layoutX="404.0" layoutY="40.0" spacing="20.0" AnchorPane.rightAnchor="70.0" AnchorPane.topAnchor="45.0">
+					<children>
+						<Label fx:id="iRedLabel" styleClass="instruction" stylesheets="@tddtrainer.css" text="%instruction.red" textFill="#6f8391">
+							<font>
+								<Font size="14.0" />
+							</font>
+						</Label>
+						<ImageView fitHeight="47.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" rotate="130.0" scaleY="-1.0">
+							<effect>
+								<ColorAdjust brightness="0.86" contrast="1.0" hue="-0.9" saturation="1.0" />
+							</effect>
+							<image>
+								<Image url="@black-arrow-curved-hi.png" />
+							</image>
+						</ImageView>
+					</children>
+				</HBox>
+				<HBox layoutX="15.0" layoutY="10.0" minWidth="150.0" prefHeight="31.0" prefWidth="356.0" spacing="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="410.0" AnchorPane.topAnchor="10.0">
+					<children>
+						<Label minWidth="90.0" text="%exercise" textFill="#6f8391" HBox.hgrow="NEVER">
+							<font>
+								<Font name="System Bold" size="21.0" />
+							</font>
+						</Label>
+						<Label fx:id="exerciseLabel" textFill="#6f8391">
+							<font>
+								<Font size="21.0" />
+							</font>
+						</Label>
+					</children>
+				</HBox>
+			</children>
+		</AnchorPane>
+	</center>
+</BorderPane>
