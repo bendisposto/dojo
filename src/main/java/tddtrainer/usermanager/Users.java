@@ -15,7 +15,7 @@ public class Users {
 
 	private final Set<User> currentUsers = new HashSet<>();
 
-	public void loginUser(String mail, String passwordText) throws NoSuchUserException, UnirestException {
+	public void loginAuasUser(String mail, String passwordText) throws NoSuchUserException, UnirestException {
 		Document document = requestPageFromAuas(mail, passwordText);
 		if (isAuasUser(document)) {
 			String user = fetchUserNameFromAuas(mail, document);
@@ -23,6 +23,18 @@ public class Users {
 		} else {
 			throw new NoSuchUserException(mail);
 		}
+	}
+
+	public void loginNonAuasUser(String name, String mail) {
+		currentUsers.add(new User(name, mail));
+	}
+
+	public void logoutUser(User user) {
+		currentUsers.remove(user);
+	}
+
+	public Set<User> getCurrentUsers() {
+		return currentUsers;
 	}
 
 	private String fetchUserNameFromAuas(String mail, Document document) {
@@ -51,14 +63,6 @@ public class Users {
 		}
 		String body = response.getBody();
 		return Jsoup.parse(body);
-	}
-
-	public void logoutUser(User user) {
-		currentUsers.remove(user);
-	}
-
-	public Set<User> getCurrentUsers() {
-		return currentUsers;
 	}
 
 }
