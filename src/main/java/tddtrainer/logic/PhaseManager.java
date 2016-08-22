@@ -125,6 +125,7 @@ public class PhaseManager implements PhaseManagerIF {
 		if (validExercise != null) {
 			babystepsManager.start(originalExercise.getBabyStepsTestTime());
 			bus.post(new ExerciseEvent(validExercise));
+			bus.post(new ExerciseEvent(validExercise));
 		}
 	}
 

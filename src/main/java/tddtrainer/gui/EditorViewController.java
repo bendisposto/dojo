@@ -11,6 +11,7 @@ import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExecutionResultEvent;
 import tddtrainer.events.ExerciseEvent;
+import tddtrainer.events.PhaseChangeEvent;
 import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManagerIF;
 import tddtrainer.logic.PhaseStatus;
@@ -42,8 +43,6 @@ public class EditorViewController {
 	private HBox codeBox;
 
 	private PhaseManagerIF phaseManager;
-	private RootLayoutController rootLayoutController;
-	private boolean tutorialMode = true;
 
 	public void initialize() {
 		iGreenBox.setVisible(false);
@@ -52,10 +51,6 @@ public class EditorViewController {
 
 	protected void init(PhaseManagerIF phaseManager, RootLayoutController rootLayoutController) {
 		this.phaseManager = phaseManager;
-		this.rootLayoutController = rootLayoutController;
-		rootLayoutController.enableReset(false);
-		rootLayoutController.enableShowDescription(false);
-		rootLayoutController.hideRedBox();
 	}
 
 	@Subscribe
@@ -63,7 +58,7 @@ public class EditorViewController {
 		Exercise exercise = exerciseEvent.getExercise();
 		if (exercise != null) {
 			showExercise(exercise);
-			changePhase(phaseManager.checkPhase(exercise, false));
+			changePhase(new PhaseChangeEvent(phaseManager.checkPhase(exercise, false).getPhase()));
 		}
 	}
 
@@ -87,9 +82,9 @@ public class EditorViewController {
 		}
 	}
 
-	void changePhase(PhaseStatus phaseStatus) {
-		Phase phase = phaseStatus.getPhase();
-
+	@Subscribe
+	void changePhase(PhaseChangeEvent phaseChangeEvent) {
+		Phase phase = phaseChangeEvent.getPhase();
 		switch (phase) {
 		case RED:
 			changePhaseToRed();
@@ -104,41 +99,29 @@ public class EditorViewController {
 	}
 
 	private void changePhaseToRed() {
-		rootLayoutController.switchToStatusRed();
 		code.disable(true);
 		tests.disable(false);
 		tests.setStyle("-fx-border-color: crimson;");
 		code.setStyle("-fx-border-color: transparent;");
-		if (tutorialMode) {
-			rootLayoutController.showRedBox();
-			iGreenBox.setVisible(false);
-		}
+		iGreenBox.setVisible(false);
 		AnchorPane.setRightAnchor(codeBox, 15.0);
 	}
 
 	private void changePhaseToGreen() {
-		rootLayoutController.switchToStatusGreen();
 		code.disable(false);
 		tests.disable(true);
 		code.setStyle("-fx-border-color: forestgreen;");
 		tests.setStyle("-fx-border-color: transparent;");
-		if (tutorialMode) {
-			rootLayoutController.hideRedBox();
-			iGreenBox.setVisible(true);
-			AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
-		}
+		iGreenBox.setVisible(true);
+		AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
 	}
 
 	private void changePhaseToRefactor() {
-		rootLayoutController.switchToStatusRefactor();
 		code.disable(false);
 		tests.disable(false);
 		tests.setStyle("-fx-border-color: grey;");
 		code.setStyle("-fx-border-color: grey;");
-		if (tutorialMode) {
-			rootLayoutController.hideRedBox();
-			iGreenBox.setVisible(false);
-		}
+		iGreenBox.setVisible(false);
 		AnchorPane.setRightAnchor(codeBox, 15.0);
 	}
 

@@ -32,8 +32,10 @@ import javafx.scene.text.Font;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
+import tddtrainer.events.PhaseChangeEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.handbook.Handbook;
+import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManagerIF;
 import tddtrainer.logic.PhaseStatus;
 
@@ -86,6 +88,9 @@ public class RootLayoutController implements Initializable {
 		this.phaseManager = phaseManager;
 		this.bus = bus;
 		bus.register(this);
+		enableReset(false);
+		enableShowDescription(false);
+		hideRedBox();
 		showEditorView();
 	}
 
@@ -151,8 +156,25 @@ public class RootLayoutController implements Initializable {
 
 	}
 
+	@Subscribe
+	void changePhase(PhaseChangeEvent phaseChangeEvent) {
+		Phase phase = phaseChangeEvent.getPhase();
+		switch (phase) {
+		case RED:
+			switchToStatusRed();
+			break;
+		case GREEN:
+			switchToStatusGreen();
+			break;
+		case REFACTOR:
+			switchToStatusRefactor();
+			break;
+		}
+	}
+
 	public void switchToStatusRed() {
 		System.out.println("red");
+		showRedBox();
 		enableReset(true);
 		// statusLabel.setText("red");
 		// statusLabel.getStyleClass().clear();
@@ -162,6 +184,7 @@ public class RootLayoutController implements Initializable {
 	public void switchToStatusGreen() {
 		System.out.println("green");
 		enableReset(true);
+		hideRedBox();
 		// statusLabel.setText("green");
 		// statusLabel.getStyleClass().clear();
 		// statusLabel.getStyleClass().add("statuslabel-green");
@@ -170,6 +193,7 @@ public class RootLayoutController implements Initializable {
 	public void switchToStatusRefactor() {
 		System.out.println("refactor");
 		enableReset(false);
+		hideRedBox();
 		timeLabel.setText("");
 		timerImage.setVisible(false);
 		// statusLabel.setText("refactor");
@@ -202,7 +226,7 @@ public class RootLayoutController implements Initializable {
 	private void handleNextStep(ActionEvent event) {
 		Exercise exercise = editorViewController.newExerciseFromCurrentInput();
 		PhaseStatus status = phaseManager.checkPhase(exercise, true);
-		editorViewController.changePhase(status);
+		bus.post(new PhaseChangeEvent(status.getPhase()));
 	}
 
 	@FXML
@@ -212,7 +236,6 @@ public class RootLayoutController implements Initializable {
 		alert.setTitle(resources.getString("description"));
 		alert.setHeaderText(null);
 		alert.setContentText(description);
-
 		alert.showAndWait();
 	}
 
