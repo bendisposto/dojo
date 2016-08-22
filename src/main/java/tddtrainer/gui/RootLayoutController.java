@@ -19,17 +19,18 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import tddtrainer.catalog.Exercise;
+import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.handbook.Handbook;
@@ -40,30 +41,30 @@ public class RootLayoutController implements Initializable {
 
 	@FXML
 	private BorderPane root;
-	
-    @FXML
-    private Button reset;
-    
-	@FXML
-	Label statusLabel;
 
 	@FXML
-	Label exerciseLabel;
-    
-	@FXML
-	Label timeLabel;
+	private Button resetButton;
 
 	@FXML
-	Button nextStepButton;
+	private Button nextStepButton;
 
 	@FXML
-	HBox iRedBox;
+	private Label statusLabel;
 
-    @FXML
-    private MenuItem showDescription;
-    
-    @FXML
-    ImageView timerImage;
+	@FXML
+	private Label exerciseLabel;
+
+	@FXML
+	private Label timeLabel;
+
+	@FXML
+	private ImageView timerImage;
+
+	@FXML
+	private HBox iRedBox;
+
+	@FXML
+	private MenuItem showDescription;
 
 	private ResourceBundle resources;
 
@@ -73,9 +74,9 @@ public class RootLayoutController implements Initializable {
 
 	private EditorViewController editorViewController;
 
-    @FXML
-    private AnchorPane rootPane;
-	
+	@FXML
+	private AnchorPane rootPane;
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.resources = resources;
@@ -106,7 +107,7 @@ public class RootLayoutController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Subscribe
 	public void updateTime(TimeEvent event) {
 		long time = event.getTime();
@@ -150,34 +151,60 @@ public class RootLayoutController implements Initializable {
 
 	}
 
+	public void switchToStatusRed() {
+		System.out.println("red");
+		enableReset(true);
+		// statusLabel.setText("red");
+		// statusLabel.getStyleClass().clear();
+		// statusLabel.getStyleClass().add("statuslabel-red");
+	}
+
+	public void switchToStatusGreen() {
+		System.out.println("green");
+		enableReset(true);
+		// statusLabel.setText("green");
+		// statusLabel.getStyleClass().clear();
+		// statusLabel.getStyleClass().add("statuslabel-green");
+	}
+
+	public void switchToStatusRefactor() {
+		System.out.println("refactor");
+		enableReset(false);
+		timeLabel.setText("");
+		timerImage.setVisible(false);
+		// statusLabel.setText("refactor");
+		// statusLabel.getStyleClass().clear();
+		// statusLabel.getStyleClass().add("statuslabel-refactor");
+	}
+
 	@FXML
 	private void selectExercise(ActionEvent event) {
 		phaseManager.selectExercise();
 	}
-	
+
 	@FXML
 	private void showProgress(ActionEvent event) {
 		phaseManager.displayTracking();
 	}
-	
+
 	@FXML
 	private void reset(ActionEvent event) {
 		phaseManager.resetPhase();
 	}
 
-	@FXML
-	private void handleTutorialMode(ActionEvent event) {
-		CheckMenuItem item = (CheckMenuItem) event.getSource();
-		editorViewController.setTutorialMode(item.isSelected());
-	}
-	
+	// @FXML
+	// private void handleTutorialMode(ActionEvent event) {
+	// CheckMenuItem item = (CheckMenuItem) event.getSource();
+	// editorViewController.setTutorialMode(item.isSelected());
+	// }
+
 	@FXML
 	private void handleNextStep(ActionEvent event) {
 		Exercise exercise = editorViewController.newExerciseFromCurrentInput();
 		PhaseStatus status = phaseManager.checkPhase(exercise, true);
 		editorViewController.changePhase(status);
 	}
-	
+
 	@FXML
 	private void showExerciseDescription(ActionEvent event) {
 		String description = phaseManager.getOriginalExercise().getDescription();
@@ -188,7 +215,7 @@ public class RootLayoutController implements Initializable {
 
 		alert.showAndWait();
 	}
-	
+
 	@FXML
 	private void showHandbook(ActionEvent event) {
 		try {
@@ -203,11 +230,32 @@ public class RootLayoutController implements Initializable {
 	}
 
 	protected void enableReset(boolean enable) {
-		reset.setDisable(!enable);
+		resetButton.setDisable(!enable);
 	}
-	
+
 	protected void enableShowDescription(boolean enable) {
 		showDescription.setDisable(!enable);
+	}
+
+	@Subscribe
+	public void showExercise(ExerciseEvent exerciseEvent) {
+		Exercise exercise = exerciseEvent.getExercise();
+
+		if (exercise != null) {
+			exerciseLabel.setText(exercise.getName());
+			exerciseLabel.setTooltip(new Tooltip(exercise.getName()));
+			enableShowDescription(true);
+		}
+		nextStepButton.setDisable(false);
+	}
+
+	public void hideRedBox() {
+		iRedBox.setVisible(false);
+	}
+
+	public void showRedBox() {
+		iRedBox.setVisible(true);
+		iRedBox.toFront();
 	}
 
 }

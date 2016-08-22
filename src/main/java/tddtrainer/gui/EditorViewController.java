@@ -5,7 +5,6 @@ import com.google.common.eventbus.Subscribe;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.Tooltip;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import tddtrainer.catalog.Exercise;
@@ -44,7 +43,6 @@ public class EditorViewController {
 
 	private PhaseManagerIF phaseManager;
 	private RootLayoutController rootLayoutController;
-	private boolean guidisabled;
 	private boolean tutorialMode = true;
 
 	public void initialize() {
@@ -57,41 +55,35 @@ public class EditorViewController {
 		this.rootLayoutController = rootLayoutController;
 		rootLayoutController.enableReset(false);
 		rootLayoutController.enableShowDescription(false);
-		rootLayoutController.iRedBox.setVisible(false);
+		rootLayoutController.hideRedBox();
 	}
 
 	@Subscribe
 	public void showExercise(ExerciseEvent exerciseEvent) {
 		Exercise exercise = exerciseEvent.getExercise();
-
 		if (exercise != null) {
-			guidisabled = false;
 			showExercise(exercise);
 			changePhase(phaseManager.checkPhase(exercise, false));
-			rootLayoutController.exerciseLabel.setText(exercise.getName());
-			rootLayoutController.exerciseLabel.setTooltip(new Tooltip(exercise.getName()));
-			rootLayoutController.enableShowDescription(true);
 		}
-		rootLayoutController.nextStepButton.setDisable(guidisabled);
 	}
 
 	public void showExercise(Exercise exercise) {
 		for (JavaClass jclass : exercise.getCode()) {
-//			boolean wasDisabled = code.isDisable();
-//			code.setDisable(false);
+			// boolean wasDisabled = code.isDisable();
+			// code.setDisable(false);
 			code.clear();
 			code.appendText(jclass.getCode());
 			codeLabel.setText(jclass.getName());
-//			code.setDisable(wasDisabled);
+			// code.setDisable(wasDisabled);
 		}
 
 		for (JavaClass jclass : exercise.getTests()) {
-//			boolean wasDisabled = code.isDisable();
-//			tests.setDisable(false);
+			// boolean wasDisabled = code.isDisable();
+			// tests.setDisable(false);
 			tests.clear();
 			tests.appendText(jclass.getCode());
 			testLabel.setText(jclass.getName());
-//			tests.setDisable(wasDisabled);
+			// tests.setDisable(wasDisabled);
 		}
 	}
 
@@ -112,51 +104,39 @@ public class EditorViewController {
 	}
 
 	private void changePhaseToRed() {
-		rootLayoutController.statusLabel.setText("red");
-		rootLayoutController.statusLabel.getStyleClass().clear();
-		rootLayoutController.statusLabel.getStyleClass().add("statuslabel-red");
+		rootLayoutController.switchToStatusRed();
 		code.disable(true);
 		tests.disable(false);
-		rootLayoutController.enableReset(true);
 		tests.setStyle("-fx-border-color: crimson;");
 		code.setStyle("-fx-border-color: transparent;");
 		if (tutorialMode) {
-			rootLayoutController.iRedBox.setVisible(true);
-			rootLayoutController.iRedBox.toFront();
+			rootLayoutController.showRedBox();
 			iGreenBox.setVisible(false);
 		}
 		AnchorPane.setRightAnchor(codeBox, 15.0);
 	}
 
 	private void changePhaseToGreen() {
-		rootLayoutController.statusLabel.setText("green");
-		rootLayoutController.statusLabel.getStyleClass().clear();
-		rootLayoutController.statusLabel.getStyleClass().add("statuslabel-green");
+		rootLayoutController.switchToStatusGreen();
 		code.disable(false);
 		tests.disable(true);
-		rootLayoutController.enableReset(true);
 		code.setStyle("-fx-border-color: forestgreen;");
 		tests.setStyle("-fx-border-color: transparent;");
 		if (tutorialMode) {
-			rootLayoutController.iRedBox.setVisible(false);
+			rootLayoutController.hideRedBox();
 			iGreenBox.setVisible(true);
 			AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
 		}
 	}
 
 	private void changePhaseToRefactor() {
-		rootLayoutController.statusLabel.setText("refactor");
-		rootLayoutController.statusLabel.getStyleClass().clear();
-		rootLayoutController.statusLabel.getStyleClass().add("statuslabel-refactor");
-		rootLayoutController.timeLabel.setText("");
-		rootLayoutController.timerImage.setVisible(false);
+		rootLayoutController.switchToStatusRefactor();
 		code.disable(false);
 		tests.disable(false);
-		rootLayoutController.enableReset(false);
 		tests.setStyle("-fx-border-color: grey;");
 		code.setStyle("-fx-border-color: grey;");
 		if (tutorialMode) {
-			rootLayoutController.iRedBox.setVisible(false);
+			rootLayoutController.hideRedBox();
 			iGreenBox.setVisible(false);
 		}
 		AnchorPane.setRightAnchor(codeBox, 15.0);
@@ -200,14 +180,15 @@ public class EditorViewController {
 		}
 	}
 
-	protected void setTutorialMode(boolean selected) {
-		tutorialMode = selected;
-		if (!selected) {
-			rootLayoutController.iRedBox.setVisible(false);
-			iGreenBox.setVisible(false);
-			AnchorPane.setRightAnchor(codeBox, 15.0);
-		}
-		phaseManager.resetPhase();
-	}
+	// protected void setTutorialMode(boolean selected) {
+	// tutorialMode = selected;
+	// if (!selected) {
+	// rootLayoutController.hideRedBox();
+	// rootLayoutController.iRedBox.setVisible(false);
+	// iGreenBox.setVisible(false);
+	// AnchorPane.setRightAnchor(codeBox, 15.0);
+	// }
+	// phaseManager.resetPhase();
+	// }
 
 }
