@@ -111,21 +111,12 @@ public class PhaseManager implements PhaseManagerIF {
 	private boolean compileErrorsAreAllowed(ExecutionResult executionResult) {
 		for (CompilationResult cr : executionResult.getCompileErrors()) {
 			for (CompileError ce : cr.getCompileErrors()) {
-				if (!isMissingSymbol(ce) && !messageContainsMethod(ce)) {
+				if (!isMissingSymbol(ce)) {
 					return false;
 				}
 			}
 		}
 		return true;
-	}
-
-	private boolean messageContainsMethod(CompileError ce) {
-		// FIXME Why ist this here?
-		// The only messages containing the word method are
-		// a) cannot return a value from method whose result type is void
-		// b) invalid method declaration; return type required
-		// c) non-static method cannot be referenced from a static context
-		return ce.getMessage().contains("method");
 	}
 
 	private boolean isMissingSymbol(CompileError ce) {
