@@ -26,7 +26,8 @@ public class PhaseManagerTest {
 
 	@Before
 	public void createPhaseManager() {
-		phaseManager = new PhaseManager(new TrackingManager(), new ExerciseSelector(new FakeCatalogDatasource(), null),
+		phaseManager = new PhaseManager(new TrackingManager(new EventBus()),
+				new ExerciseSelector(new FakeCatalogDatasource(), null),
 				new EventBus());
 		List<Exercise> fcd = new FakeCatalogDatasource().loadCatalog();
 		exerciseWithCompileError = fcd.get(1);
