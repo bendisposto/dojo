@@ -27,6 +27,6 @@ dependencies {
 	compile 'org.jsoup:jsoup:1.9.2'
 }
 
-mainClassName = "tddtrainer.Main"
+mainClassName = "tddtrainer.Startup"
 
 
