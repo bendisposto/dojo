@@ -33,6 +33,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import tddtrainer.catalog.Exercise;
+import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.PhaseChangeEvent;
@@ -40,6 +41,7 @@ import tddtrainer.events.TimeEvent;
 import tddtrainer.handbook.Handbook;
 import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManagerIF;
+import tddtrainer.logic.PhaseStatus;
 
 public class RootLayoutController extends BorderPane implements Initializable {
 
@@ -78,6 +80,9 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private AnchorPane rootPane;
+
+	@FXML
+	private EditorViewController editors;
 
 	Logger logger = LoggerFactory.getLogger(RootLayoutController.class);
 
@@ -216,11 +221,17 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void handleNextStep(ActionEvent event) {
-		throw new UnsupportedOperationException("Currently broken");
-		// Exercise exercise =
-		// editorViewController.newExerciseFromCurrentInput();
-		// PhaseStatus status = phaseManager.checkPhase(exercise, true);
-		// bus.post(new PhaseChangeEvent(status.getPhase()));
+		Exercise exercise = newExerciseFromCurrentInput();
+		PhaseStatus status = phaseManager.checkPhase(exercise, true);
+		bus.post(new PhaseChangeEvent(status.getPhase()));
+	}
+
+	private Exercise newExerciseFromCurrentInput() {
+		Exercise oldExercise = phaseManager.getOriginalExercise();
+		Exercise exercise = new Exercise(oldExercise.getName(), oldExercise.getDescription());
+		exercise.addCode(new JavaClass(oldExercise.getCode(0).getName(), editors.getCode()));
+		exercise.addTest(new JavaClass(oldExercise.getTest(0).getName(), editors.getTest()));
+		return exercise;
 	}
 
 	@FXML

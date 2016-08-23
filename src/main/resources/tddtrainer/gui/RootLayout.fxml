@@ -140,7 +140,7 @@
 						</Label>
 					</children>
 				</HBox>
-				<EditorViewController></EditorViewController>
+				<EditorViewController fx:id="editors"></EditorViewController>
 			</children>
 		</AnchorPane>
 	</center>

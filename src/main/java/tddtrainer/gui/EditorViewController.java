@@ -97,6 +97,14 @@ public class EditorViewController extends SplitPane implements Initializable {
 		}
 	}
 
+	public String getCode() {
+		return code.getText();
+	}
+
+	public String getTest() {
+		return tests.getText();
+	}
+
 	public void showExercise(Exercise exercise) {
 		for (JavaClass jclass : exercise.getCode()) {
 			// boolean wasDisabled = code.isDisable();
@@ -158,14 +166,6 @@ public class EditorViewController extends SplitPane implements Initializable {
 		code.setStyle("-fx-border-color: grey;");
 		iGreenBox.setVisible(false);
 		AnchorPane.setRightAnchor(codeBox, 15.0);
-	}
-
-	Exercise newExerciseFromCurrentInput() {
-		Exercise oldExercise = phaseManager.getOriginalExercise();
-		Exercise exercise = new Exercise(oldExercise.getName(), oldExercise.getDescription());
-		exercise.addCode(new JavaClass(oldExercise.getCode(0).getName(), code.getText()));
-		exercise.addTest(new JavaClass(oldExercise.getTest(0).getName(), tests.getText()));
-		return exercise;
 	}
 
 	private void addEditors() {
