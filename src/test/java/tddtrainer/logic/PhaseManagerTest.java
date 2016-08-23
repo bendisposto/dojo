@@ -13,7 +13,6 @@ import com.google.common.eventbus.EventBus;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.FakeCatalogDatasource;
 import tddtrainer.gui.catalog.ExerciseSelector;
-import tddtrainer.tracking.TrackingManager;
 
 public class PhaseManagerTest {
 
@@ -26,7 +25,7 @@ public class PhaseManagerTest {
 
 	@Before
 	public void createPhaseManager() {
-		phaseManager = new PhaseManager(new TrackingManager(new EventBus()),
+		phaseManager = new PhaseManager(
 				new ExerciseSelector(new FakeCatalogDatasource(), null),
 				new EventBus());
 		List<Exercise> fcd = new FakeCatalogDatasource().loadCatalog();

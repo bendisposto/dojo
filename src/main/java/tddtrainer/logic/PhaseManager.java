@@ -17,7 +17,6 @@ import tddtrainer.executor.CompilationResult;
 import tddtrainer.executor.ExecutionResult;
 import tddtrainer.executor.Executor;
 import tddtrainer.gui.catalog.ExerciseSelector;
-import tddtrainer.tracking.TrackingManager;
 import vk.core.api.CompileError;
 
 /**
@@ -31,16 +30,14 @@ public class PhaseManager {
 
 	private Phase phase = Phase.RED;
 	private Exercise validExercise;
-	private TrackingManager trackingManager;
 	private EventBus bus;
 	private ExerciseSelector exerciseSelector;
 	private Exercise originalExercise;
 	private PhaseStatus phaseStatus;
 
 	@Inject
-	public PhaseManager(TrackingManager trackingManager, ExerciseSelector exerciseSelector, EventBus bus) {
+	public PhaseManager(ExerciseSelector exerciseSelector, EventBus bus) {
 		this.originalExercise = new Exercise();
-		this.trackingManager = trackingManager;
 		this.bus = bus;
 		bus.register(this);
 		this.exerciseSelector = exerciseSelector;
@@ -62,7 +59,8 @@ public class PhaseManager {
 	public PhaseStatus checkPhase(Exercise exercise, boolean continuePhase) {
 		ExecutionResult executionResult = new Executor().execute(exercise);
 		phaseStatus.setExecutionResult(executionResult);
-		trackingManager.track(exercise, phaseStatus);
+
+		bus.post(new Snapshot(exercise, phaseStatus));
 
 		boolean canChange;
 
@@ -181,12 +179,7 @@ public class PhaseManager {
 		originalExercise = validExercise = exercise;
 
 		bus.post(new ExerciseEvent(validExercise));
-		trackingManager.reset();
 		bus.post(new StartBabysteps(originalExercise.getBabyStepsTestTime()));
-	}
-
-	public void displayTracking() {
-		trackingManager.displayInNewWindow();
 	}
 
 	public Exercise getOriginalExercise() {

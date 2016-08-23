@@ -9,14 +9,13 @@ import com.google.common.eventbus.EventBus;
 
 import tddtrainer.catalog.FakeCatalogDatasource;
 import tddtrainer.gui.catalog.ExerciseSelector;
-import tddtrainer.tracking.TrackingManager;
 
 public class PhaseStatusTest {
 
 	@Test
 	public void testWithNoCompileErrorsAndNoFailingTests() {
 		EventBus bus = new EventBus();
-		PhaseStatus phaseStatus = new PhaseManager(new TrackingManager(bus),
+		PhaseStatus phaseStatus = new PhaseManager(
 				new ExerciseSelector(new FakeCatalogDatasource(), null), bus)
 						.checkPhase(new FakeCatalogDatasource().loadCatalog().get(0), true);
 		assertEquals("Compile Errors: 0\nSuccessful Tests: 1, Failed Tests: 0\n",
@@ -26,7 +25,7 @@ public class PhaseStatusTest {
 	@Test
 	public void testWithCompileErrors() {
 		EventBus bus = new EventBus();
-		PhaseStatus phaseStatus = new PhaseManager(new TrackingManager(bus),
+		PhaseStatus phaseStatus = new PhaseManager(
 				new ExerciseSelector(new FakeCatalogDatasource(), null), bus)
 						.checkPhase(new FakeCatalogDatasource().loadCatalog().get(1), true);
 
@@ -40,7 +39,7 @@ public class PhaseStatusTest {
 	@Test
 	public void testWithNoCompileErrorsAndOneFailingTest() {
 		EventBus bus = new EventBus();
-		PhaseStatus phaseStatus = new PhaseManager(new TrackingManager(bus),
+		PhaseStatus phaseStatus = new PhaseManager(
 				new ExerciseSelector(new FakeCatalogDatasource(), null), bus)
 						.checkPhase(new FakeCatalogDatasource().loadCatalog().get(2), true);
 		String result = phaseStatus.getExecutionResultAsString();

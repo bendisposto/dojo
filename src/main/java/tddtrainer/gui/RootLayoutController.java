@@ -39,6 +39,7 @@ import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.PhaseChangeEvent;
 import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
+import tddtrainer.events.TrackingWindowEvent;
 import tddtrainer.handbook.Handbook;
 import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManager;
@@ -206,7 +207,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void showProgress(ActionEvent event) {
-		phaseManager.displayTracking();
+		bus.post(new TrackingWindowEvent());
 	}
 
 	@FXML
