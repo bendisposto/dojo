@@ -2,6 +2,9 @@ apply plugin: "java"
 apply plugin: "application"
 apply plugin: "eclipse"
 
+group 'de.hhu.stups'
+version '0.1.0'
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
