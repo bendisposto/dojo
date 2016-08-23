@@ -6,7 +6,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -18,13 +21,16 @@ import tddtrainer.catalog.Exercise;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.logic.PhaseStatus;
 
+@Singleton
 public class TrackingManager implements TrackingManagerIF {
 
 	ArrayList<Snapshot> progress;
 	LocalDateTime start;
 	ResourceBundle bundle;
 
-	public TrackingManager() {
+	@Inject
+	public TrackingManager(EventBus bus) {
+		bus.register(this);
 		progress = new ArrayList<>();
 		start = LocalDateTime.now();
 	}
@@ -40,7 +46,7 @@ public class TrackingManager implements TrackingManagerIF {
 	}
 
 	public void displayInNewWindow() {
-		
+
 		Stage stage = new Stage();
 		stage.setMinWidth(800);
 		stage.setWidth(800);
@@ -48,34 +54,33 @@ public class TrackingManager implements TrackingManagerIF {
 		stage.setHeight(500);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setTitle("Tracked Progress");
-		
-		
+
 		try {
 			FXMLLoader loader = new FXMLLoader();
 			loader.setResources(bundle);
 			loader.setLocation(Main.class.getResource("gui/tracking/Tracking.fxml"));
 			BorderPane boarderPane = (BorderPane) loader.load();
-			
+
 			TrackingController controller = loader.getController();
-			
+
 			controller.setStage(stage);
 			controller.generateTrackline(this);
-			
+
 			Scene scene = new Scene(boarderPane);
-	        stage.setScene(scene);
-	        stage.showAndWait();
-	        
+			stage.setScene(scene);
+			stage.showAndWait();
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void reset() {
 		progress = new ArrayList<>();
 		start = LocalDateTime.now();
 	}
-	
+
 	@Subscribe
 	public void setResourceBundle(LanguageChangeEvent event) {
 		this.bundle = event.getBundle();

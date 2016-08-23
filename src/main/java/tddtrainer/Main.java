@@ -26,7 +26,6 @@ import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelector;
 import tddtrainer.logic.PhaseManager;
 import tddtrainer.logic.PhaseManagerIF;
-import tddtrainer.tracking.TrackingManager;
 
 /**
  * The Main Class to get the Application started.
@@ -68,9 +67,6 @@ public class Main extends Application {
 		primaryStage.setTitle("TDDTrainer");
 		primaryStage.getIcons().add(new Image("/tddtrainer/gui/app_icon.png"));
 		primaryStage.setOnCloseRequest((e) -> System.exit(0));
-
-		TrackingManager trackingManager = new TrackingManager();
-		bus.register(trackingManager);
 
 		bus.post(new LanguageChangeEvent(null));
 	}

@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import com.google.common.eventbus.EventBus;
+
 import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.FakeCatalogDatasource;
 import tddtrainer.executor.ExecutionResult;
@@ -25,7 +27,7 @@ public class TrackingManagerTest {
 
 	@Before
 	public void instantiateTrackingManager() {
-		trackingManager = new TrackingManager();
+		trackingManager = new TrackingManager(new EventBus());
 		FakeCatalogDatasource fake = new FakeCatalogDatasource();
 		exercise = fake.loadCatalog().get(0);
 		Executor executor = new Executor();
