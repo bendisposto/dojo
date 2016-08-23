@@ -61,43 +61,56 @@ public class PhaseManager implements PhaseManagerIF {
 		phaseStatus.setExecutionResult(executionResult);
 		trackingManager.track(exercise, phaseStatus);
 
-		if (phase == Phase.RED) {
-			boolean valid = true;
-			if (executionResult.getCompilerResult().hasCompileErrors()) {
-				valid = compileErrorsAreAllowed(executionResult);
-			} else if (executionResult.getTestResult().getNumberOfFailedTests() != 1) {
-				valid = false;
-			}
-			if (valid) {
-				if (continuePhase) {
-					phase = Phase.GREEN;
-					babystepsManager.start(originalExercise.getBabyStepsCodeTime());
-				}
-				validExercise = exercise;
-			}
-			phaseStatus = new PhaseStatus(valid, executionResult, phase);
-		}
+		boolean canChange;
 
-		else {
-			boolean allGreen = hasNoCompileErrors(executionResult) &&
-					hasNoFailingTests(executionResult);
-			if (allGreen) {
-				if (continuePhase) {
-					if (phase == Phase.GREEN) {
-						phase = Phase.REFACTOR;
-						babystepsManager.stop();
-					} else {
-						phase = Phase.RED;
-						babystepsManager.start(originalExercise.getBabyStepsTestTime());
-					}
-				}
-				validExercise = exercise;
-			}
-			phaseStatus = new PhaseStatus(allGreen, executionResult, phase);
+		if (phase == Phase.RED) {
+			canChange = switchRed(exercise, continuePhase, executionResult);
+		} else {
+			canChange = switchGreen(exercise, continuePhase, executionResult);
 		}
+		phaseStatus = new PhaseStatus(canChange, executionResult, phase);
 
 		bus.post(new ExecutionResultEvent(phaseStatus));
 		return phaseStatus;
+	}
+
+	private boolean switchGreen(Exercise exercise, boolean continuePhase, ExecutionResult executionResult) {
+		boolean canChange;
+		boolean allGreen = hasNoCompileErrors(executionResult) &&
+				hasNoFailingTests(executionResult);
+		if (allGreen) {
+			if (continuePhase) {
+				if (phase == Phase.GREEN) {
+					phase = Phase.REFACTOR;
+					babystepsManager.stop();
+				} else {
+					phase = Phase.RED;
+					babystepsManager.start(originalExercise.getBabyStepsTestTime());
+				}
+			}
+			validExercise = exercise;
+		}
+		canChange = allGreen;
+		return canChange;
+	}
+
+	private boolean switchRed(Exercise exercise, boolean continuePhase, ExecutionResult executionResult) {
+		boolean canChange;
+		boolean valid = true;
+		if (executionResult.getCompilerResult().hasCompileErrors()) {
+			valid = compileErrorsAreAllowed(executionResult);
+		} else if (executionResult.getTestResult().getNumberOfFailedTests() != 1) {
+			valid = false;
+		}
+		if (valid) {
+			if (continuePhase) {
+				phase = Phase.GREEN;
+				babystepsManager.start(originalExercise.getBabyStepsCodeTime());
+			}
+			validExercise = exercise;
+		}
+		canChange = valid;
+		return canChange;
 	}
 
 	private boolean hasNoFailingTests(ExecutionResult executionResult) {
