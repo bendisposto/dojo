@@ -40,6 +40,24 @@ public class FakeCatalogDatasource implements CatalogDatasourceIF {
 		testError.setBabyStepsTestTime(10);
 		catalog.add(testError);
 
+		Exercise notAllowedToProceedToGreenSyntaxError = new Exercise(
+				"Not Allowed to proceed to Green because it has a syntax error",
+				"This has a syntax error.");
+		notAllowedToProceedToGreenSyntaxError.addCode(new JavaClass("WorkingCode",
+				"public class WorkingCode {\n\n\tpublic int returnOne() {\n\t\treturn 1;\n\t}\n}"));
+		notAllowedToProceedToGreenSyntaxError.addTest(new JavaClass("WorkingTest",
+				"import static org.junit.Assert.*;\nimport org.junit.Test;\n\npublic class WorkingTest {\n\n\t@Test\n\tpublic void testCode() {\n\t\tWorkingCode c = new WorkingCode();\n\t\tassertEquals(1, c.returnOne());\n\t\n}"));
+		catalog.add(notAllowedToProceedToGreenSyntaxError);
+
+		Exercise notAllowedToProceedToGreenMissingTestAnnotation = new Exercise(
+				"Not Allowed to proceed to Green because there is not method annotated with @Test",
+				"No @Test");
+		notAllowedToProceedToGreenMissingTestAnnotation.addCode(new JavaClass("WorkingCode",
+				"public class WorkingCode {\n\n\tpublic int returnOne() {\n\t\treturn 1;\n\t}\n}"));
+		notAllowedToProceedToGreenMissingTestAnnotation.addTest(new JavaClass("WorkingTest",
+				"import static org.junit.Assert.*;\nimport org.junit.Test;\n\npublic class WorkingTest {\n\n\t\n\tpublic void testCode() {\n\t\tWorkingCode c = new WorkingCode();\n\t\tassertEquals(1, c.returnOne());\n\t}\n}"));
+		catalog.add(notAllowedToProceedToGreenMissingTestAnnotation);
+
 		return catalog;
 	}
 

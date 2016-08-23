@@ -2,6 +2,7 @@ package tddtrainer.logic;
 
 import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 
 import tddtrainer.babysteps.BabystepsManager;
 import tddtrainer.catalog.Exercise;
@@ -20,6 +21,7 @@ import vk.core.api.CompileError;
  * @author Luisa
  *
  */
+@Singleton
 public class PhaseManager implements PhaseManagerIF {
 
 	private Phase phase = Phase.RED;
@@ -58,17 +60,11 @@ public class PhaseManager implements PhaseManagerIF {
 		ExecutionResult executionResult = new Executor().execute(exercise);
 		phaseStatus.setExecutionResult(executionResult);
 		trackingManager.track(exercise, phaseStatus);
+
 		if (phase == Phase.RED) {
 			boolean valid = true;
 			if (executionResult.getCompilerResult().hasCompileErrors()) {
-				loop: for (CompilationResult cr : executionResult.getCompileErrors()) {
-					for (CompileError ce : cr.getCompileErrors()) {
-						if (!(ce.getMessage().contains("cannot find symbol") || ce.getMessage().contains("method"))) {
-							valid = false;
-							break loop;
-						}
-					}
-				}
+				valid = compileErrorsAreAllowed(executionResult);
 			} else if (executionResult.getTestResult().getNumberOfFailedTests() != 1) {
 				valid = false;
 			}
@@ -83,8 +79,9 @@ public class PhaseManager implements PhaseManagerIF {
 		}
 
 		else {
-			if ((!(executionResult.getCompilerResult().hasCompileErrors())) &&
-					(executionResult.getTestResult().getNumberOfFailedTests() == 0)) {
+			boolean allGreen = hasNoCompileErrors(executionResult) &&
+					hasNoFailingTests(executionResult);
+			if (allGreen) {
 				if (continuePhase) {
 					if (phase == Phase.GREEN) {
 						phase = Phase.REFACTOR;
@@ -95,13 +92,44 @@ public class PhaseManager implements PhaseManagerIF {
 					}
 				}
 				validExercise = exercise;
-				phaseStatus = new PhaseStatus(true, executionResult, phase);
-			} else {
-				phaseStatus = new PhaseStatus(false, executionResult, phase);
 			}
+			phaseStatus = new PhaseStatus(allGreen, executionResult, phase);
 		}
+
 		bus.post(new ExecutionResultEvent(phaseStatus));
 		return phaseStatus;
+	}
+
+	private boolean hasNoFailingTests(ExecutionResult executionResult) {
+		return executionResult.getTestResult().getNumberOfFailedTests() == 0;
+	}
+
+	private boolean hasNoCompileErrors(ExecutionResult executionResult) {
+		return !(executionResult.getCompilerResult().hasCompileErrors());
+	}
+
+	private boolean compileErrorsAreAllowed(ExecutionResult executionResult) {
+		for (CompilationResult cr : executionResult.getCompileErrors()) {
+			for (CompileError ce : cr.getCompileErrors()) {
+				if (!isMissingSymbol(ce) && !messageContainsMethod(ce)) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	private boolean messageContainsMethod(CompileError ce) {
+		// FIXME Why ist this here?
+		// The only messages containing the word method are
+		// a) cannot return a value from method whose result type is void
+		// b) invalid method declaration; return type required
+		// c) non-static method cannot be referenced from a static context
+		return ce.getMessage().contains("method");
+	}
+
+	private boolean isMissingSymbol(CompileError ce) {
+		return ce.getMessage().contains("cannot find symbol");
 	}
 
 	@Override
