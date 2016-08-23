@@ -21,6 +21,7 @@ import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.EditorViewController;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelector;
+import tddtrainer.logic.PhaseAutomaton;
 import tddtrainer.logic.PhaseManager;
 
 public class GuiceConfiguration extends AbstractModule {
@@ -42,6 +43,7 @@ public class GuiceConfiguration extends AbstractModule {
 		bind(EditorViewController.class);
 		bind(RootLayoutController.class);
 		bind(PhaseManager.class);
+		bind(PhaseAutomaton.class).asEagerSingleton();
 		bind(BabystepsManager.class).asEagerSingleton();
 		bind(ExerciseSelector.class).asEagerSingleton();
 		bind(CatalogDatasourceIF.class).to(XMLCatalogDatasource.class);

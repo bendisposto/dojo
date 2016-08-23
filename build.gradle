@@ -17,7 +17,7 @@ repositories {
 }
 
 dependencies {
-	compile "de.hhu.stups:virtual-kata-lib:1.1.0-SNAPSHOT"
+	compile "de.hhu.stups:virtual-kata-lib:1.2.0-SNAPSHOT"
 	compile "org.sonatype.nexus:google-guava-eventbus:3.0.0-03"
 	compile "org.fxmisc.richtext:richtextfx:0.6.10"
 	compile 'ch.qos.logback:logback-core:0.9.29' 
