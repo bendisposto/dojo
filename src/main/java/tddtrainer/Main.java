@@ -3,8 +3,6 @@ package tddtrainer;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 import javax.tools.ToolProvider;
 
@@ -43,12 +41,16 @@ public class Main extends Application {
 	Logger logger = LoggerFactory.getLogger(Main.class);
 	private String location = "https://gist.githubusercontent.com/bendisposto/22c56ad002e562b14beea0449b981b0d/raw/f968a2dbebc4830ed94e4e47beb25e50c9901288/catalog.xml";
 	private final EventBus bus;
+	private FXMLLoader loader;
+	private RootLayoutController root;
 
 	@Inject
-	public Main(EventBus bus, PhaseManager phaseManager,
-			ExerciseSelector exerciseSelector) {
+	public Main(FXMLLoader loader, EventBus bus, PhaseManager phaseManager,
+			ExerciseSelector exerciseSelector, RootLayoutController root) {
+		this.loader = loader;
 		this.bus = bus;
 		this.phaseManager = phaseManager;
+		this.root = root;
 		exerciseSelector.getDataSource().setXmlStream(getDatasourceStream());
 		bus.register(exerciseSelector);
 	}
@@ -70,9 +72,7 @@ public class Main extends Application {
 		TrackingManager trackingManager = new TrackingManager();
 		bus.register(trackingManager);
 
-		Locale locale = new Locale("en", "EN");
-		ResourceBundle bundle = ResourceBundle.getBundle("bundles.tddt", locale);
-		bus.post(new LanguageChangeEvent(bundle));
+		bus.post(new LanguageChangeEvent(null));
 	}
 
 	private void checkForJdk() {
@@ -119,14 +119,11 @@ public class Main extends Application {
 
 	@Subscribe
 	public void initRootLayout(LanguageChangeEvent event) throws IOException {
-		ResourceBundle bundle = event.getBundle();
-		FXMLLoader loader = new FXMLLoader();
-		loader.setResources(bundle);
-		loader.setLocation(Main.class.getResource("gui/RootLayout.fxml"));
-		rootLayout = (BorderPane) loader.load();
-		RootLayoutController controller = loader.getController();
-		controller.init(phaseManager, bus);
-		primaryStage.setScene(new Scene(rootLayout));
+		// loader.setLocation(Main.class.getResource("gui/RootLayout.fxml"));
+		// rootLayout = (BorderPane) loader.load();
+		// RootLayoutController controller = loader.getController();
+		// controller.init(phaseManager, bus);
+		primaryStage.setScene(new Scene(root));
 		primaryStage.show();
 		primaryStage.setWidth(1100);
 		primaryStage.setMinWidth(1100);

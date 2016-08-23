@@ -8,8 +8,12 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -22,7 +26,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -37,9 +40,8 @@ import tddtrainer.events.TimeEvent;
 import tddtrainer.handbook.Handbook;
 import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManagerIF;
-import tddtrainer.logic.PhaseStatus;
 
-public class RootLayoutController implements Initializable {
+public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private BorderPane root;
@@ -74,42 +76,32 @@ public class RootLayoutController implements Initializable {
 
 	private EventBus bus;
 
-	private EditorViewController editorViewController;
-
 	@FXML
 	private AnchorPane rootPane;
+
+	Logger logger = LoggerFactory.getLogger(RootLayoutController.class);
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		this.resources = resources;
-	}
-
-	public void init(PhaseManagerIF phaseManager, EventBus bus) {
-		this.phaseManager = phaseManager;
-		this.bus = bus;
-		bus.register(this);
 		enableReset(false);
 		enableShowDescription(false);
 		hideRedBox();
-		showEditorView();
 	}
 
-	private void showEditorView() {
+	@Inject
+	public RootLayoutController(FXMLLoader loader, EventBus bus, PhaseManagerIF phaseManager) {
+		this.phaseManager = phaseManager;
+		this.bus = bus;
+		bus.register(this);
+		URL resource = getClass().getResource("RootLayout.fxml");
+		loader.setLocation(resource);
+		loader.setController(this);
+		loader.setRoot(this);
 		try {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(this.getClass().getResource("EditorView.fxml"));
-			loader.setResources(resources);
-			SplitPane editorView = loader.load();
-			rootPane.getChildren().add(editorView);
-			AnchorPane.setBottomAnchor(editorView, 0.0);
-			AnchorPane.setLeftAnchor(editorView, 5.0);
-			AnchorPane.setRightAnchor(editorView, 5.0);
-			AnchorPane.setTopAnchor(editorView, 60.0);
-			editorViewController = loader.getController();
-			bus.register(editorViewController);
-			editorViewController.init(phaseManager, this);
+			loader.load();
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Error loading Root view", e);
 		}
 	}
 
@@ -224,9 +216,11 @@ public class RootLayoutController implements Initializable {
 
 	@FXML
 	private void handleNextStep(ActionEvent event) {
-		Exercise exercise = editorViewController.newExerciseFromCurrentInput();
-		PhaseStatus status = phaseManager.checkPhase(exercise, true);
-		bus.post(new PhaseChangeEvent(status.getPhase()));
+		throw new UnsupportedOperationException("Currently broken");
+		// Exercise exercise =
+		// editorViewController.newExerciseFromCurrentInput();
+		// PhaseStatus status = phaseManager.checkPhase(exercise, true);
+		// bus.post(new PhaseChangeEvent(status.getPhase()));
 	}
 
 	@FXML

@@ -1,9 +1,21 @@
 package tddtrainer.gui;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
@@ -16,7 +28,7 @@ import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManagerIF;
 import tddtrainer.logic.PhaseStatus;
 
-public class EditorViewController {
+public class EditorViewController extends SplitPane implements Initializable {
 
 	private JavaCodeArea tests;
 	private JavaCodeArea code;
@@ -44,13 +56,36 @@ public class EditorViewController {
 
 	private PhaseManagerIF phaseManager;
 
-	public void initialize() {
-		iGreenBox.setVisible(false);
-		addEditors();
+	Logger logger = LoggerFactory.getLogger(EditorViewController.class);
+
+	@Inject
+	public EditorViewController(FXMLLoader loader, EventBus bus, PhaseManagerIF phaseManager) {
+		this.phaseManager = phaseManager;
+		bus.register(this);
+		URL resource = getClass().getResource("EditorView.fxml");
+		loader.setLocation(resource);
+		loader.setController(this);
+		loader.setRoot(this);
+		try {
+			loader.load();
+		} catch (IOException e) {
+			logger.error("Error loading Root view", e);
+		}
 	}
 
-	protected void init(PhaseManagerIF phaseManager, RootLayoutController rootLayoutController) {
-		this.phaseManager = phaseManager;
+	@Override
+	public void initialize(URL location, ResourceBundle resources) {
+		iGreenBox.setVisible(false);
+		addEditors();
+		AnchorPane.setBottomAnchor(this, 0.0);
+		AnchorPane.setLeftAnchor(this, 5.0);
+		AnchorPane.setRightAnchor(this, 5.0);
+		AnchorPane.setTopAnchor(this, 60.0);
+
+	}
+
+	protected void init(PhaseManagerIF phaseManager, EventBus bus) {
+		bus.register(this);
 	}
 
 	@Subscribe

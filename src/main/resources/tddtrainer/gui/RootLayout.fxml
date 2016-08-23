@@ -13,11 +13,12 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
+<?import tddtrainer.gui.EditorViewController?>
 
-<BorderPane fx:id="root" minHeight="100.0" minWidth="500.0"
-	prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: white;"
-	xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1"
-	fx:controller="tddtrainer.gui.RootLayoutController">
+<fx:root type="BorderPane" fx:id="root" minHeight="100.0"
+	minWidth="500.0" prefHeight="600.0" prefWidth="1000.0"
+	style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.60"
+	xmlns:fx="http://javafx.com/fxml/1">
 	<top>
 		<AnchorPane BorderPane.alignment="CENTER">
 			<children>
@@ -139,7 +140,8 @@
 						</Label>
 					</children>
 				</HBox>
+				<EditorViewController></EditorViewController>
 			</children>
 		</AnchorPane>
 	</center>
-</BorderPane>
+</fx:root>

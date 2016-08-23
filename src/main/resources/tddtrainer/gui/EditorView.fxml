@@ -10,73 +10,97 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.7" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tddtrainer.gui.EditorViewController">
+<fx:root type="SplitPane" dividerPositions="0.7" orientation="VERTICAL"
+	prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: white;"
+	xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
 	<items>
-		<AnchorPane minHeight="100.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+		<AnchorPane minHeight="100.0" minWidth="0.0" prefHeight="100.0"
+			prefWidth="160.0">
 			<children>
-				<SplitPane dividerPositions="0.5" prefHeight="315.0" prefWidth="640.0" style="-fx-background-color: white;" stylesheets="@tddtrainer.css" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+				<SplitPane dividerPositions="0.5" prefHeight="315.0"
+					prefWidth="640.0" style="-fx-background-color: white;" stylesheets="@tddtrainer.css"
+					AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
+					AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 					<items>
-								<AnchorPane fx:id="codePane" minWidth="300.0" style="-fx-background-color: white;">
+						<AnchorPane fx:id="codePane" minWidth="300.0"
+							style="-fx-background-color: white;">
+							<children>
+								<HBox fx:id="iGreenBox" alignment="TOP_RIGHT" layoutX="121.0"
+									layoutY="179.0" spacing="20.0" AnchorPane.rightAnchor="5.0"
+									AnchorPane.topAnchor="0.0">
 									<children>
-										<HBox fx:id="iGreenBox" alignment="TOP_RIGHT" layoutX="121.0" layoutY="179.0" spacing="20.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
-											<children>
-												<ImageView fitHeight="47.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" rotate="50.0">
-													<image>
-														<Image url="@black-arrow-curved-hi.png" />
-													</image>
-													<effect>
-														<ColorAdjust brightness="0.86" contrast="1.0" hue="-0.9" saturation="1.0" />
-													</effect>
-												</ImageView>
-												<Label fx:id="iRedLabel1" styleClass="instruction" stylesheets="@tddtrainer.css" text="%instruction.green" textFill="#6f8391">
-													<font>
-														<Font size="14.0" />
-													</font>
-												</Label>
-											</children>
-										</HBox>
-										<HBox fx:id="codeBox" alignment="CENTER_LEFT" layoutX="14.0" layoutY="-1.0" spacing="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="0.0">
-											<children>
-												<Label minWidth="-Infinity" text="Code:" textFill="#6f8391" HBox.hgrow="NEVER">
-													<font>
-														<Font size="21.0" />
-													</font>
-												</Label>
-												<Label fx:id="codeLabel" textFill="#6f8391">
-													<font>
-														<Font size="18.0" />
-													</font>
-												</Label>
-											</children>
-										</HBox>
+										<ImageView fitHeight="47.0" fitWidth="25.0"
+											pickOnBounds="true" preserveRatio="true" rotate="50.0">
+											<image>
+												<Image url="@black-arrow-curved-hi.png" />
+											</image>
+											<effect>
+												<ColorAdjust brightness="0.86" contrast="1.0"
+													hue="-0.9" saturation="1.0" />
+											</effect>
+										</ImageView>
+										<Label fx:id="iRedLabel1" styleClass="instruction"
+											stylesheets="@tddtrainer.css" text="%instruction.green"
+											textFill="#6f8391">
+											<font>
+												<Font size="14.0" />
+											</font>
+										</Label>
 									</children>
-								</AnchorPane>
-								<AnchorPane fx:id="testPane" minWidth="300.0" style="-fx-background-color: white;">
+								</HBox>
+								<HBox fx:id="codeBox" alignment="CENTER_LEFT" layoutX="14.0"
+									layoutY="-1.0" spacing="10.0" AnchorPane.leftAnchor="15.0"
+									AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="0.0">
 									<children>
-										<HBox alignment="CENTER_LEFT" layoutX="15.0" spacing="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="0.0">
-											<children>
-												<Label minWidth="-Infinity" text="Tests:" textFill="#6f8391" HBox.hgrow="NEVER">
-													<font>
-														<Font size="21.0" />
-													</font>
-												</Label>
-												<Label fx:id="testLabel" textFill="#6f8391">
-													<font>
-														<Font size="18.0" />
-													</font>
-												</Label>
-											</children>
-										</HBox>
+										<Label minWidth="-Infinity" text="Code:" textFill="#6f8391"
+											HBox.hgrow="NEVER">
+											<font>
+												<Font size="21.0" />
+											</font>
+										</Label>
+										<Label fx:id="codeLabel" textFill="#6f8391">
+											<font>
+												<Font size="18.0" />
+											</font>
+										</Label>
 									</children>
-								</AnchorPane>
+								</HBox>
+							</children>
+						</AnchorPane>
+						<AnchorPane fx:id="testPane" minWidth="300.0"
+							style="-fx-background-color: white;">
+							<children>
+								<HBox alignment="CENTER_LEFT" layoutX="15.0" spacing="10.0"
+									AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0"
+									AnchorPane.topAnchor="0.0">
+									<children>
+										<Label minWidth="-Infinity" text="Tests:" textFill="#6f8391"
+											HBox.hgrow="NEVER">
+											<font>
+												<Font size="21.0" />
+											</font>
+										</Label>
+										<Label fx:id="testLabel" textFill="#6f8391">
+											<font>
+												<Font size="18.0" />
+											</font>
+										</Label>
+									</children>
+								</HBox>
+							</children>
+						</AnchorPane>
 					</items>
 				</SplitPane>
 			</children>
 		</AnchorPane>
-		<AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+		<AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="100.0"
+			prefWidth="160.0">
 			<children>
-				<TextArea fx:id="console" editable="false" layoutX="29.0" layoutY="-46.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0" />
+				<TextArea fx:id="console" editable="false" layoutX="29.0"
+					layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
+					AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
+					AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0" />
 			</children>
 		</AnchorPane>
 	</items>
-</SplitPane>
+</fx:root>
