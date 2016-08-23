@@ -21,7 +21,6 @@ import tddtrainer.gui.EditorViewController;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelector;
 import tddtrainer.logic.PhaseManager;
-import tddtrainer.logic.PhaseManagerIF;
 import tddtrainer.tracking.TrackingManager;
 
 public class GuiceConfiguration extends AbstractModule {
@@ -42,7 +41,7 @@ public class GuiceConfiguration extends AbstractModule {
 		bind(EditorViewController.class);
 		bind(RootLayoutController.class);
 		bind(EventBus.class).toInstance(bus);
-		bind(PhaseManagerIF.class).to(PhaseManager.class);
+		bind(PhaseManager.class);
 		bind(TrackingManager.class);
 		bind(ExerciseSelector.class).asEagerSingleton();
 		bind(CatalogDatasourceIF.class).to(XMLCatalogDatasource.class);

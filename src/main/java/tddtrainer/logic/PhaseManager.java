@@ -22,7 +22,7 @@ import vk.core.api.CompileError;
  *
  */
 @Singleton
-public class PhaseManager implements PhaseManagerIF {
+public class PhaseManager {
 
 	private Phase phase = Phase.RED;
 	private Exercise validExercise;
@@ -55,7 +55,6 @@ public class PhaseManager implements PhaseManagerIF {
 	 *            {@link Exercise} is valid
 	 * @return The {@link PhaseStatus} after the {@link Executor Execution}
 	 */
-	@Override
 	public PhaseStatus checkPhase(Exercise exercise, boolean continuePhase) {
 		ExecutionResult executionResult = new Executor().execute(exercise);
 		phaseStatus.setExecutionResult(executionResult);
@@ -136,7 +135,6 @@ public class PhaseManager implements PhaseManagerIF {
 		return ce.getMessage().contains("cannot find symbol");
 	}
 
-	@Override
 	public Phase getPhase() {
 		return phase;
 	}
@@ -145,7 +143,6 @@ public class PhaseManager implements PhaseManagerIF {
 	 * Phase.RED: Phase stays in phase RED Phase.GREEN: Phase returns to phase
 	 * RED Phase.REFACTOR: Throws Exception
 	 */
-	@Override
 	public void resetPhase() {
 		if (phase == Phase.REFACTOR) {
 			throw new IllegalStateException("Reset not permitted during Refactor.");
@@ -165,7 +162,6 @@ public class PhaseManager implements PhaseManagerIF {
 	 * Selects an {@link Exercise} and manages the {@link TrackingManager} and
 	 * the {@link BabystepsManager}.
 	 */
-	@Override
 	public void selectExercise() {
 		Exercise exercise = exerciseSelector.selectExercise();
 		if (exercise == null) {
@@ -184,12 +180,10 @@ public class PhaseManager implements PhaseManagerIF {
 		babystepsManager.start(originalExercise.getBabyStepsTestTime());
 	}
 
-	@Override
 	public void displayTracking() {
 		trackingManager.displayInNewWindow();
 	}
 
-	@Override
 	public Exercise getOriginalExercise() {
 		return originalExercise;
 	}

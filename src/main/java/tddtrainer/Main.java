@@ -14,18 +14,15 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelector;
 import tddtrainer.logic.PhaseManager;
-import tddtrainer.logic.PhaseManagerIF;
 
 /**
  * The Main Class to get the Application started.
@@ -33,22 +30,17 @@ import tddtrainer.logic.PhaseManagerIF;
  */
 public class Main extends Application {
 
-	private BorderPane rootLayout;
 	private Stage primaryStage;
-	private final PhaseManagerIF phaseManager;
 
 	Logger logger = LoggerFactory.getLogger(Main.class);
 	private String location = "https://gist.githubusercontent.com/bendisposto/22c56ad002e562b14beea0449b981b0d/raw/f968a2dbebc4830ed94e4e47beb25e50c9901288/catalog.xml";
 	private final EventBus bus;
-	private FXMLLoader loader;
 	private RootLayoutController root;
 
 	@Inject
-	public Main(FXMLLoader loader, EventBus bus, PhaseManager phaseManager,
+	public Main(EventBus bus, PhaseManager phaseManager,
 			ExerciseSelector exerciseSelector, RootLayoutController root) {
-		this.loader = loader;
 		this.bus = bus;
-		this.phaseManager = phaseManager;
 		this.root = root;
 		exerciseSelector.getDataSource().setXmlStream(getDatasourceStream());
 		bus.register(exerciseSelector);

@@ -40,7 +40,7 @@ import tddtrainer.events.PhaseChangeEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.handbook.Handbook;
 import tddtrainer.logic.Phase;
-import tddtrainer.logic.PhaseManagerIF;
+import tddtrainer.logic.PhaseManager;
 import tddtrainer.logic.PhaseStatus;
 
 public class RootLayoutController extends BorderPane implements Initializable {
@@ -74,7 +74,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	private ResourceBundle resources;
 
-	private PhaseManagerIF phaseManager;
+	private PhaseManager phaseManager;
 
 	private EventBus bus;
 
@@ -95,7 +95,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 	}
 
 	@Inject
-	public RootLayoutController(FXMLLoader loader, EventBus bus, PhaseManagerIF phaseManager) {
+	public RootLayoutController(FXMLLoader loader, EventBus bus, PhaseManager phaseManager) {
 		this.phaseManager = phaseManager;
 		this.bus = bus;
 		bus.register(this);

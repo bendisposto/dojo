@@ -7,15 +7,16 @@ import com.google.common.eventbus.EventBus;
 
 import javafx.application.Platform;
 import tddtrainer.events.TimeEvent;
-import tddtrainer.logic.PhaseManagerIF;
+import tddtrainer.logic.PhaseManager;
 
 /**
- * An implementation of {@link BabystepsManagerIF} to force the user to make small tests and less code by limiting the time for editing code and tests.
+ * An implementation of {@link BabystepsManagerIF} to force the user to make
+ * small tests and less code by limiting the time for editing code and tests.
  *
  */
-public class BabystepsManager implements BabystepsManagerIF{
-	
-	PhaseManagerIF phaseManager;
+public class BabystepsManager implements BabystepsManagerIF {
+
+	PhaseManager phaseManager;
 	private boolean enabled = false;
 	private boolean running = false;
 	private LocalDateTime startTime;
@@ -23,33 +24,34 @@ public class BabystepsManager implements BabystepsManagerIF{
 	private boolean stopped = true;
 	private int phaseTime;
 	private EventBus bus;
-	
-	public BabystepsManager(PhaseManagerIF phaseManager, EventBus bus) {
+
+	public BabystepsManager(PhaseManager phaseManager, EventBus bus) {
 		this.phaseManager = phaseManager;
 		this.bus = bus;
 	}
-	
+
 	@Override
 	public synchronized void start(int mPhaseTime) {
-		if(this.enabled) {
+		if (this.enabled) {
 			phaseTime = mPhaseTime;
 			startTime = LocalDateTime.now();
 			stopped = false;
-			if(!running) {
+			if (!running) {
 				running = true;
 				new Thread(() -> {
-					while(!stopped) {
+					while (!stopped) {
 						nowTime = LocalDateTime.now();
 						long dTime = startTime.until(nowTime, ChronoUnit.SECONDS);
-		
-			    		if(dTime > phaseTime) {
-			    			Platform.runLater(() -> phaseManager.resetPhase());
-							running = false; 
+
+						if (dTime > phaseTime) {
+							Platform.runLater(() -> phaseManager.resetPhase());
+							running = false;
 							return;
-			    		};
-						
-			    		bus.post(new TimeEvent(phaseTime - dTime));
-			    		
+						}
+						;
+
+						bus.post(new TimeEvent(phaseTime - dTime));
+
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
@@ -59,21 +61,22 @@ public class BabystepsManager implements BabystepsManagerIF{
 					}
 					running = false;
 				})
-				.start();
+						.start();
 			}
 		}
 	}
-	
+
 	public void stop() {
-		if(this.enabled) {
+		if (this.enabled) {
 			this.stopped = true;
 		}
-	}	
-	public void enable(){
+	}
+
+	public void enable() {
 		this.enabled = true;
 	}
-	
-	public void disable(){
+
+	public void disable() {
 		this.enabled = false;
 	}
 }

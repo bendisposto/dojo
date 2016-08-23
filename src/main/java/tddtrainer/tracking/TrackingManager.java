@@ -22,7 +22,7 @@ import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.logic.PhaseStatus;
 
 @Singleton
-public class TrackingManager implements TrackingManagerIF {
+public class TrackingManager {
 
 	ArrayList<Snapshot> progress;
 	LocalDateTime start;
@@ -35,7 +35,6 @@ public class TrackingManager implements TrackingManagerIF {
 		start = LocalDateTime.now();
 	}
 
-	@Override
 	public void track(Exercise exercise, PhaseStatus phaseStatus) {
 		Snapshot snapshot = new Snapshot(exercise, LocalDateTime.now(), phaseStatus);
 		progress.add(snapshot);

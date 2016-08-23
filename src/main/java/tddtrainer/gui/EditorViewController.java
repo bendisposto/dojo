@@ -25,7 +25,7 @@ import tddtrainer.events.ExecutionResultEvent;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.PhaseChangeEvent;
 import tddtrainer.logic.Phase;
-import tddtrainer.logic.PhaseManagerIF;
+import tddtrainer.logic.PhaseManager;
 import tddtrainer.logic.PhaseStatus;
 
 public class EditorViewController extends SplitPane implements Initializable {
@@ -54,12 +54,12 @@ public class EditorViewController extends SplitPane implements Initializable {
 	@FXML
 	private HBox codeBox;
 
-	private PhaseManagerIF phaseManager;
+	private PhaseManager phaseManager;
 
 	Logger logger = LoggerFactory.getLogger(EditorViewController.class);
 
 	@Inject
-	public EditorViewController(FXMLLoader loader, EventBus bus, PhaseManagerIF phaseManager) {
+	public EditorViewController(FXMLLoader loader, EventBus bus, PhaseManager phaseManager) {
 		this.phaseManager = phaseManager;
 		bus.register(this);
 		URL resource = getClass().getResource("EditorView.fxml");
@@ -82,10 +82,6 @@ public class EditorViewController extends SplitPane implements Initializable {
 		AnchorPane.setRightAnchor(this, 5.0);
 		AnchorPane.setTopAnchor(this, 60.0);
 
-	}
-
-	protected void init(PhaseManagerIF phaseManager, EventBus bus) {
-		bus.register(this);
 	}
 
 	@Subscribe
