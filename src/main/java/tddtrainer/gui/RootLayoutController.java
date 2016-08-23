@@ -37,6 +37,7 @@ import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.PhaseChangeEvent;
+import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.handbook.Handbook;
 import tddtrainer.logic.Phase;
@@ -148,7 +149,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 			this.resources = ResourceBundle.getBundle("bundles.tddt", locale);
 			bus.post(new LanguageChangeEvent(resources));
-			phaseManager.resetPhase();
+			bus.post(new PhaseResetEvent());
 		}
 
 	}
@@ -210,7 +211,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void reset(ActionEvent event) {
-		phaseManager.resetPhase();
+		bus.post(new PhaseResetEvent());
 	}
 
 	// @FXML

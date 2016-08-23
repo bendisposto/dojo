@@ -14,6 +14,7 @@ import com.google.inject.Provides;
 
 import javafx.fxml.FXMLLoader;
 import javafx.util.Callback;
+import tddtrainer.babysteps.BabystepsManager;
 import tddtrainer.catalog.CatalogDatasourceIF;
 import tddtrainer.catalog.XMLCatalogDatasource;
 import tddtrainer.events.LanguageChangeEvent;
@@ -38,11 +39,12 @@ public class GuiceConfiguration extends AbstractModule {
 	@Override
 	protected void configure() {
 		logger.trace("Configuring Dependency Injection");
+		bind(EventBus.class).toInstance(bus);
 		bind(EditorViewController.class);
 		bind(RootLayoutController.class);
-		bind(EventBus.class).toInstance(bus);
 		bind(PhaseManager.class);
 		bind(TrackingManager.class);
+		bind(BabystepsManager.class).asEagerSingleton();
 		bind(ExerciseSelector.class).asEagerSingleton();
 		bind(CatalogDatasourceIF.class).to(XMLCatalogDatasource.class);
 		logger.trace("Configuring Dependency Injection completed");

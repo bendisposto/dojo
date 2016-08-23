@@ -1,6 +1,7 @@
 package tddtrainer.logic;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 
@@ -8,6 +9,10 @@ import tddtrainer.babysteps.BabystepsManager;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExecutionResultEvent;
 import tddtrainer.events.ExerciseEvent;
+import tddtrainer.events.PhaseResetEvent;
+import tddtrainer.events.babysteps.Babysteps;
+import tddtrainer.events.babysteps.StartBabysteps;
+import tddtrainer.events.babysteps.StopBabysteps;
 import tddtrainer.executor.CompilationResult;
 import tddtrainer.executor.ExecutionResult;
 import tddtrainer.executor.Executor;
@@ -29,7 +34,6 @@ public class PhaseManager {
 	private TrackingManager trackingManager;
 	private EventBus bus;
 	private ExerciseSelector exerciseSelector;
-	private BabystepsManager babystepsManager;
 	private Exercise originalExercise;
 	private PhaseStatus phaseStatus;
 
@@ -38,8 +42,8 @@ public class PhaseManager {
 		this.originalExercise = new Exercise();
 		this.trackingManager = trackingManager;
 		this.bus = bus;
+		bus.register(this);
 		this.exerciseSelector = exerciseSelector;
-		this.babystepsManager = new BabystepsManager(this, bus);
 		this.phaseStatus = new PhaseStatus(false, null, phase);
 	}
 
@@ -81,10 +85,11 @@ public class PhaseManager {
 			if (continuePhase) {
 				if (phase == Phase.GREEN) {
 					phase = Phase.REFACTOR;
-					babystepsManager.stop();
+					bus.post(new StopBabysteps());
+
 				} else {
 					phase = Phase.RED;
-					babystepsManager.start(originalExercise.getBabyStepsTestTime());
+					bus.post(new StartBabysteps(originalExercise.getBabyStepsTestTime()));
 				}
 			}
 			validExercise = exercise;
@@ -104,7 +109,7 @@ public class PhaseManager {
 		if (valid) {
 			if (continuePhase) {
 				phase = Phase.GREEN;
-				babystepsManager.start(originalExercise.getBabyStepsCodeTime());
+				bus.post(new StartBabysteps(originalExercise.getBabyStepsCodeTime()));
 			}
 			validExercise = exercise;
 		}
@@ -143,7 +148,8 @@ public class PhaseManager {
 	 * Phase.RED: Phase stays in phase RED Phase.GREEN: Phase returns to phase
 	 * RED Phase.REFACTOR: Throws Exception
 	 */
-	public void resetPhase() {
+	@Subscribe
+	public void resetPhase(PhaseResetEvent event) {
 		if (phase == Phase.REFACTOR) {
 			throw new IllegalStateException("Reset not permitted during Refactor.");
 		}
@@ -152,8 +158,7 @@ public class PhaseManager {
 		}
 
 		if (validExercise != null) {
-			babystepsManager.start(originalExercise.getBabyStepsTestTime());
-			bus.post(new ExerciseEvent(validExercise));
+			bus.post(new StartBabysteps(originalExercise.getBabyStepsTestTime()));
 			bus.post(new ExerciseEvent(validExercise));
 		}
 	}
@@ -168,16 +173,16 @@ public class PhaseManager {
 			return;
 		}
 		if (exercise.isBabyStepsActivated()) {
-			babystepsManager.enable();
+			bus.post(Babysteps.ON);
 		} else {
-			babystepsManager.disable();
+			bus.post(Babysteps.OFF);
 		}
 		phase = Phase.RED;
 		originalExercise = validExercise = exercise;
 
 		bus.post(new ExerciseEvent(validExercise));
 		trackingManager.reset();
-		babystepsManager.start(originalExercise.getBabyStepsTestTime());
+		bus.post(new StartBabysteps(originalExercise.getBabyStepsTestTime()));
 	}
 
 	public void displayTracking() {

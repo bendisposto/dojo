@@ -4,19 +4,23 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
+import com.google.inject.Inject;
 
 import javafx.application.Platform;
+import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
-import tddtrainer.logic.PhaseManager;
+import tddtrainer.events.babysteps.Babysteps;
+import tddtrainer.events.babysteps.StartBabysteps;
+import tddtrainer.events.babysteps.StopBabysteps;
 
 /**
  * An implementation of {@link BabystepsManagerIF} to force the user to make
  * small tests and less code by limiting the time for editing code and tests.
  *
  */
-public class BabystepsManager implements BabystepsManagerIF {
+public class BabystepsManager {
 
-	PhaseManager phaseManager;
 	private boolean enabled = false;
 	private boolean running = false;
 	private LocalDateTime startTime;
@@ -25,15 +29,16 @@ public class BabystepsManager implements BabystepsManagerIF {
 	private int phaseTime;
 	private EventBus bus;
 
-	public BabystepsManager(PhaseManager phaseManager, EventBus bus) {
-		this.phaseManager = phaseManager;
+	@Inject
+	public BabystepsManager(EventBus bus) {
 		this.bus = bus;
+		bus.register(this);
 	}
 
-	@Override
-	public synchronized void start(int mPhaseTime) {
+	@Subscribe
+	public synchronized void start(StartBabysteps event) {
 		if (this.enabled) {
-			phaseTime = mPhaseTime;
+			phaseTime = event.getTime();
 			startTime = LocalDateTime.now();
 			stopped = false;
 			if (!running) {
@@ -44,18 +49,16 @@ public class BabystepsManager implements BabystepsManagerIF {
 						long dTime = startTime.until(nowTime, ChronoUnit.SECONDS);
 
 						if (dTime > phaseTime) {
-							Platform.runLater(() -> phaseManager.resetPhase());
+							Platform.runLater(() -> bus.post(new PhaseResetEvent()));
 							running = false;
 							return;
 						}
-						;
 
 						bus.post(new TimeEvent(phaseTime - dTime));
 
 						try {
 							Thread.sleep(1000);
 						} catch (Exception e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -66,17 +69,16 @@ public class BabystepsManager implements BabystepsManagerIF {
 		}
 	}
 
-	public void stop() {
+	@Subscribe
+	public void stop(StopBabysteps event) {
 		if (this.enabled) {
 			this.stopped = true;
 		}
 	}
 
-	public void enable() {
-		this.enabled = true;
+	@Subscribe
+	public void switchBabysteps(Babysteps event) {
+		this.enabled = event.enabled;
 	}
 
-	public void disable() {
-		this.enabled = false;
-	}
 }
