@@ -1,6 +1,8 @@
-﻿# Testdriven Development Trainer
+# Test Driven Development Trainer
 
-This is a modified version of the student's project by Marcel Käufler, Antonia Pütz, Benedikt Schmeitz, Luisa Schuhmacher & Simon Weber
+[![Build Status](https://travis-ci.org/bendisposto/dojo.svg?branch=develop)](https://travis-ci.org/bendisposto/dojo)
+
+This tool is based on a student's project by Marcel Käufler, Antonia Pütz, Benedikt Schmeitz, Luisa Schuhmacher & Simon Weber
 
 ##Build instructions
 * Type 'gradle distZip' to build the distribution
