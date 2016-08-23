@@ -13,20 +13,20 @@ public class Snapshot {
 	PhaseStatus phaseStatus;
 
 	public Snapshot(Exercise exercise, LocalDateTime pointOfTime, PhaseStatus phaseStatus) {
-		this.exercise = exercise; 
+		this.exercise = new Exercise(exercise);
 		this.pointOfTime = pointOfTime;
 		this.phaseStatus = phaseStatus;
 	}
-	
-	Color getColor(){
-	    	switch(phaseStatus.getPhase()) {
-	    	case RED:
-	    		return Color.CRIMSON;
-	    	case GREEN:
-	    		return Color.FORESTGREEN;
-	    	default:
-	    		return Color.web("#6f8391");
-	    		
-	    	}
+
+	Color getColor() {
+		switch (phaseStatus.getPhase()) {
+		case RED:
+			return Color.CRIMSON;
+		case GREEN:
+			return Color.FORESTGREEN;
+		default:
+			return Color.web("#6f8391");
+
+		}
 	}
 }

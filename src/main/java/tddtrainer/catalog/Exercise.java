@@ -33,6 +33,17 @@ public class Exercise {
 		this.description = description;
 	}
 
+	public Exercise(Exercise that) {
+		this();
+		this.name = that.name;
+		this.description = that.description;
+		this.code.addAll(that.code);
+		this.tests.addAll(that.tests);
+		this.babyStepsActivated = that.babyStepsActivated;
+		this.babyStepsCodeTime = that.babyStepsCodeTime;
+		this.babyStepsTestTime = that.babyStepsTestTime;
+	}
+
 	public String getName() {
 		return name;
 	}
@@ -48,21 +59,23 @@ public class Exercise {
 	public List<JavaClass> getTests() {
 		return tests;
 	}
-	
-	public JavaClass getCode(int index){
-		if(index >= code.size()) return null;
+
+	public JavaClass getCode(int index) {
+		if (index >= code.size())
+			return null;
 		return code.get(index);
 	}
-	
-	public JavaClass getTest(int index){
-		if(index >= tests.size()) return null;
+
+	public JavaClass getTest(int index) {
+		if (index >= tests.size())
+			return null;
 		return tests.get(index);
 	}
-	
-	public boolean isBabyStepsActivated(){
+
+	public boolean isBabyStepsActivated() {
 		return babyStepsActivated;
 	}
-	
+
 	public int getBabyStepsCodeTime() {
 		return babyStepsCodeTime;
 	}
@@ -71,11 +84,11 @@ public class Exercise {
 		return babyStepsTestTime;
 	}
 
-	public void addCode(JavaClass code){
+	public void addCode(JavaClass code) {
 		this.code.add(code);
 	}
-	
-	public void addTest(JavaClass test){
+
+	public void addTest(JavaClass test) {
 		this.tests.add(test);
 	}
 
@@ -94,11 +107,11 @@ public class Exercise {
 	public void setTests(List<JavaClass> test) {
 		this.tests = test;
 	}
-	
-	public void setBabyStepsActivated(boolean activated){
+
+	public void setBabyStepsActivated(boolean activated) {
 		this.babyStepsActivated = activated;
 	}
-	
+
 	public void setBabyStepsCodeTime(int babyStepsCodeTime) {
 		this.babyStepsCodeTime = babyStepsCodeTime;
 	}
@@ -108,8 +121,9 @@ public class Exercise {
 	}
 
 	@Override
-	public String toString(){
-		return String.format("{name=\"%s\" description=\"%s\" code=%s tests=%s}", name, description.replaceAll("\n", " "), code.toString(), tests.toString());
+	public String toString() {
+		return String.format("{name=\"%s\" description=\"%s\" code=%s tests=%s}", name,
+				description.replaceAll("\n", " "), code.toString(), tests.toString());
 	}
 
 }
