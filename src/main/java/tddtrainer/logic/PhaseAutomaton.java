@@ -7,6 +7,11 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import tddtrainer.catalog.JavaClass;
+import tddtrainer.events.ExerciseEvent;
+import tddtrainer.logic.events.NextPhaseEvent;
+import tddtrainer.logic.events.SwitchToGreenEvent;
+import tddtrainer.logic.events.SwitchToRedEvent;
+import tddtrainer.logic.events.SwitchToRefactorEvent;
 import vk.core.api.CompilationUnit;
 import vk.core.api.CompileError;
 import vk.core.api.CompilerFactory;
@@ -19,8 +24,10 @@ public class PhaseAutomaton {
 	private Phase currentState = Phase.RED;
 	private EventBus bus;
 
-	public void init() {
+	@Subscribe
+	public void init(ExerciseEvent exerciseEvent) {
 		currentState = Phase.RED;
+		bus.post(new SwitchToRedEvent());
 	}
 
 	@Inject
@@ -53,7 +60,6 @@ public class PhaseAutomaton {
 	}
 
 	private void switchToGreen(JavaStringCompiler compiler, CompilationUnit testCompilationUnit) {
-
 		if (aMethodIsMissing(compiler.getCompilerResult(), testCompilationUnit)
 				|| aSingleTestFails(compiler.getTestResult())) {
 			currentState = Phase.GREEN;

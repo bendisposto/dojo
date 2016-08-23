@@ -41,10 +41,12 @@ import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.events.TrackingWindowEvent;
 import tddtrainer.handbook.Handbook;
-import tddtrainer.logic.NextPhaseEvent;
-import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManager;
 import tddtrainer.logic.PhaseStatus;
+import tddtrainer.logic.events.NextPhaseEvent;
+import tddtrainer.logic.events.SwitchToGreenEvent;
+import tddtrainer.logic.events.SwitchToRedEvent;
+import tddtrainer.logic.events.SwitchToRefactorEvent;
 
 public class RootLayoutController extends BorderPane implements Initializable {
 
@@ -156,23 +158,24 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	}
 
-	@Subscribe
-	void changePhase(PhaseChangeEvent phaseChangeEvent) {
-		Phase phase = phaseChangeEvent.getPhase();
-		switch (phase) {
-		case RED:
-			switchToStatusRed();
-			break;
-		case GREEN:
-			switchToStatusGreen();
-			break;
-		case REFACTOR:
-			switchToStatusRefactor();
-			break;
-		}
-	}
+	// @Subscribe
+	// void changePhase(PhaseChangeEvent phaseChangeEvent) {
+	// Phase phase = phaseChangeEvent.getPhase();
+	// switch (phase) {
+	// case RED:
+	// switchToStatusRed();
+	// break;
+	// case GREEN:
+	// switchToStatusGreen();
+	// break;
+	// case REFACTOR:
+	// switchToStatusRefactor();
+	// break;
+	// }
+	// }
 
-	public void switchToStatusRed() {
+	@Subscribe
+	public void switchToStatusRed(SwitchToRedEvent event) {
 		System.out.println("red");
 		showRedBox();
 		enableReset(true);
@@ -181,7 +184,8 @@ public class RootLayoutController extends BorderPane implements Initializable {
 		// statusLabel.getStyleClass().add("statuslabel-red");
 	}
 
-	public void switchToStatusGreen() {
+	@Subscribe
+	public void switchToStatusGreen(SwitchToGreenEvent event) {
 		System.out.println("green");
 		enableReset(true);
 		hideRedBox();
@@ -190,7 +194,8 @@ public class RootLayoutController extends BorderPane implements Initializable {
 		// statusLabel.getStyleClass().add("statuslabel-green");
 	}
 
-	public void switchToStatusRefactor() {
+	@Subscribe
+	public void switchToStatusRefactor(SwitchToRefactorEvent event) {
 		System.out.println("refactor");
 		enableReset(false);
 		hideRedBox();

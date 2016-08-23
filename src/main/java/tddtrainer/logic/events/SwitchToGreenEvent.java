@@ -1,4 +1,4 @@
-package tddtrainer.logic;
+package tddtrainer.logic.events;
 
 public class SwitchToGreenEvent {
 	public SwitchToGreenEvent() {

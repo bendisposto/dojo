@@ -23,10 +23,11 @@ import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExecutionResultEvent;
 import tddtrainer.events.ExerciseEvent;
-import tddtrainer.events.PhaseChangeEvent;
-import tddtrainer.logic.Phase;
 import tddtrainer.logic.PhaseManager;
 import tddtrainer.logic.PhaseStatus;
+import tddtrainer.logic.events.SwitchToGreenEvent;
+import tddtrainer.logic.events.SwitchToRedEvent;
+import tddtrainer.logic.events.SwitchToRefactorEvent;
 
 public class EditorViewController extends SplitPane implements Initializable {
 
@@ -89,7 +90,9 @@ public class EditorViewController extends SplitPane implements Initializable {
 		Exercise exercise = exerciseEvent.getExercise();
 		if (exercise != null) {
 			showExercise(exercise);
-			changePhase(new PhaseChangeEvent(phaseManager.checkPhase(exercise, false).getPhase()));
+			// changePhase(new
+			// PhaseChangeEvent(phaseManager.checkPhase(exercise,
+			// false).getPhase()));
 		}
 	}
 
@@ -121,23 +124,24 @@ public class EditorViewController extends SplitPane implements Initializable {
 		}
 	}
 
-	@Subscribe
-	void changePhase(PhaseChangeEvent phaseChangeEvent) {
-		Phase phase = phaseChangeEvent.getPhase();
-		switch (phase) {
-		case RED:
-			changePhaseToRed();
-			break;
-		case GREEN:
-			changePhaseToGreen();
-			break;
-		case REFACTOR:
-			changePhaseToRefactor();
-			break;
-		}
-	}
+	// @Subscribe
+	// void changePhase(PhaseChangeEvent phaseChangeEvent) {
+	// Phase phase = phaseChangeEvent.getPhase();
+	// switch (phase) {
+	// case RED:
+	// changePhaseToRed();
+	// break;
+	// case GREEN:
+	// changePhaseToGreen();
+	// break;
+	// case REFACTOR:
+	// changePhaseToRefactor();
+	// break;
+	// }
+	// }
 
-	private void changePhaseToRed() {
+	@Subscribe
+	private void changePhaseToRed(SwitchToRedEvent event) {
 		code.disable(true);
 		tests.disable(false);
 		tests.setStyle("-fx-border-color: crimson;");
@@ -146,7 +150,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 		AnchorPane.setRightAnchor(codeBox, 15.0);
 	}
 
-	private void changePhaseToGreen() {
+	@Subscribe
+	private void changePhaseToGreen(SwitchToGreenEvent event) {
 		code.disable(false);
 		tests.disable(true);
 		code.setStyle("-fx-border-color: forestgreen;");
@@ -155,7 +160,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 		AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
 	}
 
-	private void changePhaseToRefactor() {
+	@Subscribe
+	private void changePhaseToRefactor(SwitchToRefactorEvent event) {
 		code.disable(false);
 		tests.disable(false);
 		tests.setStyle("-fx-border-color: grey;");

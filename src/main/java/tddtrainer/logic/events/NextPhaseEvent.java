@@ -1,4 +1,4 @@
-package tddtrainer.logic;
+package tddtrainer.logic.events;
 
 import java.util.List;
 
