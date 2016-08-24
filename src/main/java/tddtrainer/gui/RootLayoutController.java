@@ -39,7 +39,6 @@ import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.events.TrackingWindowEvent;
 import tddtrainer.handbook.Handbook;
-import tddtrainer.logic.PhaseManager;
 import tddtrainer.logic.events.NextPhaseEvent;
 import tddtrainer.logic.events.SwitchToGreenEvent;
 import tddtrainer.logic.events.SwitchToRedEvent;
@@ -76,8 +75,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	private ResourceBundle resources;
 
-	private PhaseManager phaseManager;
-
 	private EventBus bus;
 
 	@FXML
@@ -99,8 +96,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 	}
 
 	@Inject
-	public RootLayoutController(FXMLLoader loader, EventBus bus, PhaseManager phaseManager) {
-		this.phaseManager = phaseManager;
+	public RootLayoutController(FXMLLoader loader, EventBus bus) {
 		this.bus = bus;
 		bus.register(this);
 		URL resource = getClass().getResource("RootLayout.fxml");
@@ -217,11 +213,11 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void showExerciseDescription(ActionEvent event) {
-		String description = phaseManager.getOriginalExercise().getDescription();
 		Alert alert = new Alert(AlertType.INFORMATION);
 		alert.setTitle(resources.getString("description"));
 		alert.setHeaderText(null);
-		alert.setContentText(description);
+		alert.setContentText("Implement me");
+		// alert.setContentText(description);
 		alert.showAndWait();
 	}
 

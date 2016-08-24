@@ -21,9 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.JavaClass;
-import tddtrainer.events.ExecutionResultEvent;
 import tddtrainer.events.ExerciseEvent;
-import tddtrainer.logic.PhaseStatus;
 import tddtrainer.logic.events.SwitchToGreenEvent;
 import tddtrainer.logic.events.SwitchToRedEvent;
 import tddtrainer.logic.events.SwitchToRefactorEvent;
@@ -169,11 +167,9 @@ public class EditorViewController extends SplitPane implements Initializable {
 	}
 
 	@Subscribe
-	public void showExecutionResult(ExecutionResultEvent event) {
-		PhaseStatus status = event.getPhaseStatus();
-		console.setText(status.getExecutionResultAsString());
-
-		if (status.isValid()) {
+	public void compileResult(CompilationXResult result) {
+		console.setText(result.getConsoleOutput());
+		if (result.canProceed()) {
 			console.setStyle("-fx-text-fill: grey");
 		} else {
 			console.setStyle("-fx-text-fill: red");

@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelector;
-import tddtrainer.logic.PhaseManager;
 
 /**
  * The Main Class to get the Application started.
@@ -38,7 +37,7 @@ public class Main extends Application {
 	private RootLayoutController root;
 
 	@Inject
-	public Main(EventBus bus, PhaseManager phaseManager,
+	public Main(EventBus bus,
 			ExerciseSelector exerciseSelector, RootLayoutController root) {
 		this.bus = bus;
 		this.root = root;
