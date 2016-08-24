@@ -23,7 +23,6 @@ import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExecutionResultEvent;
 import tddtrainer.events.ExerciseEvent;
-import tddtrainer.logic.PhaseManager;
 import tddtrainer.logic.PhaseStatus;
 import tddtrainer.logic.events.SwitchToGreenEvent;
 import tddtrainer.logic.events.SwitchToRedEvent;
@@ -55,13 +54,10 @@ public class EditorViewController extends SplitPane implements Initializable {
 	@FXML
 	private HBox codeBox;
 
-	private PhaseManager phaseManager;
-
 	Logger logger = LoggerFactory.getLogger(EditorViewController.class);
 
 	@Inject
-	public EditorViewController(FXMLLoader loader, EventBus bus, PhaseManager phaseManager) {
-		this.phaseManager = phaseManager;
+	public EditorViewController(FXMLLoader loader, EventBus bus) {
 		bus.register(this);
 		URL resource = getClass().getResource("EditorView.fxml");
 		loader.setLocation(resource);
@@ -123,22 +119,6 @@ public class EditorViewController extends SplitPane implements Initializable {
 			// tests.setDisable(wasDisabled);
 		}
 	}
-
-	// @Subscribe
-	// void changePhase(PhaseChangeEvent phaseChangeEvent) {
-	// Phase phase = phaseChangeEvent.getPhase();
-	// switch (phase) {
-	// case RED:
-	// changePhaseToRed();
-	// break;
-	// case GREEN:
-	// changePhaseToGreen();
-	// break;
-	// case REFACTOR:
-	// changePhaseToRefactor();
-	// break;
-	// }
-	// }
 
 	@Subscribe
 	private void changePhaseToRed(SwitchToRedEvent event) {

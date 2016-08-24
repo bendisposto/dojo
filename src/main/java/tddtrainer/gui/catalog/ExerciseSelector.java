@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
@@ -13,6 +15,10 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import tddtrainer.catalog.CatalogDatasourceIF;
 import tddtrainer.catalog.Exercise;
+import tddtrainer.events.ExerciseEvent;
+import tddtrainer.events.babysteps.Babysteps;
+import tddtrainer.events.babysteps.StartBabysteps;
+import tddtrainer.gui.SelectExerciseEvent;
 
 /**
  * Provides an gui window where a user can select an Exercise from a exercise
@@ -24,6 +30,7 @@ public class ExerciseSelector {
 
 	private CatalogDatasourceIF dataSource;
 	private Provider<ResourceBundle> bundleProvider;
+	private EventBus bus;
 
 	/**
 	 * Creates an ExerciseSelector
@@ -32,9 +39,11 @@ public class ExerciseSelector {
 	 *            the data source from where the catalog should be read
 	 */
 	@Inject
-	public ExerciseSelector(CatalogDatasourceIF dataSource, Provider<ResourceBundle> bundleProvider) {
+	public ExerciseSelector(CatalogDatasourceIF dataSource, Provider<ResourceBundle> bundleProvider, EventBus bus) {
 		this.dataSource = dataSource;
 		this.bundleProvider = bundleProvider;
+		this.bus = bus;
+		bus.register(this);
 	}
 
 	public CatalogDatasourceIF getDataSource() {
@@ -47,9 +56,10 @@ public class ExerciseSelector {
 	 * 
 	 * @return the selected Exercise or null if the dialog is canceled
 	 */
-	public Exercise selectExercise() {
+	@Subscribe
+	public void selectExercise(SelectExerciseEvent event) {
 		Stage dialogStage = new Stage();
-
+		Exercise exercise = null;
 		try {
 			URL location = getClass().getResource("ExerciseSelector.fxml");
 			FXMLLoader loader = new FXMLLoader(location);
@@ -64,12 +74,20 @@ public class ExerciseSelector {
 			dialogStage.sizeToScene();
 			dialogStage.setResizable(false);
 			dialogStage.showAndWait();
+			exercise = controller.getSelectedExercise();
 
-			return controller.getSelectedExercise();
 		} catch (IOException e) {
 			e.printStackTrace();
-			return null;
 		}
+		if (exercise == null)
+			return;
+		if (exercise.isBabyStepsActivated()) {
+			bus.post(Babysteps.ON);
+		} else {
+			bus.post(Babysteps.OFF);
+		}
+		bus.post(new ExerciseEvent(exercise));
+		bus.post(new StartBabysteps(exercise.getBabyStepsTestTime()));
 	}
 
 }

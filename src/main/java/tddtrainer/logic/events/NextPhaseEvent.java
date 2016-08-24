@@ -1,25 +1,28 @@
 package tddtrainer.logic.events;
 
-import java.util.List;
-
-import tddtrainer.catalog.JavaClass;
+import tddtrainer.catalog.Exercise;
+import vk.core.api.CompilationUnit;
 
 public class NextPhaseEvent {
 
-	private final List<JavaClass> code;
-	private final List<JavaClass> tests;
+	private Exercise exercise;
+	private String code;
+	private String test;
 
-	public NextPhaseEvent(List<JavaClass> code, List<JavaClass> tests) {
+	public NextPhaseEvent(Exercise exercise, String code, String test) {
+		this.exercise = exercise;
 		this.code = code;
-		this.tests = tests;
+		this.test = test;
 	}
 
-	public List<JavaClass> getCode() {
-		return code;
+	public CompilationUnit getCodeCU() {
+		String name = exercise.getCode().get(0).getName();
+		return new CompilationUnit(name, code, false);
 	}
 
-	public List<JavaClass> getTests() {
-		return tests;
+	public CompilationUnit getTestCU() {
+		String name = exercise.getTests().get(0).getName();
+		return new CompilationUnit(name, test, true);
 	}
 
 }

@@ -10,7 +10,6 @@ import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExecutionResultEvent;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.PhaseResetEvent;
-import tddtrainer.events.babysteps.Babysteps;
 import tddtrainer.events.babysteps.StartBabysteps;
 import tddtrainer.events.babysteps.StopBabysteps;
 import tddtrainer.executor.CompilationResult;
@@ -159,27 +158,6 @@ public class PhaseManager {
 			bus.post(new StartBabysteps(originalExercise.getBabyStepsTestTime()));
 			bus.post(new ExerciseEvent(validExercise));
 		}
-	}
-
-	/**
-	 * Selects an {@link Exercise} and manages the {@link TrackingManager} and
-	 * the {@link BabystepsManager}.
-	 */
-	public void selectExercise() {
-		Exercise exercise = exerciseSelector.selectExercise();
-		if (exercise == null) {
-			return;
-		}
-		if (exercise.isBabyStepsActivated()) {
-			bus.post(Babysteps.ON);
-		} else {
-			bus.post(Babysteps.OFF);
-		}
-		phase = Phase.RED;
-		originalExercise = validExercise = exercise;
-
-		bus.post(new ExerciseEvent(validExercise));
-		bus.post(new StartBabysteps(originalExercise.getBabyStepsTestTime()));
 	}
 
 	public Exercise getOriginalExercise() {

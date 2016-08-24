@@ -33,16 +33,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import tddtrainer.catalog.Exercise;
-import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
-import tddtrainer.events.PhaseChangeEvent;
 import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.events.TrackingWindowEvent;
 import tddtrainer.handbook.Handbook;
 import tddtrainer.logic.PhaseManager;
-import tddtrainer.logic.PhaseStatus;
 import tddtrainer.logic.events.NextPhaseEvent;
 import tddtrainer.logic.events.SwitchToGreenEvent;
 import tddtrainer.logic.events.SwitchToRedEvent;
@@ -90,6 +87,8 @@ public class RootLayoutController extends BorderPane implements Initializable {
 	private EditorViewController editors;
 
 	Logger logger = LoggerFactory.getLogger(RootLayoutController.class);
+
+	private Exercise exercise;
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -158,22 +157,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	}
 
-	// @Subscribe
-	// void changePhase(PhaseChangeEvent phaseChangeEvent) {
-	// Phase phase = phaseChangeEvent.getPhase();
-	// switch (phase) {
-	// case RED:
-	// switchToStatusRed();
-	// break;
-	// case GREEN:
-	// switchToStatusGreen();
-	// break;
-	// case REFACTOR:
-	// switchToStatusRefactor();
-	// break;
-	// }
-	// }
-
 	@Subscribe
 	public void switchToStatusRed(SwitchToRedEvent event) {
 		System.out.println("red");
@@ -208,7 +191,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void selectExercise(ActionEvent event) {
-		phaseManager.selectExercise();
+		bus.post(new SelectExerciseEvent());
 	}
 
 	@FXML
@@ -229,18 +212,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void handleNextStep(ActionEvent event) {
-		Exercise exercise = newExerciseFromCurrentInput();
-		PhaseStatus status = phaseManager.checkPhase(exercise, true);
-		bus.post(new NextPhaseEvent(exercise.getCode(), exercise.getTests()));
-		bus.post(new PhaseChangeEvent(status.getPhase()));
-	}
-
-	private Exercise newExerciseFromCurrentInput() {
-		Exercise oldExercise = phaseManager.getOriginalExercise();
-		Exercise exercise = new Exercise(oldExercise.getName(), oldExercise.getDescription());
-		exercise.addCode(new JavaClass(oldExercise.getCode(0).getName(), editors.getCode()));
-		exercise.addTest(new JavaClass(oldExercise.getTest(0).getName(), editors.getTest()));
-		return exercise;
+		bus.post(new NextPhaseEvent(exercise, editors.getCode(), editors.getTest()));
 	}
 
 	@FXML
@@ -276,7 +248,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@Subscribe
 	public void showExercise(ExerciseEvent exerciseEvent) {
-		Exercise exercise = exerciseEvent.getExercise();
+		exercise = exerciseEvent.getExercise();
 
 		if (exercise != null) {
 			exerciseLabel.setText(exercise.getName());

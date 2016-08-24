@@ -16,7 +16,7 @@ public class PhaseStatusTest {
 	public void testWithNoCompileErrorsAndNoFailingTests() {
 		EventBus bus = new EventBus();
 		PhaseStatus phaseStatus = new PhaseManager(
-				new ExerciseSelector(new FakeCatalogDatasource(), null), bus)
+				new ExerciseSelector(new FakeCatalogDatasource(), null, bus), bus)
 						.checkPhase(new FakeCatalogDatasource().loadCatalog().get(0), true);
 		assertEquals("Compile Errors: 0\nSuccessful Tests: 1, Failed Tests: 0\n",
 				phaseStatus.getExecutionResultAsString());
@@ -26,7 +26,7 @@ public class PhaseStatusTest {
 	public void testWithCompileErrors() {
 		EventBus bus = new EventBus();
 		PhaseStatus phaseStatus = new PhaseManager(
-				new ExerciseSelector(new FakeCatalogDatasource(), null), bus)
+				new ExerciseSelector(new FakeCatalogDatasource(), null, bus), bus)
 						.checkPhase(new FakeCatalogDatasource().loadCatalog().get(1), true);
 
 		String result = phaseStatus.getExecutionResultAsString();
@@ -40,7 +40,7 @@ public class PhaseStatusTest {
 	public void testWithNoCompileErrorsAndOneFailingTest() {
 		EventBus bus = new EventBus();
 		PhaseStatus phaseStatus = new PhaseManager(
-				new ExerciseSelector(new FakeCatalogDatasource(), null), bus)
+				new ExerciseSelector(new FakeCatalogDatasource(), null, bus), bus)
 						.checkPhase(new FakeCatalogDatasource().loadCatalog().get(2), true);
 		String result = phaseStatus.getExecutionResultAsString();
 		assertThat(result, containsString("Compile Errors: 0\nSuccessful Tests: 0, Failed Tests: 1\nClass:"));

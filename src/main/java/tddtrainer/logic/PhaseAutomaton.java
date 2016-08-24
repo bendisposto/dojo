@@ -6,7 +6,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
-import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.logic.events.NextPhaseEvent;
 import tddtrainer.logic.events.SwitchToGreenEvent;
@@ -38,10 +37,10 @@ public class PhaseAutomaton {
 
 	@Subscribe
 	public void next(NextPhaseEvent event) {
-		JavaClass code = event.getCode().get(0);
-		JavaClass test = event.getTests().get(0);
-		CompilationUnit testCompilationUnit = new CompilationUnit(test.getName(), test.getCode(), true);
-		CompilationUnit codeCompilationUnit = new CompilationUnit(code.getName(), code.getCode(), false);
+
+		CompilationUnit testCompilationUnit = event.getTestCU();
+		CompilationUnit codeCompilationUnit = event.getCodeCU();
+
 		JavaStringCompiler compiler = CompilerFactory.getCompiler(
 				codeCompilationUnit,
 				testCompilationUnit);

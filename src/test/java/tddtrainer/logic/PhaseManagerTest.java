@@ -25,9 +25,10 @@ public class PhaseManagerTest {
 
 	@Before
 	public void createPhaseManager() {
+		EventBus bus = new EventBus();
 		phaseManager = new PhaseManager(
-				new ExerciseSelector(new FakeCatalogDatasource(), null),
-				new EventBus());
+				new ExerciseSelector(new FakeCatalogDatasource(), null, bus),
+				bus);
 		List<Exercise> fcd = new FakeCatalogDatasource().loadCatalog();
 		exerciseWithCompileError = fcd.get(1);
 		exerciseWithTestError = fcd.get(2);
