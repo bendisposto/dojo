@@ -10,6 +10,7 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import tddtrainer.events.ExerciseEvent;
+import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.gui.CompilationXResult;
 import tddtrainer.logic.events.NextPhaseEvent;
 import tddtrainer.logic.events.SwitchToGreenEvent;
@@ -29,7 +30,7 @@ public class PhaseAutomaton {
 	private EventBus bus;
 
 	@Subscribe
-	public void init(ExerciseEvent event) {
+	private void init(ExerciseEvent event) {
 		CompilationUnit testCompilationUnit = event.getTestCU();
 		CompilationUnit codeCompilationUnit = event.getCodeCU();
 		JavaStringCompiler compiler = compile(testCompilationUnit, codeCompilationUnit);
@@ -45,7 +46,7 @@ public class PhaseAutomaton {
 	}
 
 	@Subscribe
-	public void next(NextPhaseEvent event) {
+	private void next(NextPhaseEvent event) {
 
 		CompilationUnit testCompilationUnit = event.getTestCU();
 		CompilationUnit codeCompilationUnit = event.getCodeCU();
@@ -63,6 +64,12 @@ public class PhaseAutomaton {
 			switchToRed(compiler);
 			break;
 		}
+	}
+
+	@Subscribe
+	private void reset(PhaseResetEvent event) {
+		currentState = Phase.RED;
+		bus.post(new SwitchToRedEvent());
 	}
 
 	private JavaStringCompiler compile(CompilationUnit testCompilationUnit, CompilationUnit codeCompilationUnit) {

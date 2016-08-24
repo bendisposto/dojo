@@ -22,6 +22,7 @@ import javafx.scene.layout.HBox;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExerciseEvent;
+import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.logic.events.SwitchToGreenEvent;
 import tddtrainer.logic.events.SwitchToRedEvent;
 import tddtrainer.logic.events.SwitchToRefactorEvent;
@@ -53,6 +54,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 	private HBox codeBox;
 
 	Logger logger = LoggerFactory.getLogger(EditorViewController.class);
+
+	String lastredCode;
 
 	@Inject
 	public EditorViewController(FXMLLoader loader, EventBus bus) {
@@ -119,6 +122,13 @@ public class EditorViewController extends SplitPane implements Initializable {
 	}
 
 	@Subscribe
+	private void resetToRed(PhaseResetEvent event) {
+		code.clear();
+		code.appendText(lastredCode);
+
+	}
+
+	@Subscribe
 	private void changePhaseToRed(SwitchToRedEvent event) {
 		code.disable(true);
 		tests.disable(false);
@@ -132,6 +142,7 @@ public class EditorViewController extends SplitPane implements Initializable {
 	private void changePhaseToGreen(SwitchToGreenEvent event) {
 		code.disable(false);
 		tests.disable(true);
+		lastredCode = code.getText();
 		code.setStyle("-fx-border-color: forestgreen;");
 		tests.setStyle("-fx-border-color: transparent;");
 		iGreenBox.setVisible(true);

@@ -148,7 +148,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 			this.resources = ResourceBundle.getBundle("bundles.tddt", locale);
 			bus.post(new LanguageChangeEvent(resources));
-			bus.post(new PhaseResetEvent());
 		}
 
 	}
@@ -157,7 +156,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 	public void switchToStatusRed(SwitchToRedEvent event) {
 		System.out.println("red");
 		showRedBox();
-		enableReset(true);
+		enableReset(false);
 		// statusLabel.setText("red");
 		// statusLabel.getStyleClass().clear();
 		// statusLabel.getStyleClass().add("statuslabel-red");
