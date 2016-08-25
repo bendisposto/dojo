@@ -35,14 +35,15 @@ import javafx.scene.text.Font;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
-import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.events.TrackingWindowEvent;
+import tddtrainer.events.automaton.ProceedPhaseRequest;
+import tddtrainer.events.automaton.ResetPhaseEvent;
+import tddtrainer.events.automaton.SwitchedToGreenEvent;
+import tddtrainer.events.automaton.SwitchedToRedEvent;
+import tddtrainer.events.automaton.SwitchedToRefactorEvent;
+import tddtrainer.events.gui.ShowSelectDialogRequest;
 import tddtrainer.handbook.Handbook;
-import tddtrainer.logic.events.NextPhaseEvent;
-import tddtrainer.logic.events.SwitchToGreenEvent;
-import tddtrainer.logic.events.SwitchToRedEvent;
-import tddtrainer.logic.events.SwitchToRefactorEvent;
 
 public class RootLayoutController extends BorderPane implements Initializable {
 
@@ -153,7 +154,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 	}
 
 	@Subscribe
-	public void switchToStatusRed(SwitchToRedEvent event) {
+	public void switchToStatusRed(SwitchedToRedEvent event) {
 		System.out.println("red");
 		showRedBox();
 		enableReset(false);
@@ -163,7 +164,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 	}
 
 	@Subscribe
-	public void switchToStatusGreen(SwitchToGreenEvent event) {
+	public void switchToStatusGreen(SwitchedToGreenEvent event) {
 		System.out.println("green");
 		enableReset(true);
 		hideRedBox();
@@ -173,7 +174,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 	}
 
 	@Subscribe
-	public void switchToStatusRefactor(SwitchToRefactorEvent event) {
+	public void switchToStatusRefactor(SwitchedToRefactorEvent event) {
 		System.out.println("refactor");
 		enableReset(false);
 		hideRedBox();
@@ -186,7 +187,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void selectExercise(ActionEvent event) {
-		bus.post(new SelectExerciseEvent());
+		bus.post(new ShowSelectDialogRequest());
 	}
 
 	@FXML
@@ -196,7 +197,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void reset(ActionEvent event) {
-		bus.post(new PhaseResetEvent());
+		bus.post(new ResetPhaseEvent());
 	}
 
 	// @FXML
@@ -207,7 +208,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void handleNextStep(ActionEvent event) {
-		bus.post(new NextPhaseEvent());
+		bus.post(new ProceedPhaseRequest());
 	}
 
 	@FXML

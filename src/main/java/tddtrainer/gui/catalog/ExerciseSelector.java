@@ -17,8 +17,7 @@ import tddtrainer.catalog.CatalogDatasourceIF;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.babysteps.Babysteps;
-import tddtrainer.events.babysteps.StartBabysteps;
-import tddtrainer.gui.SelectExerciseEvent;
+import tddtrainer.events.gui.ShowSelectDialogRequest;
 
 /**
  * Provides an gui window where a user can select an Exercise from a exercise
@@ -57,7 +56,7 @@ public class ExerciseSelector {
 	 * @return the selected Exercise or null if the dialog is canceled
 	 */
 	@Subscribe
-	public void selectExercise(SelectExerciseEvent event) {
+	public void selectExercise(ShowSelectDialogRequest event) {
 		Stage dialogStage = new Stage();
 		Exercise exercise = null;
 		try {
@@ -87,7 +86,6 @@ public class ExerciseSelector {
 			bus.post(Babysteps.OFF);
 		}
 		bus.post(new ExerciseEvent(exercise));
-		bus.post(new StartBabysteps(exercise.getBabyStepsTestTime()));
 	}
 
 }

@@ -26,12 +26,13 @@ import javafx.scene.layout.HBox;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
-import tddtrainer.events.PhaseResetEvent;
-import tddtrainer.gui.JavaCodeChangeEvent.CodeType;
-import tddtrainer.logic.ProceedPhaseEvent;
-import tddtrainer.logic.events.SwitchToGreenEvent;
-import tddtrainer.logic.events.SwitchToRedEvent;
-import tddtrainer.logic.events.SwitchToRefactorEvent;
+import tddtrainer.events.JavaCodeChangeEvent;
+import tddtrainer.events.JavaCodeChangeEvent.CodeType;
+import tddtrainer.events.automaton.ResetPhaseEvent;
+import tddtrainer.events.automaton.ProceedPhaseEvent;
+import tddtrainer.events.automaton.SwitchedToGreenEvent;
+import tddtrainer.events.automaton.SwitchedToRedEvent;
+import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 
 public class EditorViewController extends SplitPane implements Initializable {
 
@@ -150,14 +151,14 @@ public class EditorViewController extends SplitPane implements Initializable {
 	}
 
 	@Subscribe
-	private void resetToRed(PhaseResetEvent event) {
+	private void resetToRed(ResetPhaseEvent event) {
 		code.clear();
 		code.appendText(lastredCode);
 
 	}
 
 	@Subscribe
-	private void changePhaseToRed(SwitchToRedEvent event) {
+	private void changePhaseToRed(SwitchedToRedEvent event) {
 		code.disable(true);
 		tests.disable(false);
 		tests.setStyle("-fx-border-color: crimson;");
@@ -167,7 +168,7 @@ public class EditorViewController extends SplitPane implements Initializable {
 	}
 
 	@Subscribe
-	private void changePhaseToGreen(SwitchToGreenEvent event) {
+	private void changePhaseToGreen(SwitchedToGreenEvent event) {
 		code.disable(false);
 		tests.disable(true);
 		lastredCode = code.getText();
@@ -178,7 +179,7 @@ public class EditorViewController extends SplitPane implements Initializable {
 	}
 
 	@Subscribe
-	private void changePhaseToRefactor(SwitchToRefactorEvent event) {
+	private void changePhaseToRefactor(SwitchedToRefactorEvent event) {
 		code.disable(false);
 		tests.disable(false);
 		tests.setStyle("-fx-border-color: grey;");

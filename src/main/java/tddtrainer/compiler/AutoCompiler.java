@@ -9,8 +9,8 @@ import com.google.inject.Inject;
 
 import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExerciseEvent;
-import tddtrainer.gui.JavaCodeChangeEvent;
-import tddtrainer.gui.JavaCodeChangeEvent.CodeType;
+import tddtrainer.events.JavaCodeChangeEvent;
+import tddtrainer.events.JavaCodeChangeEvent.CodeType;
 import vk.core.api.CompilationUnit;
 import vk.core.api.CompilerFactory;
 import vk.core.api.JavaStringCompiler;

@@ -1,4 +1,4 @@
-package tddtrainer.gui;
+package tddtrainer.events;
 
 public class JavaCodeChangeEvent {
 

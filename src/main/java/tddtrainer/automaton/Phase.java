@@ -1,4 +1,4 @@
-package tddtrainer.logic;
+package tddtrainer.automaton;
 
 /**
  * RED: A new failing test should be created

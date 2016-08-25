@@ -1,4 +1,4 @@
-package tddtrainer;
+package tddtrainer.guice;
 import com.google.inject.Binding;
 import com.google.inject.Inject;
 import com.google.inject.Injector;

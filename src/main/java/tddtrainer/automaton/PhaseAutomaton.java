@@ -1,4 +1,4 @@
-package tddtrainer.logic;
+package tddtrainer.automaton;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
@@ -7,11 +7,12 @@ import com.google.inject.Inject;
 import tddtrainer.compiler.AutoCompiler;
 import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
-import tddtrainer.events.PhaseResetEvent;
-import tddtrainer.logic.events.NextPhaseEvent;
-import tddtrainer.logic.events.SwitchToGreenEvent;
-import tddtrainer.logic.events.SwitchToRedEvent;
-import tddtrainer.logic.events.SwitchToRefactorEvent;
+import tddtrainer.events.automaton.ProceedPhaseRequest;
+import tddtrainer.events.automaton.ResetPhaseEvent;
+import tddtrainer.events.automaton.ProceedPhaseEvent;
+import tddtrainer.events.automaton.SwitchedToGreenEvent;
+import tddtrainer.events.automaton.SwitchedToRedEvent;
+import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 
 public class PhaseAutomaton {
 
@@ -23,7 +24,7 @@ public class PhaseAutomaton {
 	private void init(ExerciseEvent event) {
 		autoCompiler.compileAndPost();
 		currentState = Phase.RED;
-		bus.post(new SwitchToRedEvent());
+		bus.post(new SwitchedToRedEvent());
 	}
 
 	@Inject
@@ -34,7 +35,7 @@ public class PhaseAutomaton {
 	}
 
 	@Subscribe
-	private void next(NextPhaseEvent event) {
+	private void next(ProceedPhaseRequest event) {
 		AutoCompilerResult compilerResult = autoCompiler.recompile();
 		switch (currentState) {
 		case RED:
@@ -50,9 +51,9 @@ public class PhaseAutomaton {
 	}
 
 	@Subscribe
-	private void reset(PhaseResetEvent event) {
+	private void reset(ResetPhaseEvent event) {
 		currentState = Phase.RED;
-		bus.post(new SwitchToRedEvent());
+		bus.post(new SwitchedToRedEvent());
 	}
 
 	private void switchToGreen(AutoCompilerResult compilerResult) {
@@ -60,7 +61,7 @@ public class PhaseAutomaton {
 				|| compilerResult.aSingleTestFails();
 		if (proceed) {
 			currentState = Phase.GREEN;
-			bus.post(new SwitchToGreenEvent());
+			bus.post(new SwitchedToGreenEvent());
 		}
 		bus.post(new ProceedPhaseEvent(proceed));
 	}
@@ -69,7 +70,7 @@ public class PhaseAutomaton {
 		boolean proceed = compilerResult.allClassesCompile() && compilerResult.allTestsGreen();
 		if (proceed) {
 			currentState = Phase.REFACTOR;
-			bus.post(new SwitchToRefactorEvent());
+			bus.post(new SwitchedToRefactorEvent());
 		}
 		bus.post(new ProceedPhaseEvent(proceed));
 	}
@@ -78,7 +79,7 @@ public class PhaseAutomaton {
 		boolean proceed = compilerResult.allClassesCompile() && compilerResult.allTestsGreen();
 		if (proceed) {
 			currentState = Phase.RED;
-			bus.post(new SwitchToRedEvent());
+			bus.post(new SwitchedToRedEvent());
 		}
 		bus.post(new ProceedPhaseEvent(proceed));
 	}

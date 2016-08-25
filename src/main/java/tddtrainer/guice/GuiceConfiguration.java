@@ -1,4 +1,4 @@
-package tddtrainer;
+package tddtrainer.guice;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -14,6 +14,7 @@ import com.google.inject.Provides;
 
 import javafx.fxml.FXMLLoader;
 import javafx.util.Callback;
+import tddtrainer.automaton.PhaseAutomaton;
 import tddtrainer.babysteps.BabystepsManager;
 import tddtrainer.catalog.CatalogDatasourceIF;
 import tddtrainer.catalog.XMLCatalogDatasource;
@@ -22,7 +23,6 @@ import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.EditorViewController;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelector;
-import tddtrainer.logic.PhaseAutomaton;
 
 public class GuiceConfiguration extends AbstractModule {
 

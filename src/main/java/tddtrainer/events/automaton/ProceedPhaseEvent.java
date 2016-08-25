@@ -1,4 +1,4 @@
-package tddtrainer.logic;
+package tddtrainer.events.automaton;
 
 public class ProceedPhaseEvent {
 

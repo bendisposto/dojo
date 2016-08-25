@@ -8,11 +8,12 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import javafx.application.Platform;
-import tddtrainer.events.PhaseResetEvent;
 import tddtrainer.events.TimeEvent;
+import tddtrainer.events.automaton.ResetPhaseEvent;
+import tddtrainer.events.automaton.SwitchedToGreenEvent;
+import tddtrainer.events.automaton.SwitchedToRedEvent;
+import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 import tddtrainer.events.babysteps.Babysteps;
-import tddtrainer.events.babysteps.StartBabysteps;
-import tddtrainer.events.babysteps.StopBabysteps;
 
 /**
  * An implementation of {@link BabystepsManagerIF} to force the user to make
@@ -36,9 +37,28 @@ public class BabystepsManager {
 	}
 
 	@Subscribe
-	public synchronized void start(StartBabysteps event) {
+	private void enterRed(SwitchedToRedEvent e) {
+		start();
+	}
+
+	@Subscribe
+	private void enterRed(SwitchedToGreenEvent e) {
+		start();
+	}
+
+	@Subscribe
+	private void enterRed(SwitchedToRefactorEvent e) {
+		stopped = true;
+	}
+
+	@Subscribe
+	void debug(TimeEvent e) {
+		System.out.print(".");
+	}
+
+	private synchronized void start() {
 		if (this.enabled) {
-			phaseTime = event.getTime();
+			phaseTime = 120;
 			startTime = LocalDateTime.now();
 			stopped = false;
 			if (!running) {
@@ -49,7 +69,7 @@ public class BabystepsManager {
 						long dTime = startTime.until(nowTime, ChronoUnit.SECONDS);
 
 						if (dTime > phaseTime) {
-							Platform.runLater(() -> bus.post(new PhaseResetEvent()));
+							Platform.runLater(() -> bus.post(new ResetPhaseEvent()));
 							running = false;
 							return;
 						}
@@ -70,15 +90,7 @@ public class BabystepsManager {
 	}
 
 	@Subscribe
-	public void stop(StopBabysteps event) {
-		if (this.enabled) {
-			this.stopped = true;
-		}
-	}
-
-	@Subscribe
 	public void switchBabysteps(Babysteps event) {
 		this.enabled = event.enabled;
 	}
-
 }
