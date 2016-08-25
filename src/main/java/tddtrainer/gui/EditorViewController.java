@@ -2,7 +2,10 @@ package tddtrainer.gui;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
+import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +14,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -20,9 +24,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import tddtrainer.catalog.Exercise;
-import tddtrainer.catalog.JavaClass;
+import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.PhaseResetEvent;
+import tddtrainer.gui.JavaCodeChangeEvent.CodeType;
+import tddtrainer.logic.ProceedPhaseEvent;
 import tddtrainer.logic.events.SwitchToGreenEvent;
 import tddtrainer.logic.events.SwitchToRedEvent;
 import tddtrainer.logic.events.SwitchToRefactorEvent;
@@ -56,9 +62,11 @@ public class EditorViewController extends SplitPane implements Initializable {
 	Logger logger = LoggerFactory.getLogger(EditorViewController.class);
 
 	String lastredCode;
+	private final EventBus bus;
 
 	@Inject
 	public EditorViewController(FXMLLoader loader, EventBus bus) {
+		this.bus = bus;
 		bus.register(this);
 		URL resource = getClass().getResource("EditorView.fxml");
 		loader.setLocation(resource);
@@ -80,6 +88,36 @@ public class EditorViewController extends SplitPane implements Initializable {
 		AnchorPane.setRightAnchor(this, 5.0);
 		AnchorPane.setTopAnchor(this, 60.0);
 
+		console.setStyle("-fx-font-family:monospace;");
+
+		subscribeToChangeStream(code, JavaCodeChangeEvent.CodeType.CODE);
+		subscribeToChangeStream(tests, JavaCodeChangeEvent.CodeType.TEST);
+
+	}
+
+	private void subscribeToChangeStream(JavaCodeArea area, CodeType type) {
+		area.richChanges().filter(ch -> !ch.getInserted().equals(ch.getRemoved())) // XXX
+				.successionEnds(Duration.ofMillis(500)).supplyTask(() -> compile(area))
+				.awaitLatest(area.richChanges())
+				.filterMap(t -> {
+					if (t.isSuccess()) {
+						return Optional.of(t.get());
+					} else {
+						t.getFailure().printStackTrace();
+						return Optional.empty();
+					}
+				}).subscribe(t -> bus.post(new JavaCodeChangeEvent(t, type)));
+	}
+
+	private Task<String> compile(JavaCodeArea area) {
+		Task<String> task = new Task<String>() {
+			@Override
+			protected String call() throws Exception {
+				return area.getText();
+			}
+		};
+		Executors.newSingleThreadExecutor().execute(task);
+		return task;
 	}
 
 	@Subscribe
@@ -102,23 +140,13 @@ public class EditorViewController extends SplitPane implements Initializable {
 	}
 
 	public void showExercise(Exercise exercise) {
-		for (JavaClass jclass : exercise.getCode()) {
-			// boolean wasDisabled = code.isDisable();
-			// code.setDisable(false);
-			code.clear();
-			code.appendText(jclass.getCode());
-			codeLabel.setText(jclass.getName());
-			// code.setDisable(wasDisabled);
-		}
+		code.clear();
+		code.appendText(exercise.getCode().getCode());
+		codeLabel.setText(exercise.getCode().getName());
+		tests.clear();
+		tests.appendText(exercise.getTest().getCode());
+		testLabel.setText(exercise.getTest().getName());
 
-		for (JavaClass jclass : exercise.getTests()) {
-			// boolean wasDisabled = code.isDisable();
-			// tests.setDisable(false);
-			tests.clear();
-			tests.appendText(jclass.getCode());
-			testLabel.setText(jclass.getName());
-			// tests.setDisable(wasDisabled);
-		}
 	}
 
 	@Subscribe
@@ -178,9 +206,13 @@ public class EditorViewController extends SplitPane implements Initializable {
 	}
 
 	@Subscribe
-	public void compileResult(CompilationXResult result) {
-		console.setText(result.getConsoleOutput());
-		if (result.canProceed()) {
+	public void compileResult(AutoCompilerResult result) {
+		console.setText(result.getCompilerOutput());
+	}
+
+	@Subscribe
+	private void proceeded(ProceedPhaseEvent event) {
+		if (event.hasProceeded()) {
 			console.setStyle("-fx-text-fill: grey");
 		} else {
 			console.setStyle("-fx-text-fill: red");

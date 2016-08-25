@@ -17,6 +17,7 @@ import javafx.util.Callback;
 import tddtrainer.babysteps.BabystepsManager;
 import tddtrainer.catalog.CatalogDatasourceIF;
 import tddtrainer.catalog.XMLCatalogDatasource;
+import tddtrainer.compiler.AutoCompiler;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.EditorViewController;
 import tddtrainer.gui.RootLayoutController;
@@ -41,6 +42,7 @@ public class GuiceConfiguration extends AbstractModule {
 		bind(EventBus.class).toInstance(bus);
 		bind(EditorViewController.class);
 		bind(RootLayoutController.class);
+		bind(AutoCompiler.class).asEagerSingleton();
 		bind(PhaseAutomaton.class).asEagerSingleton();
 		bind(BabystepsManager.class).asEagerSingleton();
 		bind(ExerciseSelector.class).asEagerSingleton();

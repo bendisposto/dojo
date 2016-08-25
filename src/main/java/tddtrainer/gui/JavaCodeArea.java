@@ -1,5 +1,8 @@
 package tddtrainer.gui;
 
+import static javafx.scene.input.KeyCode.*;
+import static org.fxmisc.wellbehaved.event.EventPattern.*;
+
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
@@ -14,18 +17,16 @@ import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.StyleSpans;
 import org.fxmisc.richtext.StyleSpansBuilder;
 import org.fxmisc.wellbehaved.event.EventHandlerHelper;
-import static org.fxmisc.wellbehaved.event.EventPattern.*;
 
 import javafx.concurrent.Task;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
-import static javafx.scene.input.KeyCode.*;
 
 /**
  * Source: The code is mainly copied from GitHub RichTextFX Repository but
- * modified to fit to this project.
- * The ANNOTATION_PATTERN was added.
- * (https://github.com/TomasMikula/RichTextFX/blob/master/richtextfx-demos/src/main/java/org/fxmisc/richtext/demo/JavaKeywordsAsync.java)
+ * modified to fit to this project. The ANNOTATION_PATTERN was added.
+ * (https://github.com/TomasMikula/RichTextFX/blob/master/richtextfx-demos/src/
+ * main/java/org/fxmisc/richtext/demo/JavaKeywordsAsync.java)
  * 
  * @author TomasMikula
  *
@@ -55,11 +56,10 @@ public class JavaCodeArea extends CodeArea {
 			+ ANNOTATION_PATTERN + ")" + "|(?<COMMENT>" + COMMENT_PATTERN + ")");
 
 	private ExecutorService executor;
-	
+
 	EventHandler<? super KeyEvent> tabHandler = EventHandlerHelper
-	        .on(keyPressed(TAB)).act(event -> this.replaceSelection("    "))
-	        .create();
-	
+			.on(keyPressed(TAB)).act(event -> this.replaceSelection("    "))
+			.create();
 
 	public JavaCodeArea() {
 		EventHandlerHelper.install(this.onKeyPressedProperty(), tabHandler);
@@ -88,6 +88,7 @@ public class JavaCodeArea extends CodeArea {
 			}
 		};
 		executor.execute(task);
+
 		return task;
 	}
 
@@ -128,11 +129,11 @@ public class JavaCodeArea extends CodeArea {
 			this.getStylesheets().add(this.getClass().getResource("java-keywords.css").toExternalForm());
 		}
 	}
-	
+
 	@Override
 	public void appendText(String text) {
 		text = text.replace("\t", "    ");
-        super.appendText(text);
-    }
+		super.appendText(text);
+	}
 
 }

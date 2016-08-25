@@ -207,7 +207,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
 	@FXML
 	private void handleNextStep(ActionEvent event) {
-		bus.post(new NextPhaseEvent(exercise, editors.getCode(), editors.getTest()));
+		bus.post(new NextPhaseEvent());
 	}
 
 	@FXML

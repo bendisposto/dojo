@@ -11,8 +11,8 @@ public class ExerciseEvent {
 
 	public ExerciseEvent(Exercise exercise) {
 		this.exercise = exercise;
-		this.code = exercise.getCode().get(0).getCode();
-		this.test = exercise.getTests().get(0).getCode();
+		this.code = exercise.getCode().getCode();
+		this.test = exercise.getTest().getCode();
 	}
 
 	public Exercise getExercise() {
@@ -20,12 +20,12 @@ public class ExerciseEvent {
 	}
 
 	public CompilationUnit getCodeCU() {
-		String name = exercise.getCode().get(0).getName();
+		String name = exercise.getCode().getName();
 		return new CompilationUnit(name, code, false);
 	}
 
 	public CompilationUnit getTestCU() {
-		String name = exercise.getTests().get(0).getName();
+		String name = exercise.getTest().getName();
 		return new CompilationUnit(name, test, true);
 	}
 

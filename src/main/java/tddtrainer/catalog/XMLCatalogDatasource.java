@@ -38,6 +38,7 @@ public class XMLCatalogDatasource implements CatalogDatasourceIF {
 
 	}
 
+	@Override
 	public void setXmlStream(InputStream xmlStream) {
 		this.xmlStream = xmlStream;
 	}
@@ -80,7 +81,7 @@ public class XMLCatalogDatasource implements CatalogDatasourceIF {
 
 					Element code = (Element) classes.item(k);
 
-					exercise.addCode(new JavaClass(code.getAttribute("name"), code.getTextContent()));
+					exercise.setCode(new JavaClass(code.getAttribute("name"), code.getTextContent()));
 				}
 
 				NodeList testsNode = exerciseNode.getElementsByTagName("tests");
@@ -94,7 +95,7 @@ public class XMLCatalogDatasource implements CatalogDatasourceIF {
 
 					Element code = (Element) tests.item(k);
 
-					exercise.addTest(new JavaClass(code.getAttribute("name"), code.getTextContent()));
+					exercise.setTest(new JavaClass(code.getAttribute("name"), code.getTextContent()));
 				}
 
 				exercises.add(exercise);

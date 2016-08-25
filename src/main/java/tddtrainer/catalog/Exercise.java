@@ -1,8 +1,5 @@
 package tddtrainer.catalog;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Contains a java class with code and an associated test class
  * 
@@ -12,8 +9,8 @@ public class Exercise {
 
 	private String name;
 	private String description;
-	private List<JavaClass> code;
-	private List<JavaClass> tests;
+	private JavaClass code;
+	private JavaClass test;
 	private boolean babyStepsActivated;
 	private int babyStepsCodeTime;
 	private int babyStepsTestTime;
@@ -23,8 +20,6 @@ public class Exercise {
 		description = "";
 		babyStepsCodeTime = 60;
 		babyStepsTestTime = 60;
-		code = new ArrayList<>();
-		tests = new ArrayList<>();
 	}
 
 	public Exercise(String name, String description) {
@@ -37,8 +32,8 @@ public class Exercise {
 		this();
 		this.name = that.name;
 		this.description = that.description;
-		this.code.addAll(that.code);
-		this.tests.addAll(that.tests);
+		this.code = that.code;
+		this.test = that.test;
 		this.babyStepsActivated = that.babyStepsActivated;
 		this.babyStepsCodeTime = that.babyStepsCodeTime;
 		this.babyStepsTestTime = that.babyStepsTestTime;
@@ -52,24 +47,12 @@ public class Exercise {
 		return description;
 	}
 
-	public List<JavaClass> getCode() {
+	public JavaClass getCode() {
 		return code;
 	}
 
-	public List<JavaClass> getTests() {
-		return tests;
-	}
-
-	public JavaClass getCode(int index) {
-		if (index >= code.size())
-			return null;
-		return code.get(index);
-	}
-
-	public JavaClass getTest(int index) {
-		if (index >= tests.size())
-			return null;
-		return tests.get(index);
+	public JavaClass getTest() {
+		return test;
 	}
 
 	public boolean isBabyStepsActivated() {
@@ -84,14 +67,6 @@ public class Exercise {
 		return babyStepsTestTime;
 	}
 
-	public void addCode(JavaClass code) {
-		this.code.add(code);
-	}
-
-	public void addTest(JavaClass test) {
-		this.tests.add(test);
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
@@ -100,12 +75,12 @@ public class Exercise {
 		this.description = description;
 	}
 
-	public void setCode(List<JavaClass> code) {
+	public void setCode(JavaClass code) {
 		this.code = code;
 	}
 
-	public void setTests(List<JavaClass> test) {
-		this.tests = test;
+	public void setTest(JavaClass test) {
+		this.test = test;
 	}
 
 	public void setBabyStepsActivated(boolean activated) {
@@ -123,7 +98,7 @@ public class Exercise {
 	@Override
 	public String toString() {
 		return String.format("{name=\"%s\" description=\"%s\" code=%s tests=%s}", name,
-				description.replaceAll("\n", " "), code.toString(), tests.toString());
+				description.replaceAll("\n", " "), code.toString(), test.toString());
 	}
 
 }
