@@ -36,18 +36,7 @@
                                     <Label fx:id="codeTimeLabel" />
                                  </children>
                               </HBox>
-                              <Slider fx:id="codeTimeSlider" blockIncrement="1.0" max="300.0" min="10.0" value="60.0" />
-                           </children>
-                        </VBox>
-                        <VBox>
-                           <children>
-                              <HBox spacing="5.0">
-                                 <children>
-                                    <Label text="%testTime" />
-                                    <Label fx:id="testTimeLabel" />
-                                 </children>
-                              </HBox>
-                              <Slider fx:id="testTimeSlider" blockIncrement="1.0" max="300.0" min="10.0" value="60.0" />
+                              <Slider fx:id="codeTimeSlider" blockIncrement="1.0" max="600.0" min="10.0" value="180.0" />
                            </children>
                         </VBox>
                      </children>

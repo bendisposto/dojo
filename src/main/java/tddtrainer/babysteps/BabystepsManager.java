@@ -51,14 +51,8 @@ public class BabystepsManager {
 		stopped = true;
 	}
 
-	@Subscribe
-	void debug(TimeEvent e) {
-		System.out.print(".");
-	}
-
 	private synchronized void start() {
 		if (this.enabled) {
-			phaseTime = 120;
 			startTime = LocalDateTime.now();
 			stopped = false;
 			if (!running) {
@@ -92,5 +86,6 @@ public class BabystepsManager {
 	@Subscribe
 	public void switchBabysteps(Babysteps event) {
 		this.enabled = event.enabled;
+		this.phaseTime = event.time;
 	}
 }

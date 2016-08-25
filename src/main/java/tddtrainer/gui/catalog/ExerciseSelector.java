@@ -81,9 +81,9 @@ public class ExerciseSelector {
 		if (exercise == null)
 			return;
 		if (exercise.isBabyStepsActivated()) {
-			bus.post(Babysteps.ON);
+			bus.post(new Babysteps(exercise.getBabyStepsCodeTime()));
 		} else {
-			bus.post(Babysteps.OFF);
+			bus.post(new Babysteps(-1));
 		}
 		bus.post(new ExerciseEvent(exercise));
 	}

@@ -28,8 +28,8 @@ import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.JavaCodeChangeEvent;
 import tddtrainer.events.JavaCodeChangeEvent.CodeType;
-import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.ProceedPhaseEvent;
+import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
 import tddtrainer.events.automaton.SwitchedToRedEvent;
 import tddtrainer.events.automaton.SwitchedToRefactorEvent;
@@ -63,6 +63,7 @@ public class EditorViewController extends SplitPane implements Initializable {
 	Logger logger = LoggerFactory.getLogger(EditorViewController.class);
 
 	String lastredCode;
+	String lastredTest;
 	private final EventBus bus;
 
 	@Inject
@@ -154,6 +155,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 	private void resetToRed(ResetPhaseEvent event) {
 		code.clear();
 		code.appendText(lastredCode);
+		tests.clear();
+		tests.appendText(lastredTest);
 
 	}
 
@@ -172,6 +175,7 @@ public class EditorViewController extends SplitPane implements Initializable {
 		code.disable(false);
 		tests.disable(true);
 		lastredCode = code.getText();
+		lastredTest = tests.getText();
 		code.setStyle("-fx-border-color: forestgreen;");
 		tests.setStyle("-fx-border-color: transparent;");
 		iGreenBox.setVisible(true);
