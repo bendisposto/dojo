@@ -62,8 +62,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 
 	Logger logger = LoggerFactory.getLogger(EditorViewController.class);
 
-	String lastredCode;
-	String lastredTest;
+	String revertToCode;
+	String revertToTest;
 	private final EventBus bus;
 
 	@Inject
@@ -148,15 +148,17 @@ public class EditorViewController extends SplitPane implements Initializable {
 		tests.clear();
 		tests.appendText(exercise.getTest().getCode());
 		testLabel.setText(exercise.getTest().getName());
+		revertToCode = code.getText();
+		revertToTest = tests.getText();
 
 	}
 
 	@Subscribe
 	private void resetToRed(ResetPhaseEvent event) {
 		code.clear();
-		code.appendText(lastredCode);
+		code.appendText(revertToCode);
 		tests.clear();
-		tests.appendText(lastredTest);
+		tests.appendText(revertToTest);
 
 	}
 
@@ -164,6 +166,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 	private void changePhaseToRed(SwitchedToRedEvent event) {
 		code.disable(true);
 		tests.disable(false);
+		revertToTest = tests.getText();
+		revertToCode = code.getText();
 		tests.setStyle("-fx-border-color: crimson;");
 		code.setStyle("-fx-border-color: transparent;");
 		iGreenBox.setVisible(false);
@@ -174,8 +178,7 @@ public class EditorViewController extends SplitPane implements Initializable {
 	private void changePhaseToGreen(SwitchedToGreenEvent event) {
 		code.disable(false);
 		tests.disable(true);
-		lastredCode = code.getText();
-		lastredTest = tests.getText();
+		revertToTest = tests.getText();
 		code.setStyle("-fx-border-color: forestgreen;");
 		tests.setStyle("-fx-border-color: transparent;");
 		iGreenBox.setVisible(true);
