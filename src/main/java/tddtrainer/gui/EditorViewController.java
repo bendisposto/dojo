@@ -127,9 +127,6 @@ public class EditorViewController extends SplitPane implements Initializable {
 		Exercise exercise = exerciseEvent.getExercise();
 		if (exercise != null) {
 			showExercise(exercise);
-			// changePhase(new
-			// PhaseChangeEvent(phaseManager.checkPhase(exercise,
-			// false).getPhase()));
 		}
 	}
 
@@ -226,16 +223,5 @@ public class EditorViewController extends SplitPane implements Initializable {
 			console.setStyle("-fx-text-fill: red");
 		}
 	}
-
-	// protected void setTutorialMode(boolean selected) {
-	// tutorialMode = selected;
-	// if (!selected) {
-	// rootLayoutController.hideRedBox();
-	// rootLayoutController.iRedBox.setVisible(false);
-	// iGreenBox.setVisible(false);
-	// AnchorPane.setRightAnchor(codeBox, 15.0);
-	// }
-	// phaseManager.resetPhase();
-	// }
 
 }
