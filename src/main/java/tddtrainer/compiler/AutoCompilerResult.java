@@ -1,7 +1,7 @@
 package tddtrainer.compiler;
 
 import java.util.Collection;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import tddtrainer.catalog.Exercise;
 import vk.core.api.CompilationUnit;
@@ -13,112 +13,107 @@ import vk.core.api.TestResult;
 
 public class AutoCompilerResult {
 
-	private final Collection<CompileError> errorsInTest;
-	private final TestResult testResult;
-	private final boolean hasCompileErrors;
-	private final boolean hasFailingTests;
-	private final String compilerOutput;
+    private final Collection<CompileError> errorsInTest;
+    private final TestResult testResult;
+    private final boolean hasCompileErrors;
+    private final boolean hasFailingTests;
+    private final String compilerOutput;
 
-	public AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
-		CompilationUnit testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
-		CompilationUnit codeCU = compiler.getCompilationUnitByName(exercise.getCode().getName());
-		errorsInTest = compiler.getCompilerResult().getCompilerErrorsForCompilationUnit(testCU);
-		testResult = compiler.getTestResult();
-		hasCompileErrors = compiler.getCompilerResult().hasCompileErrors();
-		hasFailingTests = hasCompileErrors ? false : compiler.getTestResult().getNumberOfFailedTests() != 0;
-		compilerOutput = getConsoleText(compiler, testCU, codeCU);
-	}
+    public AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
+        CompilationUnit testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
+        CompilationUnit codeCU = compiler.getCompilationUnitByName(exercise.getCode().getName());
 
-	public String getCompilerOutput() {
-		return compilerOutput;
-	}
+        Collection<CompileError> errors = compiler.getCompilerResult().getCompilerErrors();
+        errorsInTest = errors.stream().filter(e -> e.getCompilationUnit().isATest()).collect(Collectors.toList());
 
-	public boolean aMethodIsMissing() {
-		if (moreThanOneCompileErrorInTest(errorsInTest))
-			return false;
-		for (CompileError compileError : errorsInTest) {
-			if (!isMissingSymbol(compileError)) {
-				return false;
-			}
-		}
-		return true;
-	}
+        testResult = compiler.getTestResult();
+        hasCompileErrors = compiler.getCompilerResult().hasCompileErrors();
+        hasFailingTests = hasCompileErrors ? false : compiler.getTestResult().getNumberOfFailedTests() != 0;
+        compilerOutput = getConsoleText(compiler, testCU, codeCU);
+    }
 
-	private boolean moreThanOneCompileErrorInTest(Collection<CompileError> testErrors) {
-		return testErrors.size() != 1;
-	}
+    public String getCompilerOutput() {
+        return compilerOutput;
+    }
 
-	private boolean isMissingSymbol(CompileError ce) {
-		return ce.getMessage().contains("cannot find symbol");
-	}
+    public boolean aMethodIsMissing() {
+        if (moreThanOneCompileErrorInTest(errorsInTest))
+            return false;
+        for (CompileError compileError : errorsInTest) {
+            if (!isMissingSymbol(compileError)) {
+                return false;
+            }
+        }
+        return true;
+    }
 
-	public boolean aSingleTestFails() {
-		return testResult.getNumberOfFailedTests() == 1;
-	}
+    private boolean moreThanOneCompileErrorInTest(Collection<CompileError> testErrors) {
+        return testErrors.size() != 1;
+    }
 
-	public boolean allClassesCompile() {
-		return !hasCompileErrors;
-	}
+    private boolean isMissingSymbol(CompileError ce) {
+        return ce.getMessage().contains("cannot find symbol");
+    }
 
-	public boolean allTestsGreen() {
-		return !hasFailingTests;
-	}
+    public boolean aSingleTestFails() {
+        return testResult != null && testResult.getNumberOfFailedTests() == 1;
+    }
 
-	private String getConsoleText(JavaStringCompiler compiler, CompilationUnit testCU, CompilationUnit codeCU) {
+    public boolean allClassesCompile() {
+        return !hasCompileErrors;
+    }
 
-		CompilerResult compilerResult = compiler.getCompilerResult();
-		Map<CompilationUnit, Collection<CompileError>> compilerErrors = compilerResult.getCompilerErrors();
+    public boolean allTestsGreen() {
+        return !hasFailingTests;
+    }
 
-		int errors = countErrors(compilerErrors.values());
+    private String getConsoleText(JavaStringCompiler compiler, CompilationUnit testCU, CompilationUnit codeCU) {
 
-		TestResult testResult = compiler.getTestResult();
+        CompilerResult compilerResult = compiler.getCompilerResult();
+        Collection<CompileError> compilerErrors = compilerResult.getCompilerErrors();
 
-		StringBuffer sb = new StringBuffer();
-		sb.append("Compile Errors: ");
-		sb.append(errors);
-		sb.append("\n");
-		for (CompileError error : errorsInTest) {
-			sb.append(error.toString());
-			sb.append("\n");
-		}
+        int errors = compilerErrors.size();
 
-		if (errors == 0) {
-			appendTestResults(testResult, sb);
-		}
-		return sb.toString();
-	}
+        TestResult testResult = compiler.getTestResult();
 
-	private int countErrors(Collection<Collection<CompileError>> values) {
-		int sum = 0;
-		for (Collection<CompileError> v : values) {
-			sum += v.size();
-		}
-		return sum;
-	}
+        StringBuffer sb = new StringBuffer();
+        sb.append("Compile Errors: ");
+        sb.append(errors);
+        sb.append("\n");
+        for (CompileError error : errorsInTest) {
+            sb.append(error.toString());
+            sb.append("\n");
+        }
 
-	private void appendTestResults(TestResult testResult, StringBuffer sb) {
-		sb.append("Successful Tests: ");
-		sb.append(testResult.getNumberOfSuccessfulTests());
-		sb.append("\n");
-		sb.append("Ignored Tests: ");
-		sb.append(testResult.getNumberOfIgnoredTests());
-		sb.append("\n");
-		sb.append("Failed Tests: ");
-		sb.append(testResult.getNumberOfFailedTests());
-		sb.append("\n");
-		if (testResult.getNumberOfFailedTests() > 0) {
-			sb.append("Failures:\n");
-			Collection<TestFailure> failures = testResult.getTestFailures();
-			for (TestFailure failure : failures) {
-				sb.append("Class: ");
-				sb.append(failure.getTestClassName());
-				sb.append(", Method: ");
-				sb.append(failure.getMethodName());
-				sb.append("\n");
-				sb.append(failure.getMessage());
-				sb.append("\n");
-			}
-		}
-	}
+        if (errors == 0) {
+            appendTestResults(testResult, sb);
+        }
+        return sb.toString();
+    }
+
+    private void appendTestResults(TestResult testResult, StringBuffer sb) {
+        sb.append("Successful Tests: ");
+        sb.append(testResult.getNumberOfSuccessfulTests());
+        sb.append("\n");
+        sb.append("Ignored Tests: ");
+        sb.append(testResult.getNumberOfIgnoredTests());
+        sb.append("\n");
+        sb.append("Failed Tests: ");
+        sb.append(testResult.getNumberOfFailedTests());
+        sb.append("\n");
+        if (testResult.getNumberOfFailedTests() > 0) {
+            sb.append("Failures:\n");
+            Collection<TestFailure> failures = testResult.getTestFailures();
+            for (TestFailure failure : failures) {
+                sb.append("Class: ");
+                sb.append(failure.getTestClassName());
+                sb.append(", Method: ");
+                sb.append(failure.getMethodName());
+                sb.append("\n");
+                sb.append(failure.getMessage());
+                sb.append("\n");
+            }
+        }
+    }
 
 }
