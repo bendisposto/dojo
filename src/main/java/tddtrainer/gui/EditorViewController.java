@@ -58,6 +58,9 @@ public class EditorViewController extends SplitPane implements Initializable {
     private HBox iGreenBox;
 
     @FXML
+    private Label iRedLabel1;
+
+    @FXML
     private HBox codeBox;
 
     @FXML
@@ -175,6 +178,7 @@ public class EditorViewController extends SplitPane implements Initializable {
         tests.setStyle("-fx-border-color: crimson;");
         code.setStyle("-fx-border-color: transparent;");
         iGreenBox.setVisible(false);
+        iRedLabel1.setText("Write code to make all tests pass");
         AnchorPane.setRightAnchor(codeBox, 15.0);
     }
 
@@ -195,7 +199,8 @@ public class EditorViewController extends SplitPane implements Initializable {
         tests.disable(false);
         tests.setStyle("-fx-border-color: grey;");
         code.setStyle("-fx-border-color: grey;");
-        iGreenBox.setVisible(false);
+        iGreenBox.setVisible(true);
+        iRedLabel1.setText("Modify code, but keep all tests passing");
         AnchorPane.setRightAnchor(codeBox, 15.0);
     }
 

@@ -76,6 +76,9 @@ public class RootLayoutController extends BorderPane implements Initializable {
     private HBox iRedBox;
 
     @FXML
+    private Label iRedLabel;
+
+    @FXML
     private MenuItem showDescription;
 
     @FXML
@@ -105,6 +108,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
         enableShowDescription(false);
         hideRedBox();
         setKeyboardAccelerators();
+        resetButton.setStyle("-fx-background-color: red");
     }
 
     private void setKeyboardAccelerators() {
@@ -186,8 +190,11 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
     @Subscribe
     public void switchToStatusRed(SwitchedToRedEvent event) {
+        nextStepButton.setText("Switch to phase GREEN");
+        nextStepButton.setStyle("-fx-background-color: green");
         System.out.println("red");
         showRedBox();
+        iRedLabel.setText("Write exactly one failing test");
         enableReset(false);
         // statusLabel.setText("red");
         // statusLabel.getStyleClass().clear();
@@ -196,6 +203,9 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
     @Subscribe
     public void switchToStatusGreen(SwitchedToGreenEvent event) {
+        nextStepButton.setText("Switch to phase REFACTOR");
+        nextStepButton.setStyle("-fx-background-color: #6f8391");
+
         System.out.println("green");
         enableReset(true);
         hideRedBox();
@@ -206,9 +216,13 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
     @Subscribe
     public void switchToStatusRefactor(SwitchedToRefactorEvent event) {
+        nextStepButton.setText("Switch to phase RED");
+        nextStepButton.setStyle("-fx-background-color: red");
+
         System.out.println("refactor");
         enableReset(false);
-        hideRedBox();
+        showRedBox();
+        iRedLabel.setText("Modify tests, but keep them passing");
         timeLabel.setText("");
         timerImage.setVisible(false);
         // statusLabel.setText("refactor");

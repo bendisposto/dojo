@@ -122,9 +122,6 @@
 								<Insets left="15.0" top="5.0" />
 							</HBox.margin>
 						</Label>
-
-
-
 					</children>
 				</HBox>
 			</bottom>
