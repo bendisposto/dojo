@@ -243,6 +243,7 @@ public class EditorViewController extends SplitPane implements Initializable {
         String style = "-fx-font-size:" + fontSize + "px";
         code.setStyle(style);
         tests.setStyle(style);
+        console.setStyle(style);
     }
 
     @Subscribe

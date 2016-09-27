@@ -108,12 +108,11 @@ public class RootLayoutController extends BorderPane implements Initializable {
         enableShowDescription(false);
         hideRedBox();
         setKeyboardAccelerators();
-        resetButton.setStyle("-fx-background-color: red");
     }
 
     private void setKeyboardAccelerators() {
-        zoomin.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, KeyCombination.META_DOWN));
-        zoomout.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT9, KeyCombination.META_DOWN));
+        zoomin.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, KeyCombination.SHORTCUT_DOWN));
+        zoomout.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT9, KeyCombination.SHORTCUT_DOWN));
     }
 
     @Inject

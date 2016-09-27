@@ -98,17 +98,24 @@
 		</AnchorPane>
 		<BorderPane>
 			<center>
-				<AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="Infinity"
+				<BorderPane minHeight="50.0" minWidth="0.0" prefHeight="Infinity"
 					prefWidth="160.0">
-					<children>
+					<top>
+						<Label text="Output:"></Label>
+						<font>
+							<Font size="18.0" />
+						</font>
+					</top>
+					<center>
 						<TextArea fx:id="console" editable="false" layoutX="29.0"
 							layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
 							AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
-							AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0" />
-					</children>
-				</AnchorPane>
+							AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0"
+							style="-fx-text-fill: black" />
+					</center>
+				</BorderPane>
 			</center>
-			<bottom>
+			<top>
 				<HBox minHeight="32.0" minWidth="0.0" prefHeight="32.0"
 					prefWidth="160.0" fx:id="statuscontainer">
 
@@ -124,7 +131,7 @@
 						</Label>
 					</children>
 				</HBox>
-			</bottom>
+			</top>
 		</BorderPane>
 	</items>
 </fx:root>
