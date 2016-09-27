@@ -28,6 +28,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -75,6 +78,12 @@ public class RootLayoutController extends BorderPane implements Initializable {
     @FXML
     private MenuItem showDescription;
 
+    @FXML
+    private MenuItem zoomin;
+
+    @FXML
+    private MenuItem zoomout;
+
     private ResourceBundle resources;
 
     private EventBus bus;
@@ -95,6 +104,12 @@ public class RootLayoutController extends BorderPane implements Initializable {
         enableReset(false);
         enableShowDescription(false);
         hideRedBox();
+        setKeyboardAccelerators();
+    }
+
+    private void setKeyboardAccelerators() {
+        zoomin.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, KeyCombination.META_DOWN));
+        zoomout.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT9, KeyCombination.META_DOWN));
     }
 
     @Inject
@@ -152,6 +167,21 @@ public class RootLayoutController extends BorderPane implements Initializable {
             bus.post(new LanguageChangeEvent(resources));
         }
 
+    }
+
+    @FXML
+    private void increaseFontSize(ActionEvent event) {
+        editors.zoomIn();
+    }
+
+    @FXML
+    private void decreaseFontSize(ActionEvent event) {
+        editors.zoomOut();
+    }
+
+    @FXML
+    private void resetFontSize(ActionEvent event) {
+        editors.zoomDefault();
     }
 
     @Subscribe

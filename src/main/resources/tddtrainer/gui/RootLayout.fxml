@@ -32,14 +32,19 @@
 									text="%menu.exercise.openexercise" />
 								<MenuItem fx:id="showDescription" mnemonicParsing="false"
 									onAction="#showExerciseDescription" text="%menu.exercise.showDescription" />
-								<!--  <MenuItem mnemonicParsing="false" onAction="#showProgress"
-									text="%menu.exercise.tracking" /> -->
+								<!-- <MenuItem mnemonicParsing="false" onAction="#showProgress" text="%menu.exercise.tracking" 
+									/> -->
 							</items>
 						</Menu>
-						<Menu mnemonicParsing="false" text="%menu.settings">
+		
+						<Menu mnemonicParsing="false" text="%menu.view">
 							<items>
-								<MenuItem mnemonicParsing="false" onAction="#changeLanguage"
-									text="%menu.settings.language" />
+								<MenuItem mnemonicParsing="false" onAction="#increaseFontSize" fx:id="zoomin"
+									text="%menu.view.increase" />
+								<MenuItem mnemonicParsing="false" onAction="#decreaseFontSize"  fx:id="zoomout"
+									text="%menu.view.decrease" />
+								<MenuItem mnemonicParsing="false" onAction="#resetFontSize"
+									text="%menu.view.reset" />
 							</items>
 						</Menu>
 						<Menu mnemonicParsing="false" text="%menu.help">
