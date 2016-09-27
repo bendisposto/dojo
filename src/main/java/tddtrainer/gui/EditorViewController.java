@@ -166,7 +166,8 @@ public class EditorViewController extends SplitPane implements Initializable {
         code.appendText(revertToCode);
         tests.clear();
         tests.appendText(revertToTest);
-
+        code.getUndoManager().forgetHistory();
+        tests.getUndoManager().forgetHistory();
     }
 
     @Subscribe
