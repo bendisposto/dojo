@@ -1,12 +1,12 @@
 package tddtrainer.compiler;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 import tddtrainer.catalog.Exercise;
 import vk.core.api.CompilationUnit;
 import vk.core.api.CompileError;
-import vk.core.api.CompilerResult;
 import vk.core.api.JavaStringCompiler;
 import vk.core.api.TestFailure;
 import vk.core.api.TestResult;
@@ -18,13 +18,16 @@ public class AutoCompilerResult {
     private final boolean hasCompileErrors;
     private final boolean hasFailingTests;
     private final String compilerOutput;
+    private Collection<CompileError> allErrors;
 
     public AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
         CompilationUnit testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
         CompilationUnit codeCU = compiler.getCompilationUnitByName(exercise.getCode().getName());
 
-        Collection<CompileError> errors = compiler.getCompilerResult().getCompilerErrors();
-        errorsInTest = errors.stream().filter(e -> e.getCompilationUnit().isATest()).collect(Collectors.toList());
+        allErrors = new ArrayList<>();
+        allErrors.addAll(compiler.getCompilerResult().getCompilerErrors());
+        allErrors.addAll(compiler.getCompilerResult().getStyleErrors());
+        errorsInTest = allErrors.stream().filter(e -> e.getCompilationUnit().isATest()).collect(Collectors.toList());
 
         testResult = compiler.getTestResult();
         hasCompileErrors = compiler.getCompilerResult().hasCompileErrors();
@@ -69,10 +72,7 @@ public class AutoCompilerResult {
 
     private String getConsoleText(JavaStringCompiler compiler, CompilationUnit testCU, CompilationUnit codeCU) {
 
-        CompilerResult compilerResult = compiler.getCompilerResult();
-        Collection<CompileError> compilerErrors = compilerResult.getCompilerErrors();
-
-        int errors = compilerErrors.size();
+        int errors = allErrors.size();
 
         TestResult testResult = compiler.getTestResult();
 
@@ -80,7 +80,7 @@ public class AutoCompilerResult {
         sb.append("Compile Errors: ");
         sb.append(errors);
         sb.append("\n");
-        for (CompileError error : compilerErrors) {
+        for (CompileError error : allErrors) {
             sb.append(error.toString());
             sb.append("\n");
         }
