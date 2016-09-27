@@ -80,7 +80,7 @@ public class AutoCompilerResult {
         sb.append("Compile Errors: ");
         sb.append(errors);
         sb.append("\n");
-        for (CompileError error : errorsInTest) {
+        for (CompileError error : compilerErrors) {
             sb.append(error.toString());
             sb.append("\n");
         }
