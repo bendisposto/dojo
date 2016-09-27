@@ -11,6 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.BorderPane?>
 
 <fx:root type="SplitPane" dividerPositions="0.7" orientation="VERTICAL"
 	prefHeight="200.0" prefWidth="160.0" style="-fx-background-color: white;"
@@ -95,9 +96,9 @@
 				</SplitPane>
 			</children>
 		</AnchorPane>
-		<VBox>
-			<children>
-				<AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="100.0"
+		<BorderPane>
+			<center>
+				<AnchorPane minHeight="50.0" minWidth="0.0" prefHeight="Infinity"
 					prefWidth="160.0">
 					<children>
 						<TextArea fx:id="console" editable="false" layoutX="29.0"
@@ -106,6 +107,8 @@
 							AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0" />
 					</children>
 				</AnchorPane>
+			</center>
+			<bottom>
 				<HBox minHeight="32.0" minWidth="0.0" prefHeight="32.0"
 					prefWidth="160.0" fx:id="statuscontainer">
 
@@ -124,7 +127,7 @@
 
 					</children>
 				</HBox>
-			</children>
-		</VBox>
+			</bottom>
+		</BorderPane>
 	</items>
 </fx:root>
