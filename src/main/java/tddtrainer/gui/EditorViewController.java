@@ -60,6 +60,12 @@ public class EditorViewController extends SplitPane implements Initializable {
     @FXML
     private HBox codeBox;
 
+    @FXML
+    HBox statuscontainer;
+
+    @FXML
+    Label status;
+
     Logger logger = LoggerFactory.getLogger(EditorViewController.class);
 
     String revertToCode;
@@ -237,6 +243,22 @@ public class EditorViewController extends SplitPane implements Initializable {
     @Subscribe
     public void compileResult(AutoCompilerResult result) {
         console.setText(result.getCompilerOutput());
+
+        if (result.allClassesCompile()) {
+            if (result.allTestsGreen()) {
+                status.setText("Code and Test compile, and the tests are passing.");
+                status.setStyle("-fx-text-fill: white");
+                statuscontainer.setStyle("-fx-background-color: green");
+            } else {
+                status.setText("Code and Test compile, but the tests are not passing.");
+                status.setStyle("-fx-text-fill: white");
+                statuscontainer.setStyle("-fx-background-color: red");
+            }
+        } else {
+            status.setText("Code or Test (or both) contain errors.");
+            status.setStyle("-fx-text-fill: white");
+            statuscontainer.setStyle("-fx-background-color: black");
+        }
     }
 
     @Subscribe
