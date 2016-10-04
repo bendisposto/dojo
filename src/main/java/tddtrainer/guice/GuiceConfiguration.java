@@ -26,54 +26,54 @@ import tddtrainer.gui.catalog.ExerciseSelector;
 
 public class GuiceConfiguration extends AbstractModule {
 
-	private final EventBus bus = new EventBus();
+    private final EventBus bus = new EventBus();
 
-	private final Logger logger = LoggerFactory.getLogger(GuiceConfiguration.class);
+    private final Logger logger = LoggerFactory.getLogger(GuiceConfiguration.class);
 
-	private ResourceBundle bundle;
+    private ResourceBundle bundle;
 
-	public GuiceConfiguration() {
-		bus.register(this);
-	}
+    public GuiceConfiguration() {
+        bus.register(this);
+    }
 
-	@Override
-	protected void configure() {
-		logger.trace("Configuring Dependency Injection");
-		bind(EventBus.class).toInstance(bus);
-		bind(EditorViewController.class);
-		bind(RootLayoutController.class);
-		bind(AutoCompiler.class).asEagerSingleton();
-		bind(PhaseAutomaton.class).asEagerSingleton();
-		bind(BabystepsManager.class).asEagerSingleton();
-		bind(ExerciseSelector.class).asEagerSingleton();
-		bind(CatalogDatasourceIF.class).to(XMLCatalogDatasource.class);
-		logger.trace("Configuring Dependency Injection completed");
-	}
+    @Override
+    protected void configure() {
+        logger.trace("Configuring Dependency Injection");
+        bind(EventBus.class).toInstance(bus);
+        bind(EditorViewController.class);
+        bind(RootLayoutController.class);
+        bind(AutoCompiler.class).asEagerSingleton();
+        bind(PhaseAutomaton.class).asEagerSingleton();
+        bind(BabystepsManager.class).asEagerSingleton();
+        bind(ExerciseSelector.class).asEagerSingleton();
+        bind(CatalogDatasourceIF.class).to(XMLCatalogDatasource.class);
+        logger.trace("Configuring Dependency Injection completed");
+    }
 
-	@Provides
-	public FXMLLoader provideLoader(final Injector injector, GuiceBuilderFactory builderFactory,
-			ResourceBundle bundle) {
+    @Provides
+    public FXMLLoader provideLoader(final Injector injector, GuiceBuilderFactory builderFactory,
+            ResourceBundle bundle) {
 
-		Callback<Class<?>, Object> guiceControllerFactory = type -> injector.getInstance(type);
+        Callback<Class<?>, Object> guiceControllerFactory = type -> injector.getInstance(type);
 
-		FXMLLoader fxmlLoader = new FXMLLoader();
-		fxmlLoader.setBuilderFactory(builderFactory);
-		fxmlLoader.setControllerFactory(guiceControllerFactory);
-		fxmlLoader.setResources(bundle);
-		return fxmlLoader;
-	}
+        FXMLLoader fxmlLoader = new FXMLLoader();
+        fxmlLoader.setBuilderFactory(builderFactory);
+        fxmlLoader.setControllerFactory(guiceControllerFactory);
+        fxmlLoader.setResources(bundle);
+        return fxmlLoader;
+    }
 
-	@Subscribe
-	public void changeLanguage(LanguageChangeEvent event) {
-		bundle = event.getBundle();
-	}
+    @Subscribe
+    public void changeLanguage(LanguageChangeEvent event) {
+        bundle = event.getBundle();
+    }
 
-	@Provides
-	public synchronized ResourceBundle getBundle() {
-		if (bundle == null) {
-			Locale locale = new Locale("en", "EN");
-			bundle = ResourceBundle.getBundle("bundles.tddt", locale);
-		}
-		return bundle;
-	}
+    @Provides
+    public synchronized ResourceBundle getBundle() {
+        if (bundle == null) {
+            Locale locale = new Locale("en", "EN");
+            bundle = ResourceBundle.getBundle("bundles.tddt", locale);
+        }
+        return bundle;
+    }
 }

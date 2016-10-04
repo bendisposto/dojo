@@ -9,17 +9,17 @@ import tddtrainer.guice.GuiceConfiguration;
 
 public class Startup extends Application {
 
-	private Injector injector;
+    private Injector injector;
 
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		injector = Guice.createInjector(new GuiceConfiguration());
-		Main main = injector.getInstance(Main.class);
-		main.start(primaryStage);
-	}
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        injector = Guice.createInjector(new GuiceConfiguration());
+        Main main = injector.getInstance(Main.class);
+        main.start(primaryStage);
+    }
 
-	public static void main(String[] args) {
-		launch(args);
-	}
+    public static void main(String[] args) {
+        launch(args);
+    }
 
 }

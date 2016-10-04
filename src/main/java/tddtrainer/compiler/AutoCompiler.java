@@ -17,56 +17,56 @@ import vk.core.api.JavaStringCompiler;
 
 public class AutoCompiler {
 
-	private EventBus bus;
+    private EventBus bus;
 
-	Logger logger = LoggerFactory.getLogger(AutoCompiler.class);
+    Logger logger = LoggerFactory.getLogger(AutoCompiler.class);
 
-	private Exercise exercise;
+    private Exercise exercise;
 
-	private String code;
-	private String test;
+    private String code;
+    private String test;
 
-	@Inject
-	public AutoCompiler(EventBus bus) {
-		this.bus = bus;
-		bus.register(this);
-	}
+    @Inject
+    public AutoCompiler(EventBus bus) {
+        this.bus = bus;
+        bus.register(this);
+    }
 
-	@Subscribe
-	private void codeChanged(JavaCodeChangeEvent event) {
-		logger.debug("Changed {} detected, recompiling", event.getType());
-		storeChangedCode(event);
-		compileAndPost();
-	}
+    @Subscribe
+    private void codeChanged(JavaCodeChangeEvent event) {
+        logger.debug("Changed {} detected, recompiling", event.getType());
+        storeChangedCode(event);
+        compileAndPost();
+    }
 
-	private void storeChangedCode(JavaCodeChangeEvent event) {
-		if (event.getType() == CodeType.CODE) {
-			code = event.getText();
-		} else {
-			test = event.getText();
-		}
-	}
+    private void storeChangedCode(JavaCodeChangeEvent event) {
+        if (event.getType() == CodeType.CODE) {
+            code = event.getText();
+        } else {
+            test = event.getText();
+        }
+    }
 
-	public void compileAndPost() {
-		AutoCompilerResult compilerResult = recompile();
-		bus.post(compilerResult);
-	}
+    public void compileAndPost() {
+        AutoCompilerResult compilerResult = recompile();
+        bus.post(compilerResult);
+    }
 
-	public synchronized AutoCompilerResult recompile() {
-		CompilationUnit codeCU = new CompilationUnit(exercise.getCode().getName(), code, false);
-		CompilationUnit testCU = new CompilationUnit(exercise.getTest().getName(), test, true);
-		JavaStringCompiler compiler = CompilerFactory.getCompiler(codeCU, testCU);
-		compiler.compileAndRunTests();
-		AutoCompilerResult result = new AutoCompilerResult(compiler, exercise);
-		return result;
-	}
+    public synchronized AutoCompilerResult recompile() {
+        CompilationUnit codeCU = new CompilationUnit(exercise.getCode().getName(), code, false);
+        CompilationUnit testCU = new CompilationUnit(exercise.getTest().getName(), test, true);
+        JavaStringCompiler compiler = CompilerFactory.getCompiler(codeCU, testCU);
+        compiler.compileAndRunTests();
+        AutoCompilerResult result = new AutoCompilerResult(compiler, exercise);
+        return result;
+    }
 
-	@Subscribe
-	private synchronized void exerciseChange(ExerciseEvent event) {
-		exercise = event.getExercise();
-		code = exercise.getCode().getCode();
-		test = exercise.getTest().getCode();
-		logger.debug("Exercise changed {}", event.getExercise().getName());
-	}
+    @Subscribe
+    private synchronized void exerciseChange(ExerciseEvent event) {
+        exercise = event.getExercise();
+        code = exercise.getCode().getCode();
+        test = exercise.getTest().getCode();
+        logger.debug("Exercise changed {}", event.getExercise().getName());
+    }
 
 }
