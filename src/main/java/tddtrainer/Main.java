@@ -1,8 +1,6 @@
 package tddtrainer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 
 import javax.tools.ToolProvider;
 
@@ -18,10 +16,11 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.RootLayoutController;
-import tddtrainer.gui.catalog.ExerciseSelector;
+import tddtrainer.gui.catalog.ExerciseSelectorController;
 
 /**
  * The Main Class to get the Application started.
@@ -32,16 +31,18 @@ public class Main extends Application {
     private Stage primaryStage;
 
     Logger logger = LoggerFactory.getLogger(Main.class);
-    private String location = "https://gist.githubusercontent.com/bendisposto/22c56ad002e562b14beea0449b981b0d/raw/f968a2dbebc4830ed94e4e47beb25e50c9901288/catalog.xml";
     private final EventBus bus;
     private RootLayoutController root;
 
+    private ExerciseSelectorController exerciseSelector;
+
     @Inject
     public Main(EventBus bus,
-            ExerciseSelector exerciseSelector, RootLayoutController root) {
+            ExerciseSelectorController exerciseSelector, RootLayoutController root) {
         this.bus = bus;
+        this.exerciseSelector = exerciseSelector;
         this.root = root;
-        exerciseSelector.getDataSource().setXmlStream(getDatasourceStream());
+        // exerciseSelector.getDataSource().setXmlStream(getDatasourceStream());
         bus.register(exerciseSelector);
     }
 
@@ -55,7 +56,7 @@ public class Main extends Application {
 
         logger.trace("Setting up primary stage.");
         this.primaryStage = primaryStage;
-        primaryStage.setTitle("TDDTrainer");
+        primaryStage.setTitle("TDD Trainer");
         primaryStage.getIcons().add(new Image("/tddtrainer/gui/app_icon.png"));
         primaryStage.setOnCloseRequest((e) -> System.exit(0));
 
@@ -76,41 +77,17 @@ public class Main extends Application {
         }
     }
 
-    private InputStream getDatasourceStream() {
-        InputStream xmlStream = null;
-        try {
-            logger.debug("Fetch Catalog from {}", location);
-            URL url = new URL(location);
-            xmlStream = url.openStream();
-        } catch (IOException e) {
-            showFailedToLoadCatalogAlert(e.getClass().getSimpleName(), e.getLocalizedMessage());
-            System.exit(-1);
-        }
-        return xmlStream;
-    }
-
-    private void showFailedToLoadCatalogAlert(String exceptionName, String excptionMessage) {
-        logger.error("Error fetching catalog. {} : {}", exceptionName, excptionMessage);
-        Alert alert = new Alert(AlertType.ERROR);
-        alert.setTitle("Error fetching catalog");
-        alert.setHeaderText(null);
-        alert.setContentText(String.format(
-                "The catalog could not be downloaded. \n\n"
-                        + "The cause is %s : %s \n\n"
-                        + "Please verify that you are online. "
-                        + "If the problem still occurs please notify the administrator. \n\n"
-                        + "The program will now be terminated.",
-                exceptionName, excptionMessage));
-        alert.showAndWait();
-    }
-
     @Subscribe
     public void initRootLayout(LanguageChangeEvent event) throws IOException {
         // loader.setLocation(Main.class.getResource("gui/RootLayout.fxml"));
         // rootLayout = (BorderPane) loader.load();
         // RootLayoutController controller = loader.getController();
         // controller.init(phaseManager, bus);
-        primaryStage.setScene(new Scene(root));
+
+        StackPane theRoot = new StackPane();
+        theRoot.getChildren().add(exerciseSelector);
+
+        primaryStage.setScene(new Scene(theRoot));
         primaryStage.show();
         primaryStage.setWidth(1100);
         primaryStage.setMinWidth(1100);

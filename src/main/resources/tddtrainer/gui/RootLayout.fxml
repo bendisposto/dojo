@@ -98,7 +98,7 @@
 							</font>
 						</Button>
 						<Button fx:id="nextStepButton" disable="true"
-							mnemonicParsing="false" onAction="#handleNextStep" text="%nextStep"
+							mnemonicParsing="false" onAction="#handleNextStep" text="            "
 							textFill="WHITE">
 							<font>
 								<Font name="System Bold" size="12.0" />
