@@ -100,36 +100,28 @@
 
 		<BorderPane>
 			<center>
-				<BorderPane minHeight="50.0" minWidth="0.0" prefHeight="Infinity"
-					prefWidth="160.0">
-					<top>
-						<Label text="Output:"></Label>
-						<font>
-							<Font size="18.0" />
-						</font>
-					</top>
-					<center>
-						<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308"
-							maxWidth="1.7976931348623157E308">
-							<items>
-								<AnchorPane minHeight="0.0" minWidth="0.0"
-									prefHeight="252.0" prefWidth="310.0">
-									<TextArea fx:id="console" editable="false"
-										AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-										layoutX="29.0" layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
-										style="-fx-text-fill: black" />
-								</AnchorPane>
-								<AnchorPane minHeight="0.0" minWidth="0.0"
-									prefHeight="252.0" prefWidth="310.0">
-									<TextArea fx:id="testoutput" editable="false"
-										AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
-										layoutX="29.0" layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
-										style="-fx-text-fill: black" />
-								</AnchorPane>
-							</items>
-						</SplitPane>
-					</center>
-				</BorderPane>
+				<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308"
+					maxWidth="1.7976931348623157E308">
+					<items>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="252.0"
+							prefWidth="310.0">
+							<TextArea fx:id="console" editable="false"
+								AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+								AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+								layoutX="29.0" layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
+								style="-fx-text-fill: black" />
+						</AnchorPane>
+						<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="252.0"
+							prefWidth="310.0">
+							<TextArea fx:id="testoutput" editable="false"
+								AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+								AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+								layoutX="29.0" layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
+								style="-fx-text-fill: black" />
+						</AnchorPane>
+					</items>
+				</SplitPane>
+
 			</center>
 			<top>
 				<HBox minHeight="32.0" minWidth="0.0" prefHeight="32.0"
