@@ -96,6 +96,8 @@
 				</SplitPane>
 			</children>
 		</AnchorPane>
+
+
 		<BorderPane>
 			<center>
 				<BorderPane minHeight="50.0" minWidth="0.0" prefHeight="Infinity"
@@ -107,11 +109,25 @@
 						</font>
 					</top>
 					<center>
-						<TextArea fx:id="console" editable="false" layoutX="29.0"
-							layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
-							AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="0.0"
-							AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="5.0"
-							style="-fx-text-fill: black" />
+						<SplitPane dividerPositions="0.5" maxHeight="1.7976931348623157E308"
+							maxWidth="1.7976931348623157E308">
+							<items>
+								<AnchorPane minHeight="0.0" minWidth="0.0"
+									prefHeight="252.0" prefWidth="310.0">
+									<TextArea fx:id="console" editable="false"
+										AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+										layoutX="29.0" layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
+										style="-fx-text-fill: black" />
+								</AnchorPane>
+								<AnchorPane minHeight="0.0" minWidth="0.0"
+									prefHeight="252.0" prefWidth="310.0">
+									<TextArea fx:id="testoutput" editable="false"
+										AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+										layoutX="29.0" layoutY="-46.0" prefHeight="200.0" prefWidth="200.0"
+										style="-fx-text-fill: black" />
+								</AnchorPane>
+							</items>
+						</SplitPane>
 					</center>
 				</BorderPane>
 			</center>

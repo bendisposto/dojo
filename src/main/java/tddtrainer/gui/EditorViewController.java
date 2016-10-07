@@ -41,6 +41,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 
     @FXML
     private TextArea console;
+    @FXML
+    private TextArea testoutput;
 
     @FXML
     private AnchorPane codePane;
@@ -250,7 +252,7 @@ public class EditorViewController extends SplitPane implements Initializable {
     @Subscribe
     public void compileResult(AutoCompilerResult result) {
         console.setText(result.getCompilerOutput());
-        System.out.println(result.getTestOutput());
+        testoutput.setText(result.getTestOutput());
         if (result.allClassesCompile()) {
             if (result.allTestsGreen()) {
                 status.setText("Code and Test compile, and the tests are passing.");
