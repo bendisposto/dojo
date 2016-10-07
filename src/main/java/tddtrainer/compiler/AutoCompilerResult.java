@@ -19,6 +19,7 @@ public class AutoCompilerResult {
     private final boolean hasFailingTests;
     private final String compilerOutput;
     private Collection<CompileError> allErrors;
+    private final String testOutput;
 
     public AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
         CompilationUnit testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
@@ -33,10 +34,15 @@ public class AutoCompilerResult {
         hasCompileErrors = compiler.getCompilerResult().hasCompileErrors();
         hasFailingTests = hasCompileErrors ? false : compiler.getTestResult().getNumberOfFailedTests() != 0;
         compilerOutput = getConsoleText(compiler, testCU, codeCU);
+        testOutput = testResult == null ? "" : testResult.getOutput();
     }
 
     public String getCompilerOutput() {
         return compilerOutput;
+    }
+
+    public String getTestOutput() {
+        return testOutput;
     }
 
     public boolean aMethodIsMissing() {
