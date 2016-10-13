@@ -8,10 +8,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.eventbus.EventBus;
+import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import javafx.application.Platform;
-import javafx.beans.binding.Bindings;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -19,19 +21,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.Slider;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import tddtrainer.catalog.CatalogDatasourceIF;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExerciseEvent;
+import tddtrainer.events.Views;
+import tddtrainer.events.gui.ShowSelectDialogRequest;
 
 public class ExerciseSelectorController extends BorderPane {
 
@@ -43,16 +43,8 @@ public class ExerciseSelectorController extends BorderPane {
     private Button selectButton;
     @FXML
     private Button cancelButton;
-    @FXML
-    private HBox sliderPane;
-    @FXML
-    private CheckBox activateBabyStepsCheckBox;
-    @FXML
-    private Label codeTimeLabel;
-    @FXML
-    private Slider codeTimeSlider;
 
-    private Exercise selectedExercise;
+    private ObjectProperty<Exercise> selectedExercise = new SimpleObjectProperty<>();
     private EventBus bus;
 
     private String location = "https://gist.githubusercontent.com/bendisposto/22c56ad002e562b14beea0449b981b0d/raw/f968a2dbebc4830ed94e4e47beb25e50c9901288/catalog.xml";
@@ -65,7 +57,7 @@ public class ExerciseSelectorController extends BorderPane {
         this.bus = bus;
         this.selector = selector;
         this.bus.register(this);
-        URL resource = getClass().getResource("ExerciseSelector.fxml");
+        URL resource = getClass().getResource("ExerciseSelector2.fxml");
         loader.setLocation(resource);
         loader.setController(this);
         loader.setRoot(this);
@@ -106,6 +98,9 @@ public class ExerciseSelectorController extends BorderPane {
 
     @FXML
     public void initialize() {
+
+        cancelButton.disableProperty().bind(selectedExercise.isNull());
+
         CatalogDatasourceIF dataSource = selector.getDataSource();
         dataSource.setXmlStream(getDatasourceStream());
         exerciseList.setItems(FXCollections.observableArrayList(dataSource.loadCatalog()));
@@ -143,34 +138,43 @@ public class ExerciseSelectorController extends BorderPane {
         exerciseList.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
         descriptionField.addEventFilter(KeyEvent.KEY_PRESSED, eventHandler);
 
-        codeTimeLabel.textProperty().bind(Bindings.format("%.0fs", codeTimeSlider.valueProperty()));
         // testTimeLabel.textProperty().bind(Bindings.format("%.0fs",
         // testTimeSlider.valueProperty()));
 
-        sliderPane.setVisible(false);
         Platform.runLater(() -> exerciseList.requestFocus());
     }
 
     public void selectButtonAction() {
         Exercise selectedExercise = exerciseList.getSelectionModel().getSelectedItem();
         if (selectedExercise != null) {
-            selectedExercise.setBabyStepsActivated(activateBabyStepsCheckBox.isSelected());
-            selectedExercise.setBabyStepsCodeTime((int) codeTimeSlider.getValue());
-            this.selectedExercise = selectedExercise;
+            this.selectedExercise.set(selectedExercise);
         }
         bus.post(new ExerciseEvent(selectedExercise));
     }
 
     public void cancelButtonAction() {
-        selectedExercise = null;
+        bus.post(Views.WORKING);
     }
 
     public void checkBabySteps() {
-        sliderPane.setVisible(activateBabyStepsCheckBox.isSelected());
     }
 
     public Exercise getSelectedExercise() {
-        return selectedExercise;
+        return selectedExercise.getValue();
+    }
+
+    @Subscribe
+    public void showExerciseSelector(ShowSelectDialogRequest event) {
+        bus.post(Views.SELECTOR);
+    }
+
+    @Subscribe
+    public void setVisible(Views v) {
+        if (v.equals(Views.SELECTOR)) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
     }
 
 }

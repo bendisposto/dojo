@@ -19,6 +19,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import tddtrainer.events.LanguageChangeEvent;
+import tddtrainer.events.Views;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelectorController;
 
@@ -32,17 +33,15 @@ public class Main extends Application {
 
     Logger logger = LoggerFactory.getLogger(Main.class);
     private final EventBus bus;
-    private RootLayoutController root;
-
-    private ExerciseSelectorController exerciseSelector;
+    private final RootLayoutController workingWindow;
+    private final ExerciseSelectorController exerciseSelectionWindow;
 
     @Inject
     public Main(EventBus bus,
             ExerciseSelectorController exerciseSelector, RootLayoutController root) {
         this.bus = bus;
-        this.exerciseSelector = exerciseSelector;
-        this.root = root;
-        // exerciseSelector.getDataSource().setXmlStream(getDatasourceStream());
+        this.exerciseSelectionWindow = exerciseSelector;
+        this.workingWindow = root;
         bus.register(exerciseSelector);
     }
 
@@ -84,10 +83,10 @@ public class Main extends Application {
         // RootLayoutController controller = loader.getController();
         // controller.init(phaseManager, bus);
 
-        StackPane theRoot = new StackPane();
-        theRoot.getChildren().add(exerciseSelector);
+        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow);
+        bus.post(Views.SELECTOR);
 
-        primaryStage.setScene(new Scene(theRoot));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
         primaryStage.setWidth(1100);
         primaryStage.setMinWidth(1100);
