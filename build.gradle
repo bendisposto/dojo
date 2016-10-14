@@ -25,6 +25,8 @@ dependencies {
 	compile 'com.google.inject:guice:4.1.0'
 	compile 'com.mashape.unirest:unirest-java:1.4.9'
 	compile 'org.jsoup:jsoup:1.9.2'
+    compile 'com.google.code.gson:gson:2.7'
+    
 }
 
 mainClassName = "tddtrainer.Startup"
