@@ -3,6 +3,7 @@ package tddtrainer.gui.catalog;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +22,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
@@ -145,6 +147,18 @@ public class ExerciseSelectorController extends BorderPane {
     }
 
     public void selectButtonAction() {
+        if (selectedExercise.isNotNull().get()) {
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Changing exercise");
+            alert.setHeaderText("Do you really want to change the exercise?");
+            alert.setContentText(
+                    "If you click ok, the current exercise will be aborted and all changes are discarded!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() != ButtonType.OK) {
+                return;
+            }
+        }
         Exercise selectedExercise = exerciseList.getSelectionModel().getSelectedItem();
         if (selectedExercise != null) {
             this.selectedExercise.set(selectedExercise);
