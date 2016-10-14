@@ -68,23 +68,21 @@ public class JavaCodeArea extends CodeArea {
                 if (this.getCaretColumn() < text.length() || this.getCaretColumn() == 0) {
                     this.replaceSelection("\n");
                 } else {
-                    String previous = this.getParagraph(index - 1).toString();
-                    this.replaceSelection("\n" + getIndentionString(previous));
+                    this.replaceSelection("\n" + getIndentionString(text));
                 }
             })
             .create();
 
     private String getIndentionString(String previous) {
-        int i = 0;
         StringBuilder sb = new StringBuilder();
-        if (previous.length() > 0) {
-            while (Character.isWhitespace(previous.charAt(i))) {
-                sb.append(previous.charAt(i));
-                i++;
-            }
+        for (int j = 0; j < previous.length(); j++) {
+            char c = previous.charAt(j);
+            if (Character.isWhitespace(c))
+                sb.append(c);
+            else
+                break;
         }
-        String indention = sb.toString();
-        return indention;
+        return sb.toString();
     }
 
     public JavaCodeArea() {
