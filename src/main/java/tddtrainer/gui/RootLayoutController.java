@@ -41,6 +41,7 @@ import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.events.TrackingWindowEvent;
+import tddtrainer.events.Views;
 import tddtrainer.events.automaton.ProceedPhaseRequest;
 import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
@@ -287,9 +288,18 @@ public class RootLayoutController extends BorderPane implements Initializable {
     }
 
     @Subscribe
+    public void setVisible(Views v) {
+        if (v.equals(Views.WORKING)) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
+
+    @Subscribe
     public void showExercise(ExerciseEvent exerciseEvent) {
         exercise = exerciseEvent.getExercise();
-
+        bus.post(Views.WORKING);
         if (exercise != null) {
             exerciseLabel.setText(exercise.getName());
             exerciseLabel.setTooltip(new Tooltip(exercise.getName()));

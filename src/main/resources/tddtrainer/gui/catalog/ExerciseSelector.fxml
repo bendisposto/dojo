@@ -15,75 +15,77 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="376.0" prefWidth="606.0" style="-fx-background-color: white;" stylesheets="@../tddtrainer.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tddtrainer.gui.catalog.ExerciseSelectorController">
-   <bottom>
-      <VBox>
-         <children>
-            <HBox prefHeight="17.0" prefWidth="566.0" spacing="20.0">
-               <children>
-                  <CheckBox fx:id="activateBabyStepsCheckBox" mnemonicParsing="false" onAction="#checkBabySteps" text="%babysteps">
-                     <HBox.margin>
-                        <Insets top="7.0" />
-                     </HBox.margin>
-                  </CheckBox>
-                  <HBox fx:id="sliderPane" spacing="20.0">
-                     <children>
-                        <VBox>
-                           <children>
-                              <HBox spacing="5.0">
-                                 <children>
-                                    <Label text="%codeTime" />
-                                    <Label fx:id="codeTimeLabel" />
-                                 </children>
-                              </HBox>
-                              <Slider fx:id="codeTimeSlider" blockIncrement="1.0" max="600.0" min="10.0" value="180.0" />
-                           </children>
-                        </VBox>
-                     </children>
-                  </HBox>
-               </children>
-               <padding>
-                  <Insets top="5.0" />
-               </padding>
-            </HBox>
-            <HBox prefHeight="29.0" prefWidth="566.0" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
-               <children>
-                  <Button fx:id="selectButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#selectButtonAction" text="%select" />
-                  <Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancelButtonAction" text="%cancel" />
-               </children>
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
-            </HBox>
-         </children>
-         <padding>
-            <Insets top="10.0" />
-         </padding>
-      </VBox>
-   </bottom>
-   <padding>
-      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-   </padding>
-   <left>
-      <VBox prefHeight="285.0" prefWidth="280.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="%exercise">
-               <font>
-                  <Font size="21.0" />
-               </font></Label>
-            <ListView fx:id="exerciseList" prefHeight="264.0" prefWidth="288.0" />
-         </children>
-      </VBox>
-   </left>
-   <center>
-      <VBox prefHeight="285.0" prefWidth="270.0" BorderPane.alignment="CENTER">
-         <children>
-            <Label text="%description">
-               <font>
-                  <Font size="21.0" />
-               </font></Label>
-            <TextArea fx:id="descriptionField" editable="false" prefHeight="264.0" prefWidth="306.0" wrapText="true" />
-         </children>
-      </VBox>
-   </center>
-</BorderPane>
+<fx:root maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" style="-fx-background-color: white;" stylesheets="@../tddtrainer.css" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+	<bottom>
+		<VBox>
+			<children>
+				<HBox prefHeight="17.0" prefWidth="566.0" spacing="20.0">
+					<children>
+						<CheckBox fx:id="activateBabyStepsCheckBox" mnemonicParsing="false" onAction="#checkBabySteps" text="%babysteps">
+							<HBox.margin>
+								<Insets top="7.0" />
+							</HBox.margin>
+						</CheckBox>
+						<HBox fx:id="sliderPane" spacing="20.0">
+							<children>
+								<VBox>
+									<children>
+										<HBox spacing="5.0">
+											<children>
+												<Label text="%codeTime" />
+												<Label fx:id="codeTimeLabel" />
+											</children>
+										</HBox>
+										<Slider fx:id="codeTimeSlider" blockIncrement="1.0" max="600.0" min="10.0" value="180.0" />
+									</children>
+								</VBox>
+							</children>
+						</HBox>
+					</children>
+					<padding>
+						<Insets top="5.0" />
+					</padding>
+				</HBox>
+				<HBox prefHeight="29.0" prefWidth="566.0" spacing="10.0" BorderPane.alignment="CENTER_RIGHT">
+					<children>
+						<Button fx:id="selectButton" defaultButton="true" disable="true" mnemonicParsing="false" onAction="#selectButtonAction" text="%select" />
+						<Button fx:id="cancelButton" cancelButton="true" mnemonicParsing="false" onAction="#cancelButtonAction" text="%cancel" />
+					</children>
+					<padding>
+						<Insets top="10.0" />
+					</padding>
+				</HBox>
+			</children>
+			<padding>
+				<Insets top="10.0" />
+			</padding>
+		</VBox>
+	</bottom>
+	<padding>
+		<Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+	</padding>
+	<left>
+		<VBox prefHeight="285.0" prefWidth="280.0" BorderPane.alignment="CENTER">
+			<children>
+				<Label text="%exercise">
+					<font>
+						<Font size="21.0" />
+					</font>
+				</Label>
+				<ListView fx:id="exerciseList" prefHeight="264.0" prefWidth="288.0" />
+			</children>
+		</VBox>
+	</left>
+	<center>
+		<VBox prefHeight="285.0" prefWidth="270.0" BorderPane.alignment="CENTER">
+			<children>
+				<Label text="%description">
+					<font>
+						<Font size="21.0" />
+					</font>
+				</Label>
+				<TextArea fx:id="descriptionField" editable="false" prefHeight="264.0" prefWidth="306.0" wrapText="true" />
+			</children>
+		</VBox>
+	</center>
+</fx:root>
