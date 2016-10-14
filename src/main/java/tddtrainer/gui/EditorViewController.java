@@ -253,7 +253,7 @@ public class EditorViewController extends SplitPane implements Initializable {
     @Subscribe
     public void compileResult(AutoCompilerResult result) {
         console.setText("Compiler Output:\n================\n" + result.getCompilerOutput());
-        testoutput.setText("Console Output:\n============\n" + result.getTestOutput());
+        testoutput.setText("System.out/System.err:\n=================\n" + result.getTestOutput());
         if (result.allClassesCompile()) {
             if (result.allTestsGreen()) {
                 status.setText("Code and Test compile, and the tests are passing.");
