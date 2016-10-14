@@ -60,7 +60,7 @@ public class ExerciseSelectorController extends BorderPane {
         this.bus = bus;
         this.selector = selector;
         this.bus.register(this);
-        URL resource = getClass().getResource("ExerciseSelector2.fxml");
+        URL resource = getClass().getResource("ExerciseSelector.fxml");
         loader.setLocation(resource);
         loader.setController(this);
         loader.setRoot(this);
