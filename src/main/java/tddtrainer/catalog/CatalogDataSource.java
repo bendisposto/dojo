@@ -15,7 +15,7 @@ import com.mashape.unirest.request.GetRequest;
 
 public class CatalogDataSource {
 
-    private String defaultLocation = "https://gist.githubusercontent.com/bendisposto/059f1750f68b53ab72a945914705d2ed/raw/30e0f58346adb11e3820819abe316667958cb6df/katalogue.json";
+    private String defaultLocation = "https://www3.hhu.de/stups/downloads/dojo/katalog.json";
     private String location;
 
     static Gson gson = new Gson();

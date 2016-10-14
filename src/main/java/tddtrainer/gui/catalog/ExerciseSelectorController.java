@@ -28,10 +28,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.web.WebView;
 import tddtrainer.catalog.CatalogDataSource;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExerciseEvent;
@@ -43,7 +43,7 @@ public class ExerciseSelectorController extends BorderPane {
     @FXML
     private ListView<Exercise> exerciseList;
     @FXML
-    private TextArea descriptionField;
+    private WebView descriptionField;
     @FXML
     private Button selectButton;
     @FXML
@@ -53,12 +53,12 @@ public class ExerciseSelectorController extends BorderPane {
     private EventBus bus;
 
     Logger logger = LoggerFactory.getLogger(ExerciseSelectorController.class);
-    private ExerciseSelector selector;
+    private final CatalogDataSource datasource;
 
     @Inject
-    public ExerciseSelectorController(FXMLLoader loader, EventBus bus, ExerciseSelector selector) {
+    public ExerciseSelectorController(FXMLLoader loader, EventBus bus, CatalogDataSource datasource) {
         this.bus = bus;
-        this.selector = selector;
+        this.datasource = datasource;
         this.bus.register(this);
         URL resource = getClass().getResource("ExerciseSelector.fxml");
         loader.setLocation(resource);
@@ -91,10 +91,9 @@ public class ExerciseSelectorController extends BorderPane {
 
         cancelButton.disableProperty().bind(selectedExercise.isNull());
 
-        CatalogDataSource dataSource = selector.getDataSource();
         List<Exercise> catalog;
         try {
-            catalog = dataSource.loadCatalog();
+            catalog = datasource.loadCatalog();
         } catch (JsonSyntaxException | UnirestException e) {
             showFailedToLoadCatalogAlert(e.getClass().getSimpleName(), e.getMessage());
             catalog = new ArrayList<>();
@@ -122,7 +121,7 @@ public class ExerciseSelectorController extends BorderPane {
 
         exerciseList.getSelectionModel().selectedItemProperty().addListener((o, oldValue, newValue) -> {
             selectButton.setDisable(false);
-            descriptionField.setText(newValue.getDescription());
+            descriptionField.getEngine().loadContent(newValue.getDescription());
         });
 
         EventHandler<KeyEvent> eventHandler = (e) -> {

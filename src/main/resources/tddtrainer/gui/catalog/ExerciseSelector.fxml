@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.web.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import java.lang.*?>
@@ -9,18 +10,18 @@
 	<left>
 		<ListView fx:id="exerciseList" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
 	</left>
-	<center>
-		<TextArea fx:id="descriptionField" prefHeight="200.0" prefWidth="200.0" wrapText="true" BorderPane.alignment="CENTER" />
-	</center>
 	<bottom>
 		<ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<buttons>
-				<Button fx:id="selectButton" mnemonicParsing="false" text="Select" onAction="#selectButtonAction" />
-				<Button fx:id="cancelButton" mnemonicParsing="false" text="Cancel" onAction="#cancelButtonAction" />
+				<Button fx:id="selectButton" mnemonicParsing="false" onAction="#selectButtonAction" text="Select" />
+				<Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancelButtonAction" text="Cancel" />
 			</buttons>
 			<BorderPane.margin>
 				<Insets right="15.0" />
 			</BorderPane.margin>
 		</ButtonBar>
 	</bottom>
+   <center>
+      <WebView fx:id="descriptionField" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
 </fx:root>
