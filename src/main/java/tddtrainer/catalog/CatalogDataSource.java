@@ -20,13 +20,6 @@ public class CatalogDataSource {
 
     static Gson gson = new Gson();
 
-    public static void main(String[] args) throws JsonSyntaxException, UnirestException {
-        CatalogDataSource c = new CatalogDataSource();
-        for (Exercise e : c.loadCatalog()) {
-            System.out.println(e);
-        }
-    }
-
     public void setLocation(String location) {
         this.location = location;
     }
