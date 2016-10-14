@@ -61,8 +61,35 @@ public class JavaCodeArea extends CodeArea {
             .on(keyPressed(TAB)).act(event -> this.replaceSelection("    "))
             .create();
 
+    EventHandler<? super KeyEvent> enterHandler = EventHandlerHelper
+            .on(keyPressed(ENTER)).act(event -> {
+                int index = this.getCurrentParagraph();
+                String text = this.getParagraph(index).toString();
+                if (this.getCaretColumn() < text.length() || this.getCaretColumn() == 0) {
+                    this.replaceSelection("\n");
+                } else {
+                    String previous = this.getParagraph(index - 1).toString();
+                    this.replaceSelection("\n" + getIndentionString(previous));
+                }
+            })
+            .create();
+
+    private String getIndentionString(String previous) {
+        int i = 0;
+        StringBuilder sb = new StringBuilder();
+        if (previous.length() > 0) {
+            while (Character.isWhitespace(previous.charAt(i))) {
+                sb.append(previous.charAt(i));
+                i++;
+            }
+        }
+        String indention = sb.toString();
+        return indention;
+    }
+
     public JavaCodeArea() {
         EventHandlerHelper.install(this.onKeyPressedProperty(), tabHandler);
+        EventHandlerHelper.install(this.onKeyPressedProperty(), enterHandler);
         executor = Executors.newSingleThreadExecutor();
         this.setParagraphGraphicFactory(LineNumberFactory.get(this));
         this.richChanges().filter(ch -> !ch.getInserted().equals(ch.getRemoved())) // XXX
