@@ -247,6 +247,7 @@ public class EditorViewController extends SplitPane implements Initializable {
         code.setStyle(style);
         tests.setStyle(style);
         console.setStyle(style);
+        testoutput.setStyle(style);
     }
 
     @Subscribe
