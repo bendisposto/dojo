@@ -163,9 +163,6 @@ public class ExerciseSelectorController extends BorderPane {
         bus.post(Views.WORKING);
     }
 
-    public void checkBabySteps() {
-    }
-
     public Exercise getSelectedExercise() {
         return selectedExercise.getValue();
     }
