@@ -16,8 +16,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.util.Callback;
 import tddtrainer.automaton.PhaseAutomaton;
 import tddtrainer.babysteps.BabystepsManager;
-import tddtrainer.catalog.CatalogDatasourceIF;
-import tddtrainer.catalog.XMLCatalogDatasource;
+import tddtrainer.catalog.CatalogDataSource;
 import tddtrainer.compiler.AutoCompiler;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.EditorViewController;
@@ -46,7 +45,7 @@ public class GuiceConfiguration extends AbstractModule {
         bind(PhaseAutomaton.class).asEagerSingleton();
         bind(BabystepsManager.class).asEagerSingleton();
         bind(ExerciseSelector.class).asEagerSingleton();
-        bind(CatalogDatasourceIF.class).to(XMLCatalogDatasource.class);
+        bind(CatalogDataSource.class).asEagerSingleton();
         logger.trace("Configuring Dependency Injection completed");
     }
 

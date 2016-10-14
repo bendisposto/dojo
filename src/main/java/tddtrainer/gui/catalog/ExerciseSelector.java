@@ -6,7 +6,7 @@ import com.google.common.eventbus.EventBus;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 
-import tddtrainer.catalog.CatalogDatasourceIF;
+import tddtrainer.catalog.CatalogDataSource;
 
 /**
  * Provides an gui window where a user can select an Exercise from a exercise
@@ -16,7 +16,7 @@ import tddtrainer.catalog.CatalogDatasourceIF;
  */
 public class ExerciseSelector {
 
-    private CatalogDatasourceIF dataSource;
+    private CatalogDataSource dataSource;
     private Provider<ResourceBundle> bundleProvider;
     private EventBus bus;
 
@@ -27,14 +27,14 @@ public class ExerciseSelector {
      *            the data source from where the catalog should be read
      */
     @Inject
-    public ExerciseSelector(CatalogDatasourceIF dataSource, Provider<ResourceBundle> bundleProvider, EventBus bus) {
+    public ExerciseSelector(CatalogDataSource dataSource, Provider<ResourceBundle> bundleProvider, EventBus bus) {
         this.dataSource = dataSource;
         this.bundleProvider = bundleProvider;
         this.bus = bus;
         bus.register(this);
     }
 
-    public CatalogDatasourceIF getDataSource() {
+    public CatalogDataSource getDataSource() {
         return dataSource;
     }
 
