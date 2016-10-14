@@ -13,6 +13,7 @@ import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
 import tddtrainer.events.automaton.SwitchedToRedEvent;
 import tddtrainer.events.automaton.SwitchedToRefactorEvent;
+import tddtrainer.events.babysteps.Babysteps;
 
 public class PhaseAutomaton {
 
@@ -24,6 +25,8 @@ public class PhaseAutomaton {
     private void init(ExerciseEvent event) {
         autoCompiler.compileAndPost();
         currentState = Phase.RED;
+        if (event.getExercise().isBabyStepsActivated())
+            bus.post(new Babysteps(180));
         bus.post(new SwitchedToRedEvent());
     }
 

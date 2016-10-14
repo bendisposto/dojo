@@ -12,32 +12,8 @@ public class Exercise {
     private JavaClass code;
     private JavaClass test;
     private boolean babyStepsActivated;
-    private int babyStepsCodeTime;
-    private int babyStepsTestTime;
-
-    public Exercise() {
-        name = "";
-        description = "";
-        babyStepsCodeTime = 60;
-        babyStepsTestTime = 60;
-    }
-
-    public Exercise(String name, String description) {
-        this();
-        this.name = name;
-        this.description = description;
-    }
-
-    public Exercise(Exercise that) {
-        this();
-        this.name = that.name;
-        this.description = that.description;
-        this.code = that.code;
-        this.test = that.test;
-        this.babyStepsActivated = that.babyStepsActivated;
-        this.babyStepsCodeTime = that.babyStepsCodeTime;
-        this.babyStepsTestTime = that.babyStepsTestTime;
-    }
+    private int babyStepsCodeTime = 180;
+    private int babyStepsTestTime = 180;
 
     public String getName() {
         return name;

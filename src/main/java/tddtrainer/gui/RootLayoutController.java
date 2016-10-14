@@ -192,7 +192,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
     public void switchToStatusRed(SwitchedToRedEvent event) {
         nextStepButton.setText("Switch to phase GREEN");
         nextStepButton.setStyle("-fx-background-color: green");
-        System.out.println("red");
         showRedBox();
         iRedLabel.setText("Write exactly one failing test");
         enableReset(false);
@@ -206,7 +205,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
         nextStepButton.setText("Switch to phase REFACTOR");
         nextStepButton.setStyle("-fx-background-color: #6f8391");
 
-        System.out.println("green");
         enableReset(true);
         hideRedBox();
         // statusLabel.setText("green");
@@ -219,7 +217,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
         nextStepButton.setText("Switch to phase RED");
         nextStepButton.setStyle("-fx-background-color: red");
 
-        System.out.println("refactor");
         enableReset(false);
         showRedBox();
         iRedLabel.setText("Modify tests, but keep them passing");
