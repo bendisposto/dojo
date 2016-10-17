@@ -11,10 +11,13 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.layout.BorderPane;
 import tddtrainer.events.Views;
+import tddtrainer.events.automaton.ProceedPhaseRequest;
 
 public class RetrospectiveController extends BorderPane implements Initializable {
 
@@ -38,7 +41,7 @@ public class RetrospectiveController extends BorderPane implements Initializable
 
     @Subscribe
     public void setVisible(Views v) {
-        if (v.equals(Views.REFLECT)) {
+        if (v.equals(Views.RETROSPECT)) {
             setVisible(true);
         } else {
             setVisible(false);
@@ -48,7 +51,12 @@ public class RetrospectiveController extends BorderPane implements Initializable
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // TODO Auto-generated method stub
+    }
 
+    @FXML
+    private void continueClick(ActionEvent event) {
+        bus.post(new ProceedPhaseRequest());
+        bus.post(Views.WORKING);
     }
 
 }

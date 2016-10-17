@@ -28,7 +28,6 @@ import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.JavaCodeChangeEvent;
 import tddtrainer.events.JavaCodeChangeEvent.CodeType;
-import tddtrainer.events.automaton.ProceedPhaseEvent;
 import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
 import tddtrainer.events.automaton.SwitchedToRedEvent;
@@ -268,15 +267,6 @@ public class EditorViewController extends SplitPane implements Initializable {
             status.setText("Code or Test (or both) contain errors.");
             status.setStyle("-fx-text-fill: white");
             statuscontainer.setStyle("-fx-background-color: black");
-        }
-    }
-
-    @Subscribe
-    private void proceeded(ProceedPhaseEvent event) {
-        if (event.hasProceeded()) {
-            console.setStyle("-fx-text-fill: grey");
-        } else {
-            console.setStyle("-fx-text-fill: red");
         }
     }
 

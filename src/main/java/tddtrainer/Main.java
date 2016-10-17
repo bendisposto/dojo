@@ -88,7 +88,7 @@ public class Main extends Application {
         // controller.init(phaseManager, bus);
 
         StackPane root = new StackPane(workingWindow, exerciseSelectionWindow, retrospect);
-        bus.post(Views.REFLECT);
+        bus.post(Views.SELECTOR);
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

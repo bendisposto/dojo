@@ -7,7 +7,7 @@ import com.google.inject.Inject;
 import tddtrainer.compiler.AutoCompiler;
 import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
-import tddtrainer.events.automaton.ProceedPhaseEvent;
+import tddtrainer.events.Views;
 import tddtrainer.events.automaton.ProceedPhaseRequest;
 import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
@@ -48,9 +48,13 @@ public class PhaseAutomaton {
             switchToRefactor(compilerResult);
             break;
         case REFACTOR:
-            switchToRed(compilerResult);
+            switchToRetrospect(compilerResult);
+            break;
+        case RETROSPECT:
+            switchToRed();
             break;
         }
+
         canProceed(compilerResult);
     }
 
@@ -67,6 +71,9 @@ public class PhaseAutomaton {
             break;
         case REFACTOR:
             proceed = compilerResult.allClassesCompile() && compilerResult.allTestsGreen();
+            break;
+        case RETROSPECT:
+            proceed = true;
             break;
         }
         bus.post(new CanProceedEvent(proceed));
@@ -85,7 +92,6 @@ public class PhaseAutomaton {
             currentState = Phase.GREEN;
             bus.post(new SwitchedToGreenEvent());
         }
-        bus.post(new ProceedPhaseEvent(proceed));
     }
 
     private void switchToRefactor(AutoCompilerResult compilerResult) {
@@ -94,16 +100,19 @@ public class PhaseAutomaton {
             currentState = Phase.REFACTOR;
             bus.post(new SwitchedToRefactorEvent());
         }
-        bus.post(new ProceedPhaseEvent(proceed));
     }
 
-    private void switchToRed(AutoCompilerResult compilerResult) {
+    private void switchToRed() {
+        currentState = Phase.RED;
+        bus.post(new SwitchedToRedEvent());
+    }
+
+    private void switchToRetrospect(AutoCompilerResult compilerResult) {
         boolean proceed = compilerResult.allClassesCompile() && compilerResult.allTestsGreen();
         if (proceed) {
-            currentState = Phase.RED;
-            bus.post(new SwitchedToRedEvent());
+            currentState = Phase.RETROSPECT;
+            bus.post(Views.RETROSPECT);
         }
-        bus.post(new ProceedPhaseEvent(proceed));
     }
 
 }

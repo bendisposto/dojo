@@ -24,7 +24,7 @@
 	<bottom>
 		<ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
 			<buttons>
-				<Button mnemonicParsing="false" text="Continue" />
+				<Button mnemonicParsing="false" text="Continue"  onAction="#continueClick"/>
 			</buttons>
 			<BorderPane.margin>
 				<Insets right="10.0" />

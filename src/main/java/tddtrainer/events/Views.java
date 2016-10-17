@@ -1,5 +1,5 @@
 package tddtrainer.events;
 
 public enum Views {
-    SELECTOR, WORKING, REFLECT
+    SELECTOR, WORKING, RETROSPECT
 }
