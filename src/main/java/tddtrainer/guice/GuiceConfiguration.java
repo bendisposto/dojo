@@ -21,6 +21,7 @@ import tddtrainer.compiler.AutoCompiler;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.gui.EditorViewController;
 import tddtrainer.gui.RootLayoutController;
+import tddtrainer.tracker.Tracker;
 
 public class GuiceConfiguration extends AbstractModule {
 
@@ -44,6 +45,7 @@ public class GuiceConfiguration extends AbstractModule {
         bind(PhaseAutomaton.class).asEagerSingleton();
         bind(BabystepsManager.class).asEagerSingleton();
         bind(CatalogDataSource.class);
+        bind(Tracker.class);
         logger.trace("Configuring Dependency Injection completed");
     }
 

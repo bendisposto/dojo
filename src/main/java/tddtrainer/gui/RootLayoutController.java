@@ -49,6 +49,7 @@ import tddtrainer.events.automaton.SwitchedToRedEvent;
 import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 import tddtrainer.events.gui.ShowSelectDialogRequest;
 import tddtrainer.handbook.Handbook;
+import tddtrainer.tracker.Tracker;
 
 public class RootLayoutController extends BorderPane implements Initializable {
 
@@ -102,6 +103,8 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
     private Exercise exercise;
 
+    private final Tracker tracker;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.resources = resources;
@@ -117,8 +120,9 @@ public class RootLayoutController extends BorderPane implements Initializable {
     }
 
     @Inject
-    public RootLayoutController(FXMLLoader loader, EventBus bus) {
+    public RootLayoutController(FXMLLoader loader, EventBus bus, Tracker tracker) {
         this.bus = bus;
+        this.tracker = tracker;
         bus.register(this);
         URL resource = getClass().getResource("RootLayout.fxml");
         loader.setLocation(resource);

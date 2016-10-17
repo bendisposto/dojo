@@ -14,12 +14,15 @@ import tddtrainer.events.automaton.SwitchedToGreenEvent;
 import tddtrainer.events.automaton.SwitchedToRedEvent;
 import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 import tddtrainer.events.babysteps.Babysteps;
+import tddtrainer.tracker.ImplementationStep;
+import tddtrainer.tracker.Tracker;
 
 public class PhaseAutomaton {
 
     private Phase currentState = Phase.RED;
-    private EventBus bus;
-    private AutoCompiler autoCompiler;
+    private final EventBus bus;
+    private final AutoCompiler autoCompiler;
+    private final Tracker tracker;
 
     @Subscribe
     private void init(ExerciseEvent event) {
@@ -31,9 +34,10 @@ public class PhaseAutomaton {
     }
 
     @Inject
-    public PhaseAutomaton(EventBus bus, AutoCompiler autoCompiler) {
+    public PhaseAutomaton(EventBus bus, AutoCompiler autoCompiler, Tracker tracker) {
         this.bus = bus;
         this.autoCompiler = autoCompiler;
+        this.tracker = tracker;
         bus.register(this);
     }
 
@@ -89,12 +93,18 @@ public class PhaseAutomaton {
         boolean proceed = compilerResult.aMethodIsMissing()
                 || compilerResult.aSingleTestFails();
         if (proceed) {
+            tracker.addStep(
+                    new ImplementationStep(Phase.RED, null, compilerResult.getCodeCU(), compilerResult.getTestCU(),
+                            compilerResult.getCompilerOutput(), compilerResult.getTestOutput()));
             currentState = Phase.GREEN;
             bus.post(new SwitchedToGreenEvent());
         }
     }
 
     private void switchToRefactor(AutoCompilerResult compilerResult) {
+        tracker.addStep(
+                new ImplementationStep(Phase.GREEN, null, compilerResult.getCodeCU(), compilerResult.getTestCU(),
+                        compilerResult.getCompilerOutput(), compilerResult.getTestOutput()));
         boolean proceed = compilerResult.allClassesCompile() && compilerResult.allTestsGreen();
         if (proceed) {
             currentState = Phase.REFACTOR;
@@ -108,6 +118,9 @@ public class PhaseAutomaton {
     }
 
     private void switchToRetrospect(AutoCompilerResult compilerResult) {
+        tracker.addStep(
+                new ImplementationStep(Phase.REFACTOR, null, compilerResult.getCodeCU(), compilerResult.getTestCU(),
+                        compilerResult.getCompilerOutput(), compilerResult.getTestOutput()));
         boolean proceed = compilerResult.allClassesCompile() && compilerResult.allTestsGreen();
         if (proceed) {
             currentState = Phase.RETROSPECT;
