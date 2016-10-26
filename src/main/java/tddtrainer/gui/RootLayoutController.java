@@ -237,6 +237,11 @@ public class RootLayoutController extends BorderPane implements Initializable {
     }
 
     @FXML
+    private void showExerciseDescription(ActionEvent event) {
+        bus.post(Views.VIEWER);
+    }
+
+    @FXML
     private void showProgress(ActionEvent event) {
         bus.post(new TrackingWindowEvent());
     }
@@ -255,16 +260,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
     @FXML
     private void handleNextStep(ActionEvent event) {
         bus.post(new ProceedPhaseRequest());
-    }
-
-    @FXML
-    private void showExerciseDescription(ActionEvent event) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle(resources.getString("description"));
-        alert.setHeaderText(null);
-        alert.setContentText("Implement me");
-        // alert.setContentText(description);
-        alert.showAndWait();
     }
 
     @FXML

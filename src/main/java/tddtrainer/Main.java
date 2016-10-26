@@ -23,6 +23,7 @@ import tddtrainer.events.Views;
 import tddtrainer.gui.RetrospectiveController;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelectorController;
+import tddtrainer.gui.catalog.ExerciseViewerController;
 
 /**
  * The Main Class to get the Application started.
@@ -38,13 +39,16 @@ public class Main extends Application {
     private final ExerciseSelectorController exerciseSelectionWindow;
     private final RetrospectiveController retrospect;
 
+    private final ExerciseViewerController viewer;
+
     @Inject
     public Main(EventBus bus,
             ExerciseSelectorController exerciseSelector, RootLayoutController root,
-            RetrospectiveController retrospect) {
+            RetrospectiveController retrospect, ExerciseViewerController viewer) {
         this.bus = bus;
         this.exerciseSelectionWindow = exerciseSelector;
         this.workingWindow = root;
+        this.viewer = viewer;
         this.retrospect = retrospect;
         bus.register(exerciseSelector);
     }
@@ -87,7 +91,8 @@ public class Main extends Application {
         // RootLayoutController controller = loader.getController();
         // controller.init(phaseManager, bus);
 
-        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow, retrospect);
+
+        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow, retrospect, viewer);
         bus.post(Views.SELECTOR);
 
         primaryStage.setScene(new Scene(root));
