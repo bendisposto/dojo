@@ -23,11 +23,13 @@ public class PhaseAutomaton {
     private final EventBus bus;
     private final AutoCompiler autoCompiler;
     private final Tracker tracker;
+    private boolean retrospective;
 
     @Subscribe
     private void init(ExerciseEvent event) {
         autoCompiler.compileAndPost();
         currentState = Phase.RED;
+        retrospective = event.getExercise().isRetrospective();
         if (event.getExercise().isBabyStepsActivated())
             bus.post(new Babysteps(180));
         bus.post(new SwitchedToRedEvent());
@@ -123,8 +125,13 @@ public class PhaseAutomaton {
                         compilerResult.getCompilerOutput(), compilerResult.getTestOutput()));
         boolean proceed = compilerResult.allClassesCompile() && compilerResult.allTestsGreen();
         if (proceed) {
-            currentState = Phase.RETROSPECT;
-            bus.post(Views.RETROSPECT);
+            if (retrospective) {
+                currentState = Phase.RETROSPECT;
+                bus.post(Views.RETROSPECT);
+            } else {
+                currentState = Phase.RED;
+                bus.post(new SwitchedToRedEvent());
+            }
         }
     }
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.web.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root fx:id="exselector" maxHeight="Infinity" maxWidth="Infinity" minHeight="0" minWidth="0" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+	<bottom>
+		<ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<buttons>
+				<Button fx:id="okButton" mnemonicParsing="false" onAction="#okButtonAction" text="Ok" />
+			</buttons>
+			<BorderPane.margin>
+				<Insets right="15.0" />
+			</BorderPane.margin>
+		</ButtonBar>
+	</bottom>
+   <center>
+      <WebView fx:id="descriptionField" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
+</fx:root>
