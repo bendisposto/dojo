@@ -14,6 +14,7 @@ public class Exercise {
     private boolean babyStepsActivated;
     private int babyStepsCodeTime = 180;
     private int babyStepsTestTime = 180;
+    private boolean retrospective = false;
 
     public String getName() {
         return name;
@@ -69,6 +70,14 @@ public class Exercise {
 
     public void setBabyStepsTestTime(int babyStepsTestTime) {
         this.babyStepsTestTime = babyStepsTestTime;
+    }
+
+    public boolean isRetrospective() {
+        return retrospective;
+    }
+
+    public void setRetrospective(boolean retrospective) {
+        this.retrospective = retrospective;
     }
 
     @Override

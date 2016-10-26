@@ -7,6 +7,6 @@ package tddtrainer.automaton;
  */
 public enum Phase {
 
-    RED, GREEN, REFACTOR
+    RED, GREEN, REFACTOR, RETROSPECT
 
 }

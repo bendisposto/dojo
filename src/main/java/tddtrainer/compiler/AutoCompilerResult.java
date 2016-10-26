@@ -20,10 +20,12 @@ public class AutoCompilerResult {
     private final String compilerOutput;
     private Collection<CompileError> allErrors;
     private final String testOutput;
+    private final CompilationUnit testCU;
+    private final CompilationUnit codeCU;
 
     public AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
-        CompilationUnit testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
-        CompilationUnit codeCU = compiler.getCompilationUnitByName(exercise.getCode().getName());
+        testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
+        codeCU = compiler.getCompilationUnitByName(exercise.getCode().getName());
 
         allErrors = new ArrayList<>();
         allErrors.addAll(compiler.getCompilerResult().getCompilerErrors());
@@ -120,6 +122,14 @@ public class AutoCompilerResult {
                 sb.append("\n");
             }
         }
+    }
+
+    public CompilationUnit getCodeCU() {
+        return codeCU;
+    }
+
+    public CompilationUnit getTestCU() {
+        return testCU;
     }
 
 }
