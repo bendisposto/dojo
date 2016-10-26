@@ -22,6 +22,7 @@ import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.Views;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelectorController;
+import tddtrainer.gui.catalog.ExerciseViewerController;
 
 /**
  * The Main Class to get the Application started.
@@ -36,12 +37,16 @@ public class Main extends Application {
     private final RootLayoutController workingWindow;
     private final ExerciseSelectorController exerciseSelectionWindow;
 
+    private final ExerciseViewerController viewer;
+
     @Inject
     public Main(EventBus bus,
-            ExerciseSelectorController exerciseSelector, RootLayoutController root) {
+            ExerciseSelectorController exerciseSelector, RootLayoutController root,
+             ExerciseViewerController viewer) {
         this.bus = bus;
         this.exerciseSelectionWindow = exerciseSelector;
         this.workingWindow = root;
+        this.viewer = viewer;
         bus.register(exerciseSelector);
     }
 
@@ -83,7 +88,7 @@ public class Main extends Application {
         // RootLayoutController controller = loader.getController();
         // controller.init(phaseManager, bus);
 
-        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow);
+        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow,  viewer);
         bus.post(Views.SELECTOR);
 
         primaryStage.setScene(new Scene(root));
