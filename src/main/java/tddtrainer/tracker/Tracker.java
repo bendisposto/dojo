@@ -10,7 +10,6 @@ public class Tracker {
 
     public void addStep(AbstractStep step) {
         tracked.add(step);
-        System.out.println(step.toString());
     }
 
     public List<AbstractStep> getRetrospecives() {

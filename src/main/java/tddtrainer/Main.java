@@ -20,6 +20,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.Views;
+import tddtrainer.gui.RetrospectViewerController;
 import tddtrainer.gui.RetrospectiveController;
 import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelectorController;
@@ -41,15 +42,19 @@ public class Main extends Application {
 
     private final ExerciseViewerController viewer;
 
+    private final RetrospectViewerController retroViewer;
+
     @Inject
     public Main(EventBus bus,
             ExerciseSelectorController exerciseSelector, RootLayoutController root,
-            RetrospectiveController retrospect, ExerciseViewerController viewer) {
+            RetrospectiveController retrospect, ExerciseViewerController viewer,
+            RetrospectViewerController retroViewer) {
         this.bus = bus;
         this.exerciseSelectionWindow = exerciseSelector;
         this.workingWindow = root;
         this.viewer = viewer;
         this.retrospect = retrospect;
+        this.retroViewer = retroViewer;
         bus.register(exerciseSelector);
     }
 
@@ -91,8 +96,7 @@ public class Main extends Application {
         // RootLayoutController controller = loader.getController();
         // controller.init(phaseManager, bus);
 
-
-        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow, retrospect, viewer);
+        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow, retrospect, viewer, retroViewer);
         bus.post(Views.SELECTOR);
 
         primaryStage.setScene(new Scene(root));

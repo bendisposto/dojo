@@ -40,7 +40,6 @@ import tddtrainer.catalog.Exercise;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.TimeEvent;
-import tddtrainer.events.TrackingWindowEvent;
 import tddtrainer.events.Views;
 import tddtrainer.events.automaton.ProceedPhaseRequest;
 import tddtrainer.events.automaton.ResetPhaseEvent;
@@ -243,7 +242,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
     @FXML
     private void showProgress(ActionEvent event) {
-        bus.post(new TrackingWindowEvent());
+        bus.post(Views.RETROSPECT_VIEWER);
     }
 
     @FXML

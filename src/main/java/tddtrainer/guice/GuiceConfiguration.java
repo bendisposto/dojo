@@ -45,7 +45,7 @@ public class GuiceConfiguration extends AbstractModule {
         bind(PhaseAutomaton.class).asEagerSingleton();
         bind(BabystepsManager.class).asEagerSingleton();
         bind(CatalogDataSource.class);
-        bind(Tracker.class);
+        bind(Tracker.class).asEagerSingleton();
         logger.trace("Configuring Dependency Injection completed");
     }
 
