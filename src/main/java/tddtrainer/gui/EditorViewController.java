@@ -158,7 +158,8 @@ public class EditorViewController extends SplitPane implements Initializable {
         testLabel.setText(exercise.getTest().getName());
         revertToCode = code.getText();
         revertToTest = tests.getText();
-
+        code.selectRange(0, 0);
+        tests.selectRange(0, 0);
     }
 
     @Subscribe
