@@ -136,6 +136,12 @@ public class ExerciseSelectorController extends BorderPane {
         // testTimeLabel.textProperty().bind(Bindings.format("%.0fs",
         // testTimeSlider.valueProperty()));
 
+        exerciseList.setOnMouseClicked(click -> {
+            if (click.getClickCount() == 2) {
+                selectButtonAction();
+            }
+        });
+
         Platform.runLater(() -> exerciseList.requestFocus());
     }
 

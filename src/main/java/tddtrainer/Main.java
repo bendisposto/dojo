@@ -12,11 +12,13 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import javafx.application.Application;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.Views;
@@ -99,12 +101,16 @@ public class Main extends Application {
         StackPane root = new StackPane(workingWindow, exerciseSelectionWindow, retrospect, viewer, retroViewer);
         bus.post(Views.SELECTOR);
 
+        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+        int height = (int) Math.max(800, 0.8 * visualBounds.getHeight());
+        int width = (int) Math.max(1100, 0.8 * visualBounds.getWidth());
+
         primaryStage.setScene(new Scene(root));
-        primaryStage.show();
-        primaryStage.setWidth(1100);
+        primaryStage.setWidth(width);
         primaryStage.setMinWidth(1100);
-        primaryStage.setHeight(800);
+        primaryStage.setHeight(height);
         primaryStage.setMinHeight(600);
+        primaryStage.show();
     }
 
 }
