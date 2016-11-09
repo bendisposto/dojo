@@ -23,6 +23,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
@@ -247,6 +248,17 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
     @FXML
     private void reset(ActionEvent event) {
+
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Resetting to RED and reverting your code");
+        alert.setHeaderText("Do you really want to reset to RED? This will revert your code!");
+        alert.setContentText(
+                "If you click ok, all recent changes to your code will be reverted.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() != ButtonType.OK) {
+            return;
+        }
         bus.post(new ResetPhaseEvent());
     }
 
