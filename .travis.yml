@@ -1,11 +1,14 @@
 language: java
+
 jdk:
 - oraclejdk8
+
 script:
 - gradle check
 - gradle distZip
 - unzip build/distributions/dojo-0.2.0-SNAPSHOT.zip
-- ./dojo-0.2.0-SNAPSHOT/bin/dojo
+- ( ./dojo-0.2.0-SNAPSHOT/bin/dojo ) & sleep 15 ; kill $!
+
 addons:
   apt:
     packages:
@@ -13,8 +16,15 @@ addons:
 before_install:
 - rvm install 2.0.0
 - gem install travis-custom-deploy
+
+before_script:
+  - "export DISPLAY=:99.0"
+  - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
+
 after_success:
 - travis-custom-deploy sftp build/distributions/*.zip
+
 env:
   global:
   - secure: gwuoB2JphwCl7ME/RH0opTWTwRLmBl/b/O94qh1zKxezozXkoZI2Fq4Qhe+aO8OHZ4BIptq3KFC940ICd87T5b1ngH5R87CTnuUgYfVWRatKgWu4wL39NT3MvyNCjwmsPk5BiXrF0gQxdnsTOpzIAFQQWsulJibJAdCMjJxri0/tF8uMkhbjqliFpS51rY8pKqSFJDZq+pWpVAhSh8rcarnvRJUgMplQM5Ic3uVjdyEz8NyQlADT2kJ2muafXvYpGRvL95jwvrGipjzmmuwl7adKGXUnAFUD+udm6MIFUnZcwKybzQ9H/7SwH6ieOY8hc06flsdmS5ZLvV7qAx/QIidHfkaTmT94eOAoynYH9CGbvW3FFhWD0mLQZerzLdfQ3+p9Y8jQpH3ekeqaOtH9Ar2GqFuDW3uXFwuu1rYU3O1JOuNH7xMxbxMrjOFESMiQsvB2+k3hVV9hzRtWnGJO3rq7xH5uUU0CowDGRnZbzMsnuBuWM8SUJPTjH6rPPFG4tR6/aqOhpbqLaFkteiN58Ru/qsy9wAnAlOlnFKH7BOW/vH0BYK7yXM5HxN621zyf7X8ZFN/s3JNoP+fdST6yqfIRsVvO2gNBxYmCPUUaINt1qZR9AsDJtoUZRT3m7VsthAPPyu6kAco7pupdrweFQri709BVmCSX4H7fojoSD2w=
