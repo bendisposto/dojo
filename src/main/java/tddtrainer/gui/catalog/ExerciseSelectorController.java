@@ -84,6 +84,7 @@ public class ExerciseSelectorController extends BorderPane {
                         + "The program will now be terminated.",
                 exceptionName, excptionMessage));
         alert.showAndWait();
+        System.exit(-1);
     }
 
     @FXML
