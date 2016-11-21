@@ -44,7 +44,28 @@ public class CatalogDataSource {
         Collection<Exercise> es = gson.fromJson(fetchCatalog(), collectionType);
         ArrayList<Exercise> catalog = new ArrayList<>(es.size());
         catalog.addAll(es);
+        catalog.add(createFreeExercise());
+
         return catalog;
+    }
+
+    private Exercise createFreeExercise() {
+        Exercise ex = new Exercise();
+        ex.setName("Free Exercise");
+        ex.setDescription(
+                "<h1>Freie Übung</h1><p>Tu, was immer du willst. Dieser Modus ist geeignet um TDD an selbstgewählten Beispielen auszuprobieren.</p>");
+        String classname = "FreeExercise";
+        String testname = "FreeExerciseTest";
+        JavaClass code = new JavaClass(classname, "public class " + classname + "{\n}");
+        JavaClass test = new JavaClass(testname,
+                "import static org.junit.Assert.*;\nimport org.junit.*;\n\npublic class " + testname
+                        + " {\n\n    @Test\n    public void failingTest() {\n        fail(\"I fail on purpose\");\n    }\n\n}");
+
+        ex.setCode(code);
+        ex.setTest(test);
+        ex.setBabyStepsActivated(false);
+        ex.setRetrospective(false);
+        return ex;
     }
 
 }
