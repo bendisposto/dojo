@@ -32,6 +32,8 @@
 									text="%menu.exercise.openexercise" />
 								<MenuItem fx:id="showDescription" mnemonicParsing="false"
 									onAction="#showExerciseDescription" text="%menu.exercise.showDescription" />
+								<MenuItem fx:id="wizard" mnemonicParsing="false"
+									onAction="#newExerciseWizard" text="Create a fresh exercise" />
 					<!-- 			<MenuItem mnemonicParsing="false" onAction="#showProgress"
 									text="%menu.exercise.tracking" />  -->
 							</items>
