@@ -27,6 +27,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -38,6 +39,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import tddtrainer.automaton.CanProceedEvent;
 import tddtrainer.catalog.Exercise;
+import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.TimeEvent;
@@ -271,6 +273,37 @@ public class RootLayoutController extends BorderPane implements Initializable {
     @FXML
     private void handleNextStep(ActionEvent event) {
         bus.post(new ProceedPhaseRequest());
+    }
+
+    @FXML
+    private void newExerciseWizard(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog("MyClass");
+        dialog.setTitle("Enter Class Name");
+        dialog.setHeaderText(
+                "Creating a fresh exercise. Warning, this automatically terminates your current exercise!");
+        dialog.setContentText("Please enter the name of the class (without .java!):");
+
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            Exercise ex = new Exercise();
+            String classname = result.get();
+            String testname = classname + "Test";
+            ex.setName("Free Exercise");
+            JavaClass code = new JavaClass(classname, "public class " + classname + "{\n}");
+            JavaClass test = new JavaClass(testname,
+                    "import static org.junit.Assert.*;\nimport org.junit.*;\n\npublic class " + testname
+                            + "{\n    @Test\n    public void failingTest() {\n        fail(\"I fail on purpose\");\n    }\n}");
+
+            ex.setCode(code);
+            ex.setTest(test);
+            ex.setDescription("A free exercise, do whatever you want to do!");
+            ex.setBabyStepsActivated(false);
+            ex.setRetrospective(false);
+            bus.post(new ExerciseEvent(ex));
+
+        }
+
     }
 
     @FXML
