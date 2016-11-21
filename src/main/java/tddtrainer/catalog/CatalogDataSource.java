@@ -1,6 +1,9 @@
 package tddtrainer.catalog;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -15,20 +18,23 @@ import com.mashape.unirest.request.GetRequest;
 
 public class CatalogDataSource {
 
-    private String defaultLocation = "https://www3.hhu.de/stups/downloads/dojo/katalog.json";
-    private String location;
+    private static final String DEFAULT_LOCATION = "https://www3.hhu.de/stups/downloads/dojo/katalog.json";
 
     static Gson gson = new Gson();
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public String fetchCatalog() throws UnirestException {
-        String loc = location != null ? location : defaultLocation;
-        GetRequest getRequest = Unirest.get(loc);
-        HttpResponse<String> asString = getRequest.asString();
-        return asString.getBody();
+        String location = System.getProperty("katalog");
+        String loc = location != null ? location : DEFAULT_LOCATION;
+        if (loc.startsWith("http")) {
+            GetRequest getRequest = Unirest.get(loc);
+            HttpResponse<String> asString = getRequest.asString();
+            return asString.getBody();
+        }
+        try {
+            return new String(Files.readAllBytes(Paths.get(loc)));
+        } catch (IOException e) {
+            throw new UnirestException("Could not find Katalog at " + loc);
+        }
     }
 
     public List<Exercise> loadCatalog() throws JsonSyntaxException, UnirestException {
