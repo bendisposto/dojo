@@ -27,6 +27,10 @@ import tddtrainer.catalog.Exercise;
 import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.JavaCodeChangeEvent;
+import tddtrainer.events.automaton.ResetPhaseEvent;
+import tddtrainer.events.automaton.SwitchedToGreenEvent;
+import tddtrainer.events.automaton.SwitchedToRedEvent;
+import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 
 public class EditorViewController extends SplitPane implements Initializable {
 
@@ -139,51 +143,49 @@ public class EditorViewController extends SplitPane implements Initializable {
         // tests.selectRange(0, 0);
 
     }
-    //
-    // @Subscribe
-    // private void resetToRed(ResetPhaseEvent event) {
-    // code.clear();
-    // code.appendText(revertToCode);
-    // tests.clear();
-    // tests.appendText(revertToTest);
-    // code.getUndoManager().forgetHistory();
-    // tests.getUndoManager().forgetHistory();
-    // }
-    //
-    // @Subscribe
-    // private void changePhaseToRed(SwitchedToRedEvent event) {
-    // code.disable(true);
-    // tests.disable(false);
-    // revertToTest = tests.getText();
-    // revertToCode = code.getText();
-    // tests.setStyle("-fx-border-color: crimson;");
-    // code.setStyle("-fx-border-color: transparent;");
-    // iGreenBox.setVisible(false);
-    // iRedLabel1.setText("Write code to make all tests pass");
-    // AnchorPane.setRightAnchor(codeBox, 15.0);
-    // }
-    //
-    // @Subscribe
-    // private void changePhaseToGreen(SwitchedToGreenEvent event) {
-    // code.disable(false);
-    // tests.disable(true);
-    // revertToTest = tests.getText();
-    // code.setStyle("-fx-border-color: forestgreen;");
-    // tests.setStyle("-fx-border-color: transparent;");
-    // iGreenBox.setVisible(true);
-    // AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
-    // }
-    //
-    // @Subscribe
-    // private void changePhaseToRefactor(SwitchedToRefactorEvent event) {
-    // code.disable(false);
-    // tests.disable(false);
-    // tests.setStyle("-fx-border-color: grey;");
-    // code.setStyle("-fx-border-color: grey;");
-    // iGreenBox.setVisible(true);
-    // iRedLabel1.setText("Modify code, but keep all tests passing");
-    // AnchorPane.setRightAnchor(codeBox, 15.0);
-    // }
+
+    @Subscribe
+    private void resetToRed(ResetPhaseEvent event) {
+        String jscallCode = "editor.setValue('" + revertToCode.replaceAll("\\n", "\\\\n") + "')";
+        code.getEngine().executeScript(jscallCode);
+        String jscallTest = "editor.setValue('" + revertToTest.replaceAll("\\n", "\\\\n") + "')";
+        tests.getEngine().executeScript(jscallTest);
+    }
+
+    @Subscribe
+    private void changePhaseToRed(SwitchedToRedEvent event) {
+        code.getEngine().executeScript("editor.setOption('readOnly', true)");
+        tests.getEngine().executeScript("editor.setOption('readOnly', false)");
+        revertToTest = getTest();
+        revertToCode = getCode();
+        tests.setStyle("-fx-border-color: crimson;");
+        code.setStyle("-fx-border-color: transparent;");
+        iGreenBox.setVisible(false);
+        iRedLabel1.setText("Write code to make all tests pass");
+        AnchorPane.setRightAnchor(codeBox, 15.0);
+    }
+
+    @Subscribe
+    private void changePhaseToGreen(SwitchedToGreenEvent event) {
+        code.getEngine().executeScript("editor.setOption('readOnly', false)");
+        tests.getEngine().executeScript("editor.setOption('readOnly', true)");
+        revertToTest = getTest();
+        code.setStyle("-fx-border-color: forestgreen;");
+        tests.setStyle("-fx-border-color: transparent;");
+        iGreenBox.setVisible(true);
+        AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
+    }
+
+    @Subscribe
+    private void changePhaseToRefactor(SwitchedToRefactorEvent event) {
+        code.getEngine().executeScript("editor.setOption('readOnly', false)");
+        tests.getEngine().executeScript("editor.setOption('readOnly', false)");
+        tests.setStyle("-fx-border-color: grey;");
+        code.setStyle("-fx-border-color: grey;");
+        iGreenBox.setVisible(true);
+        iRedLabel1.setText("Modify code, but keep all tests passing");
+        AnchorPane.setRightAnchor(codeBox, 15.0);
+    }
 
     private void addEditors() {
         code = new WebView();
