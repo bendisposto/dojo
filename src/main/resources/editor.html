@@ -1,0 +1,37 @@
+<html>
+<head>
+	<link rel='stylesheet' href='codemirror.css'>
+	<script src='codemirror.js'></script>
+	<script src='clike.js'></script>
+</head>
+<body>
+<textarea id='code'></textarea>
+<script>
+
+    var TO;
+    function compile(cm) {
+      java.compile(type, cm.getValue());
+    }
+
+    function onChange(cm) {
+       clearTimeout(TO);
+       TO = setTimeout(function(){compile(cm);}, 500);
+    }
+    
+   
+    var code = document.getElementById('code');  
+    var editor = CodeMirror.fromTextArea(code, 
+                      { lineNumbers: true,
+                        indentUnit: 4, 
+                        mode: "text/x-java" });
+                        
+    editor.on("change", onChange)                 
+
+    function changeFontSize(size){
+       editor.getWrapperElement().style["font-size"] = size+"px";
+       editor.refresh();
+    }
+                        
+</script>
+</body>
+</html>
