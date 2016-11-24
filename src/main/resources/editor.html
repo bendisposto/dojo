@@ -3,6 +3,7 @@
 	<link rel='stylesheet' href='codemirror.css'>
 	<script src='codemirror.js'></script>
 	<script src='clike.js'></script>
+    <script src='closebrackets.js'></script>
 </head>
 <body>
 <div id="container">
@@ -24,7 +25,8 @@
     var code = document.getElementById('code');  
     var editor = CodeMirror.fromTextArea(code, 
                       { lineNumbers: true,
-                        indentUnit: 4, 
+                        indentUnit: 4,
+                        autoCloseBrackets: true, 
                         mode: "text/x-java" });
                         
     editor.on("change", onChange)                 
