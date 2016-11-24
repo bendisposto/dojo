@@ -86,6 +86,7 @@ public class Main extends Application {
             if (result.get() == ButtonType.OK) {
                 primaryStage.close();
                 System.exit(0);
+            }
         });
 
         bus.post(new LanguageChangeEvent(null));
