@@ -1,11 +1,10 @@
 package tddtrainer.gui;
 
+import static tddtrainer.events.JavaCodeChangeEvent.CodeType.*;
+
 import java.io.IOException;
 import java.net.URL;
-import java.time.Duration;
-import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +13,6 @@ import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -23,11 +21,12 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.web.WebView;
+import netscape.javascript.JSObject;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.JavaCodeChangeEvent;
-import tddtrainer.events.JavaCodeChangeEvent.CodeType;
 import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
 import tddtrainer.events.automaton.SwitchedToRedEvent;
@@ -35,8 +34,8 @@ import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 
 public class EditorViewController extends SplitPane implements Initializable {
 
-    private JavaCodeArea tests;
-    private JavaCodeArea code;
+    private WebView tests;
+    private WebView code;
 
     @FXML
     private TextArea console;
@@ -103,34 +102,6 @@ public class EditorViewController extends SplitPane implements Initializable {
 
         console.setStyle("-fx-font-family:monospace;");
 
-        subscribeToChangeStream(code, JavaCodeChangeEvent.CodeType.CODE);
-        subscribeToChangeStream(tests, JavaCodeChangeEvent.CodeType.TEST);
-
-    }
-
-    private void subscribeToChangeStream(JavaCodeArea area, CodeType type) {
-        area.richChanges().filter(ch -> !ch.getInserted().equals(ch.getRemoved())) // XXX
-                .successionEnds(Duration.ofMillis(500)).supplyTask(() -> compile(area))
-                .awaitLatest(area.richChanges())
-                .filterMap(t -> {
-                    if (t.isSuccess()) {
-                        return Optional.of(t.get());
-                    } else {
-                        t.getFailure().printStackTrace();
-                        return Optional.empty();
-                    }
-                }).subscribe(t -> bus.post(new JavaCodeChangeEvent(t, type)));
-    }
-
-    private Task<String> compile(JavaCodeArea area) {
-        Task<String> task = new Task<String>() {
-            @Override
-            protected String call() throws Exception {
-                return area.getText();
-            }
-        };
-        Executors.newSingleThreadExecutor().execute(task);
-        return task;
     }
 
     @Subscribe
@@ -142,42 +113,51 @@ public class EditorViewController extends SplitPane implements Initializable {
     }
 
     public String getCode() {
-        return code.getText();
+        return (String) code.getEngine().executeScript("editor.getValue()");
     }
 
     public String getTest() {
-        return tests.getText();
+        return (String) tests.getEngine().executeScript("editor.getValue()");
+    }
+
+    public void compile(String type, String text) {
+        JavaCodeChangeEvent.CodeType t = "code".equals(type) ? CODE : TEST;
+        JavaCodeChangeEvent event = new JavaCodeChangeEvent(text, t);
+        bus.post(event);
     }
 
     public void showExercise(Exercise exercise) {
-        code.clear();
-        code.appendText(exercise.getCode().getCode());
+        String jscallCode = "editor.setValue('" + exercise.getCode().getCode().replaceAll("\\n", "\\\\n") + "')";
+        code.getEngine().executeScript(jscallCode);
         codeLabel.setText(exercise.getCode().getName());
-        tests.clear();
-        tests.appendText(exercise.getTest().getCode());
+        String jscallTest = "editor.setValue('" + exercise.getTest().getCode().replaceAll("\\n", "\\\\n") + "')";
+        tests.getEngine().executeScript(jscallTest);
         testLabel.setText(exercise.getTest().getName());
-        revertToCode = code.getText();
-        revertToTest = tests.getText();
-        code.selectRange(0, 0);
-        tests.selectRange(0, 0);
+        // code.clear();
+        // code.appendText();
+        // tests.clear();
+        // tests.appendText(exercise.getTest().getCode());
+        // revertToCode = code.getText();
+        // revertToTest = tests.getText();
+        // code.selectRange(0, 0);
+        // tests.selectRange(0, 0);
+
     }
 
     @Subscribe
     private void resetToRed(ResetPhaseEvent event) {
-        code.clear();
-        code.appendText(revertToCode);
-        tests.clear();
-        tests.appendText(revertToTest);
-        code.getUndoManager().forgetHistory();
-        tests.getUndoManager().forgetHistory();
+        String jscallCode = "editor.setValue('" + revertToCode.replaceAll("\\n", "\\\\n") + "')";
+        code.getEngine().executeScript(jscallCode);
+        String jscallTest = "editor.setValue('" + revertToTest.replaceAll("\\n", "\\\\n") + "')";
+        tests.getEngine().executeScript(jscallTest);
     }
 
     @Subscribe
     private void changePhaseToRed(SwitchedToRedEvent event) {
-        code.disable(true);
-        tests.disable(false);
-        revertToTest = tests.getText();
-        revertToCode = code.getText();
+        code.getEngine().executeScript("editor.setOption('readOnly', true)");
+        tests.getEngine().executeScript("editor.setOption('readOnly', false)");
+        revertToTest = getTest();
+        revertToCode = getCode();
         tests.setStyle("-fx-border-color: crimson;");
         code.setStyle("-fx-border-color: transparent;");
         iGreenBox.setVisible(false);
@@ -187,9 +167,9 @@ public class EditorViewController extends SplitPane implements Initializable {
 
     @Subscribe
     private void changePhaseToGreen(SwitchedToGreenEvent event) {
-        code.disable(false);
-        tests.disable(true);
-        revertToTest = tests.getText();
+        code.getEngine().executeScript("editor.setOption('readOnly', false)");
+        tests.getEngine().executeScript("editor.setOption('readOnly', true)");
+        revertToTest = getTest();
         code.setStyle("-fx-border-color: forestgreen;");
         tests.setStyle("-fx-border-color: transparent;");
         iGreenBox.setVisible(true);
@@ -198,8 +178,8 @@ public class EditorViewController extends SplitPane implements Initializable {
 
     @Subscribe
     private void changePhaseToRefactor(SwitchedToRefactorEvent event) {
-        code.disable(false);
-        tests.disable(false);
+        code.getEngine().executeScript("editor.setOption('readOnly', false)");
+        tests.getEngine().executeScript("editor.setOption('readOnly', false)");
         tests.setStyle("-fx-border-color: grey;");
         code.setStyle("-fx-border-color: grey;");
         iGreenBox.setVisible(true);
@@ -208,22 +188,36 @@ public class EditorViewController extends SplitPane implements Initializable {
     }
 
     private void addEditors() {
-        code = new JavaCodeArea();
-        code.setEditable(false);
+        code = new WebView();
+        code.setContextMenuEnabled(false);
+        String resource = EditorViewController.class.getResource("/editor.html").toExternalForm();
+        code.getEngine().load(resource);
+
+        // code.setEditable(false);
         codePane.getChildren().add(code);
         AnchorPane.setTopAnchor(code, 50.0);
         AnchorPane.setLeftAnchor(code, 20.0);
         AnchorPane.setRightAnchor(code, 20.0);
         AnchorPane.setBottomAnchor(code, 5.0);
 
-        tests = new JavaCodeArea();
-        tests.setEditable(false);
+        tests = new WebView();
+        tests.getEngine().load(resource);
+        tests.setContextMenuEnabled(false);
+        // tests.setEditable(false);
         testPane.getChildren().add(tests);
         AnchorPane.setTopAnchor(tests, 50.0);
         AnchorPane.setLeftAnchor(tests, 20.0);
         AnchorPane.setRightAnchor(tests, 20.0);
         AnchorPane.setBottomAnchor(tests, 5.0);
-        zoomDefault();
+
+        JSObject jsobj = (JSObject) code.getEngine().executeScript("window");
+        jsobj.setMember("java", this);
+        jsobj.setMember("type", "code");
+
+        jsobj = (JSObject) tests.getEngine().executeScript("window");
+        jsobj.setMember("java", this);
+        jsobj.setMember("type", "test");
+
     }
 
     public void zoomIn() {
@@ -244,10 +238,10 @@ public class EditorViewController extends SplitPane implements Initializable {
 
     private void applyFontSize() {
         String style = "-fx-font-size:" + fontSize + "px";
-        code.setStyle(style);
-        tests.setStyle(style);
         console.setStyle(style);
         testoutput.setStyle(style);
+        code.getEngine().executeScript("changeFontSize(" + fontSize + ")");
+        tests.getEngine().executeScript("changeFontSize(" + fontSize + ")");
     }
 
     @Subscribe
