@@ -1,6 +1,7 @@
 package tddtrainer;
 
 import java.io.IOException;
+import java.util.Optional;
 
 import javax.tools.ToolProvider;
 
@@ -16,6 +17,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
@@ -72,7 +74,19 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
         primaryStage.setTitle("TDD Trainer");
         primaryStage.getIcons().add(new Image("/tddtrainer/gui/app_icon.png"));
-        primaryStage.setOnCloseRequest((e) -> System.exit(0));
+        primaryStage.setOnCloseRequest((e) -> {
+            e.consume();
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Closing Application");
+            alert.setHeaderText("Do you really want to close the application?");
+            alert.setContentText(
+                    "If you click ok, the application will be closed!");
+
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                primaryStage.close();
+                System.exit(0);
+        });
 
         bus.post(new LanguageChangeEvent(null));
     }
