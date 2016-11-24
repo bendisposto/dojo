@@ -5,7 +5,9 @@
 	<script src='clike.js'></script>
 </head>
 <body>
-<textarea id='code'></textarea>
+<div id="container">
+  <textarea id='code'></textarea>
+</div>  
 <script>
 
     var TO;
@@ -31,6 +33,19 @@
        editor.getWrapperElement().style["font-size"] = size+"px";
        editor.refresh();
     }
+
+    function activate(color){
+       var container = document.getElementById('container');  
+       container.style["border-color"] = color;
+       container.style["opacity"]=1; 
+    }
+    
+    function deactivate(){
+       var container = document.getElementById('container');  
+       container.style["border-color"] = 'lightgray';
+       container.style["opacity"]=0.4; 
+    }
+    
                         
 </script>
 </body>

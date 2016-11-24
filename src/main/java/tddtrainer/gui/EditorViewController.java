@@ -158,8 +158,8 @@ public class EditorViewController extends SplitPane implements Initializable {
         tests.getEngine().executeScript("editor.setOption('readOnly', false)");
         revertToTest = getTest();
         revertToCode = getCode();
-        tests.setStyle("-fx-border-color: crimson;");
-        code.setStyle("-fx-border-color: transparent;");
+        tests.getEngine().executeScript("activate('crimson')");
+        code.getEngine().executeScript("deactivate()");
         iGreenBox.setVisible(false);
         iRedLabel1.setText("Write code to make all tests pass");
         AnchorPane.setRightAnchor(codeBox, 15.0);
@@ -170,8 +170,8 @@ public class EditorViewController extends SplitPane implements Initializable {
         code.getEngine().executeScript("editor.setOption('readOnly', false)");
         tests.getEngine().executeScript("editor.setOption('readOnly', true)");
         revertToTest = getTest();
-        code.setStyle("-fx-border-color: forestgreen;");
-        tests.setStyle("-fx-border-color: transparent;");
+        code.getEngine().executeScript("activate('forestgreen')");
+        tests.getEngine().executeScript("deactivate()");
         iGreenBox.setVisible(true);
         AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
     }
@@ -180,8 +180,8 @@ public class EditorViewController extends SplitPane implements Initializable {
     private void changePhaseToRefactor(SwitchedToRefactorEvent event) {
         code.getEngine().executeScript("editor.setOption('readOnly', false)");
         tests.getEngine().executeScript("editor.setOption('readOnly', false)");
-        tests.setStyle("-fx-border-color: grey;");
-        code.setStyle("-fx-border-color: grey;");
+        tests.getEngine().executeScript("activate('black')");
+        code.getEngine().executeScript("activate('black')");
         iGreenBox.setVisible(true);
         iRedLabel1.setText("Modify code, but keep all tests passing");
         AnchorPane.setRightAnchor(codeBox, 15.0);
