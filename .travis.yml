@@ -6,8 +6,6 @@ jdk:
 script:
 - gradle check
 - gradle distZip
-- unzip build/distributions/dojo-0.2.0-SNAPSHOT.zip
-- ( ./dojo-0.2.0-SNAPSHOT/bin/dojo ) & sleep 15 ; kill $!
 
 addons:
   apt:
