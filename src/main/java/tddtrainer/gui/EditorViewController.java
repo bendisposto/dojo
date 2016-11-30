@@ -189,8 +189,8 @@ public class EditorViewController extends SplitPane implements Initializable {
     private void changePhaseToRefactor(SwitchedToRefactorEvent event) {
         code.getEngine().executeScript("editor.setOption('readOnly', false)");
         tests.getEngine().executeScript("editor.setOption('readOnly', false)");
-        tests.getEngine().executeScript("activate('black')");
-        code.getEngine().executeScript("activate('black')");
+        tests.getEngine().executeScript("activate('orange')");
+        code.getEngine().executeScript("activate('orange')");
         clearHistory();
         iGreenBox.setVisible(true);
         iRedLabel1.setText("Modify code, but keep all tests passing");

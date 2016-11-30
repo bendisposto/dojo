@@ -209,7 +209,7 @@ public class RootLayoutController extends BorderPane implements Initializable {
     @Subscribe
     public void switchToStatusGreen(SwitchedToGreenEvent event) {
         nextStepButton.setText("Switch to phase REFACTOR");
-        nextStepButton.setStyle("-fx-background-color: #6f8391");
+        nextStepButton.setStyle("-fx-background-color: orange");
 
         enableReset(true);
         hideRedBox();
