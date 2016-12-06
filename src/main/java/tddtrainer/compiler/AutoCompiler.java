@@ -53,8 +53,9 @@ public class AutoCompiler {
     }
 
     public synchronized AutoCompilerResult recompile() {
-        CompilationUnit codeCU = new CompilationUnit(exercise.getCode().getName(), code, false);
-        CompilationUnit testCU = new CompilationUnit(exercise.getTest().getName(), test, true);
+        CompilationUnit codeCU = new CompilationUnit(exercise.getCode().getName(), code.replaceAll("\t", "    "),
+                false);
+        CompilationUnit testCU = new CompilationUnit(exercise.getTest().getName(), test.replaceAll("\t", "    "), true);
         JavaStringCompiler compiler = CompilerFactory.getCompiler(codeCU, testCU);
         compiler.compileAndRunTests();
         AutoCompilerResult result = new AutoCompilerResult(compiler, exercise);
