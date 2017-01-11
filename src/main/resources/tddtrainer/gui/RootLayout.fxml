@@ -50,6 +50,8 @@
 							</items>
 						</Menu>
 						<Menu mnemonicParsing="false" text="%menu.help">
+							<MenuItem mnemonicParsing="false" onAction="#enforceRefactoring"
+									fx:id="resetrefactor" text="Force Refactoring Mode" />
 							<items>
 								<!--<CheckMenuItem mnemonicParsing="false" onAction="#handleTutorialMode" 
 									selected="true" text="%menu.help.tutorialMode" /> <MenuItem mnemonicParsing="false" 

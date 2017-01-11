@@ -44,6 +44,7 @@ import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.events.Views;
+import tddtrainer.events.automaton.EnforceRefactoringEvent;
 import tddtrainer.events.automaton.ProceedPhaseRequest;
 import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
@@ -241,6 +242,11 @@ public class RootLayoutController extends BorderPane implements Initializable {
     @FXML
     private void showExerciseDescription(ActionEvent event) {
         bus.post(Views.VIEWER);
+    }
+
+    @FXML
+    private void enforceRefactoring(ActionEvent event) {
+        bus.post(new EnforceRefactoringEvent());
     }
 
     @FXML

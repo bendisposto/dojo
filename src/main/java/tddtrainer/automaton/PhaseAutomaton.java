@@ -8,6 +8,7 @@ import tddtrainer.compiler.AutoCompiler;
 import tddtrainer.compiler.AutoCompilerResult;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.Views;
+import tddtrainer.events.automaton.EnforceRefactoringEvent;
 import tddtrainer.events.automaton.ProceedPhaseRequest;
 import tddtrainer.events.automaton.ResetPhaseEvent;
 import tddtrainer.events.automaton.SwitchedToGreenEvent;
@@ -89,6 +90,12 @@ public class PhaseAutomaton {
     private void reset(ResetPhaseEvent event) {
         currentState = Phase.RED;
         bus.post(new SwitchedToRedEvent());
+    }
+
+    @Subscribe
+    private void enforceRefactor(EnforceRefactoringEvent event) {
+        currentState = Phase.REFACTOR;
+        bus.post(new SwitchedToRefactorEvent());
     }
 
     private void switchToGreen(AutoCompilerResult compilerResult) {
