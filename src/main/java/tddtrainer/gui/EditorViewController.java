@@ -19,6 +19,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.web.WebView;
@@ -148,6 +150,10 @@ public class EditorViewController extends SplitPane implements Initializable {
     private void clearHistory() {
         code.getEngine().executeScript("clearHistory()");
         tests.getEngine().executeScript("clearHistory()");
+        final Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
+        content.putString("");
+        clipboard.setContent(content);
     }
 
     @Subscribe
