@@ -38,10 +38,13 @@
        editor.refresh();
     }
 
-    function activate(color){
+    function activate(color, fill){
        var container = document.getElementById('container');  
        container.style["border-color"] = color;
        container.style["opacity"]=1; 
+       var container = document.getElementById('container');  
+       java.jslog(editor.style);
+       editor.getWrapperElement().style["background-color"] = fill;
     }
     
     function deactivate(){

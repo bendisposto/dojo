@@ -128,6 +128,10 @@ public class EditorViewController extends SplitPane implements Initializable {
         bus.post(event);
     }
 
+    public void jslog(String msg) {
+        logger.debug(msg);
+    }
+
     public void showExercise(Exercise exercise) {
         String jscallCode = "editor.setValue('" + exercise.getCode().getCode().replaceAll("\\n", "\\\\n") + "')";
         code.getEngine().executeScript(jscallCode);
@@ -172,7 +176,7 @@ public class EditorViewController extends SplitPane implements Initializable {
         revertToTest = getTest();
         revertToCode = getCode();
         clearHistory();
-        tests.getEngine().executeScript("activate('crimson')");
+        tests.getEngine().executeScript("activate('crimson','white')");
         code.getEngine().executeScript("deactivate()");
         iGreenBox.setVisible(false);
         iRedLabel1.setText("Write code to make all tests pass");
@@ -185,7 +189,7 @@ public class EditorViewController extends SplitPane implements Initializable {
         tests.getEngine().executeScript("editor.setOption('readOnly', true)");
         revertToTest = getTest();
         clearHistory();
-        code.getEngine().executeScript("activate('forestgreen')");
+        code.getEngine().executeScript("activate('forestgreen','white')");
         tests.getEngine().executeScript("deactivate()");
         iGreenBox.setVisible(true);
         AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
@@ -195,8 +199,8 @@ public class EditorViewController extends SplitPane implements Initializable {
     private void changePhaseToRefactor(SwitchedToRefactorEvent event) {
         code.getEngine().executeScript("editor.setOption('readOnly', false)");
         tests.getEngine().executeScript("editor.setOption('readOnly', false)");
-        tests.getEngine().executeScript("activate('orange')");
-        code.getEngine().executeScript("activate('orange')");
+        tests.getEngine().executeScript("activate('orange','#FFC')");
+        code.getEngine().executeScript("activate('orange','#FFC')");
         clearHistory();
         iGreenBox.setVisible(true);
         iRedLabel1.setText("Modify code, but keep all tests passing");
