@@ -176,7 +176,7 @@ public class EditorViewController extends SplitPane implements Initializable {
         revertToTest = getTest();
         revertToCode = getCode();
         clearHistory();
-        tests.getEngine().executeScript("activate('crimson','white')");
+        tests.getEngine().executeScript("activate('crimson','rgba(220,20,60,0.1)')");
         code.getEngine().executeScript("deactivate()");
         iGreenBox.setVisible(false);
         iRedLabel1.setText("Write code to make all tests pass");
@@ -189,7 +189,7 @@ public class EditorViewController extends SplitPane implements Initializable {
         tests.getEngine().executeScript("editor.setOption('readOnly', true)");
         revertToTest = getTest();
         clearHistory();
-        code.getEngine().executeScript("activate('forestgreen','white')");
+        code.getEngine().executeScript("activate('forestgreen','rgba(34,139,34,0.1)')");
         tests.getEngine().executeScript("deactivate()");
         iGreenBox.setVisible(true);
         AnchorPane.setRightAnchor(codeBox, iGreenBox.getWidth() + 10);
