@@ -28,9 +28,18 @@
                       { lineNumbers: true,
                         indentUnit: 4,
                         autoCloseBrackets: true,
-                        matchBrackets: true, 
-                        mode: "text/x-java" });
-                        
+                        matchBrackets: true,
+                        mode: "text/x-java",
+                        extraKeys: {
+                          Tab: function(cm) {
+                            if(cm.somethingSelected())
+                              cm.indentSelection("add");
+                            else
+                              cm.execCommand("insertSoftTab");
+                            },
+                          "Shift-Tab": function(cm) {
+                            cm.indentSelection("subtract");
+                          }}});
     editor.on("change", onChange)                 
 
     function changeFontSize(size){
