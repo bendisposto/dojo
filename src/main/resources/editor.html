@@ -36,10 +36,11 @@
             mode: "text/x-java",
             extraKeys: {
                 Tab: function (cm) {
-                    if (cm.somethingSelected())
+                    if (cm.somethingSelected()) {
                         cm.indentSelection("add");
-                    else
+                    } else {
                         cm.execCommand("insertSoftTab");
+                    }
                 },
                 "Shift-Tab": function (cm) {
                     cm.indentSelection("subtract");
