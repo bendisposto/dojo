@@ -1,74 +1,77 @@
 <html>
 <head>
-	<link rel='stylesheet' href='codemirror.css'>
-	<script src='codemirror.js'></script>
-	<script src='clike.js'></script>
-    <script src='closebrackets.js'></script>
-    <script src='matchbrackets.js'></script>
+  <link rel='stylesheet' href='codemirror.css'>
+  <script src='codemirror.js'></script>
+  <script src='clike.js'></script>
+  <script src='closebrackets.js'></script>
+  <script src='matchbrackets.js'></script>
 </head>
 <body>
 <div id="container">
   <textarea id='code'></textarea>
-</div>  
+</div>
 <script>
 
     var TO;
+
     function compile(cm) {
-      java.compile(type, cm.getValue());
+        java.compile(type, cm.getValue());
     }
 
     function onChange(cm) {
-       clearTimeout(TO);
-       TO = setTimeout(function(){compile(cm);}, 500);
-    }
-    
-   
-    var code = document.getElementById('code');  
-    var editor = CodeMirror.fromTextArea(code, 
-                      { lineNumbers: true,
-                        indentUnit: 4,
-                        autoCloseBrackets: true,
-                        matchBrackets: true,
-                        mode: "text/x-java",
-                        extraKeys: {
-                          Tab: function(cm) {
-                            if(cm.somethingSelected())
-                              cm.indentSelection("add");
-                            else
-                              cm.execCommand("insertSoftTab");
-                            },
-                          "Shift-Tab": function(cm) {
-                            cm.indentSelection("subtract");
-                          }}});
-    editor.on("change", onChange)                 
-
-    function changeFontSize(size){
-       editor.getWrapperElement().style["font-size"] = size+"px";
-       editor.refresh();
+        clearTimeout(TO);
+        TO = setTimeout(function () {
+            compile(cm);
+        }, 500);
     }
 
-    function activate(color, fill){
-       var container = document.getElementById('container');  
-       container.style["border-color"] = color;
-       container.style["opacity"]=1; 
-       var container = document.getElementById('container');  
-       java.jslog(editor.style);
-       editor.getWrapperElement().style["background-color"] = fill;
+
+    var code = document.getElementById('code');
+    var editor = CodeMirror.fromTextArea(code,
+        {
+            lineNumbers: true,
+            indentUnit: 4,
+            autoCloseBrackets: true,
+            matchBrackets: true,
+            mode: "text/x-java",
+            extraKeys: {
+                Tab: function (cm) {
+                    if (cm.somethingSelected())
+                        cm.indentSelection("add");
+                    else
+                        cm.execCommand("insertSoftTab");
+                },
+                "Shift-Tab": function (cm) {
+                    cm.indentSelection("subtract");
+                }
+            }
+        });
+    editor.on("change", onChange);
+
+    function changeFontSize(size) {
+        editor.getWrapperElement().style["font-size"] = size + "px";
+        editor.refresh();
     }
-    
-    function deactivate(){
-       var container = document.getElementById('container');  
-       container.style["border-color"] = 'lightgray';
-       container.style["opacity"]=0.4; 
-       editor.getWrapperElement().style["background-color"] = 'white';
-       
+
+    function activate(color, fill) {
+        var container = document.getElementById('container');
+        container.style["border-color"] = color;
+        container.style["opacity"] = 1;
+        var container = document.getElementById('container');
+        java.jslog(editor.style);
+        editor.getWrapperElement().style["background-color"] = fill;
     }
-    
+
+    function deactivate() {
+        var container = document.getElementById('container');
+        container.style["border-color"] = 'lightgray';
+        container.style["opacity"] = 0.4;
+        editor.getWrapperElement().style["background-color"] = 'white';
+    }
+
     function clearHistory() {
-       editor.getDoc().clearHistory()
+        editor.getDoc().clearHistory()
     }
-    
-                        
 </script>
 </body>
 </html>
