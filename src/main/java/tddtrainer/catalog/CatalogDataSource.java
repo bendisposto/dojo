@@ -18,7 +18,7 @@ import com.mashape.unirest.request.GetRequest;
 
 public class CatalogDataSource {
 
-    private static final String DEFAULT_LOCATION = "https://www3.hhu.de/stups/downloads/dojo/katalog.json";
+    private static final String DEFAULT_LOCATION = "https://bendisposto.github.io/dojo/katalog.json";
 
     static Gson gson = new Gson();
 

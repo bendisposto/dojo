@@ -11,6 +11,13 @@ through the typical phases in TDD, i.e. Write failing test --> Pass the test -->
 
 ![tddt](img/happynumbers.png)
 
+### Use your own katalog
+
+You can specify your own katalog by calling the binary with this command:
+
+    DOJO_OPTS="-Dkatalog=path/to/katalog.json" ./bin/dojo
+
+
 ## Contributions
 
 This tool is based on a student's project by Marcel Käufler, Antonia Pütz, Benedikt Schmeitz, Luisa Schuhmacher & Simon Weber
