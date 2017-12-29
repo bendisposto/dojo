@@ -1,6 +1,7 @@
 package tddtrainer.compiler;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -118,7 +119,12 @@ public class AutoCompilerResult {
                 sb.append(", Method: ");
                 sb.append(failure.getMethodName());
                 sb.append("\n");
-                sb.append(failure.getMessage());
+                String[] linesOfStackTrace = failure.getExceptionStackTrace().split("\n");
+                String limitedStackTrace = Arrays.stream(linesOfStackTrace).limit(8)
+                        .collect(Collectors.joining("\n")) + "\n";
+                sb.append(limitedStackTrace);
+                if (linesOfStackTrace.length > 8)
+                    sb.append("\t...\n");
                 sb.append("\n");
             }
         }
