@@ -1,15 +1,12 @@
 package tddtrainer.compiler;
 
+import tddtrainer.catalog.Exercise;
+import vk.core.api.*;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
-import tddtrainer.catalog.Exercise;
-import vk.core.api.CompilationUnit;
-import vk.core.api.CompileError;
-import vk.core.api.JavaStringCompiler;
-import vk.core.api.TestFailure;
-import vk.core.api.TestResult;
 
 public class AutoCompilerResult {
 
@@ -18,12 +15,12 @@ public class AutoCompilerResult {
     private final boolean hasCompileErrors;
     private final boolean hasFailingTests;
     private final String compilerOutput;
-    private Collection<CompileError> allErrors;
     private final String testOutput;
     private final CompilationUnit testCU;
     private final CompilationUnit codeCU;
+    private Collection<CompileError> allErrors;
 
-    public AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
+    AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
         testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
         codeCU = compiler.getCompilationUnitByName(exercise.getCode().getName());
 
@@ -34,7 +31,7 @@ public class AutoCompilerResult {
 
         testResult = compiler.getTestResult();
         hasCompileErrors = compiler.getCompilerResult().hasCompileErrors();
-        hasFailingTests = hasCompileErrors ? false : compiler.getTestResult().getNumberOfFailedTests() != 0;
+        hasFailingTests = !hasCompileErrors && compiler.getTestResult().getNumberOfFailedTests() != 0;
         compilerOutput = getConsoleText(compiler, testCU, codeCU);
         testOutput = testResult == null ? "" : testResult.getOutput();
     }
@@ -99,6 +96,26 @@ public class AutoCompilerResult {
         return sb.toString();
     }
 
+    /**
+     * In most cases a small getMessage returns enough information to debug the error. But some exceptions require more
+     * information. In this case a part of the StackTrace is appended to the StringBuffer.
+     *
+     * @param sb
+     * @param failure
+     */
+    private void stackTraceOrMessage(StringBuffer sb, TestFailure failure) {
+        String[] linesOfStackTrace = failure.getExceptionStackTrace().split("\n");
+        if (linesOfStackTrace[0].contains("ArrayIndexOutOfBoundsException")) {
+            String limitedStackTrace = Arrays.stream(linesOfStackTrace).limit(5)
+                    .collect(Collectors.joining("\n")) + "\n";
+            sb.append(limitedStackTrace);
+            if (linesOfStackTrace.length > 5)
+                sb.append("\t...\n");
+        } else {
+            sb.append(failure.getMessage());
+        }
+    }
+
     private void appendTestResults(TestResult testResult, StringBuffer sb) {
         sb.append("Successful Tests: ");
         sb.append(testResult.getNumberOfSuccessfulTests());
@@ -118,7 +135,7 @@ public class AutoCompilerResult {
                 sb.append(", Method: ");
                 sb.append(failure.getMethodName());
                 sb.append("\n");
-                sb.append(failure.getMessage());
+                stackTraceOrMessage(sb, failure);
                 sb.append("\n");
             }
         }
