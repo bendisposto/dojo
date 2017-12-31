@@ -1,16 +1,12 @@
 package tddtrainer.compiler;
 
+import tddtrainer.catalog.Exercise;
+import vk.core.api.*;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
-
-import tddtrainer.catalog.Exercise;
-import vk.core.api.CompilationUnit;
-import vk.core.api.CompileError;
-import vk.core.api.JavaStringCompiler;
-import vk.core.api.TestFailure;
-import vk.core.api.TestResult;
 
 public class AutoCompilerResult {
 
@@ -19,12 +15,12 @@ public class AutoCompilerResult {
     private final boolean hasCompileErrors;
     private final boolean hasFailingTests;
     private final String compilerOutput;
-    private Collection<CompileError> allErrors;
     private final String testOutput;
     private final CompilationUnit testCU;
     private final CompilationUnit codeCU;
+    private Collection<CompileError> allErrors;
 
-    public AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
+    AutoCompilerResult(JavaStringCompiler compiler, Exercise exercise) {
         testCU = compiler.getCompilationUnitByName(exercise.getTest().getName());
         codeCU = compiler.getCompilationUnitByName(exercise.getCode().getName());
 
