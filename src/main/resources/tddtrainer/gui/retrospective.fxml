@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root minHeight="100.0" minWidth="500.0" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-color: white;" type="BorderPane" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1">
+	<top>
+		<HBox BorderPane.alignment="CENTER">
+			<children>
+				<Label text="Retrospective and Planning:" textFill="#6f8391">
+					<font>
+						<Font size="21.0" />
+					</font>
+					<HBox.margin>
+						<Insets left="15.0" />
+					</HBox.margin>
+				</Label>
+			</children>
+		</HBox>
+	</top>
+	<bottom>
+		<ButtonBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+			<buttons>
+				<Button mnemonicParsing="false" text="Continue"  onAction="#continueClick"/>
+			</buttons>
+			<BorderPane.margin>
+				<Insets right="10.0" />
+			</BorderPane.margin>
+		</ButtonBar>
+	</bottom>
+   <center>
+      <SplitPane dividerPositions="0.5" prefHeight="160.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TitledPane animated="false" collapsible="false" layoutX="120.0" layoutY="99.0" text="What have you learned/observed in the last cycle?" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <content>
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="retro" layoutX="38.0" layoutY="52.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                    </content>
+                  </TitledPane>
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+               <children>
+                  <TitledPane animated="false" collapsible="false" text="What do you plan for the next cycle?" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                           <children>
+                              <TextArea fx:id="plan" layoutX="59.0" layoutY="99.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                           </children>
+                        </AnchorPane>
+                     </content>
+                  </TitledPane>
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+   </center>
+</fx:root>

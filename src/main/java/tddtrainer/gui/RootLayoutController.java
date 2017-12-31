@@ -23,267 +23,349 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import tddtrainer.automaton.CanProceedEvent;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.JavaClass;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
-import tddtrainer.events.PhaseChangeEvent;
 import tddtrainer.events.TimeEvent;
+import tddtrainer.events.Views;
+import tddtrainer.events.automaton.EnforceRefactoringEvent;
+import tddtrainer.events.automaton.ProceedPhaseRequest;
+import tddtrainer.events.automaton.ResetPhaseEvent;
+import tddtrainer.events.automaton.SwitchedToGreenEvent;
+import tddtrainer.events.automaton.SwitchedToRedEvent;
+import tddtrainer.events.automaton.SwitchedToRefactorEvent;
+import tddtrainer.events.gui.ShowSelectDialogRequest;
 import tddtrainer.handbook.Handbook;
-import tddtrainer.logic.Phase;
-import tddtrainer.logic.PhaseManagerIF;
-import tddtrainer.logic.PhaseStatus;
+import tddtrainer.tracker.Tracker;
 
 public class RootLayoutController extends BorderPane implements Initializable {
 
-	@FXML
-	private BorderPane root;
+    @FXML
+    private BorderPane root;
 
-	@FXML
-	private Button resetButton;
+    @FXML
+    private Button resetButton;
 
-	@FXML
-	private Button nextStepButton;
+    @FXML
+    private Button nextStepButton;
 
-	@FXML
-	private Label statusLabel;
+    @FXML
+    private Label statusLabel;
 
-	@FXML
-	private Label exerciseLabel;
+    @FXML
+    private Label exerciseLabel;
 
-	@FXML
-	private Label timeLabel;
+    @FXML
+    private Label timeLabel;
 
-	@FXML
-	private ImageView timerImage;
+    @FXML
+    private ImageView timerImage;
 
-	@FXML
-	private HBox iRedBox;
+    @FXML
+    private HBox iRedBox;
 
-	@FXML
-	private MenuItem showDescription;
+    @FXML
+    private Label iRedLabel;
 
-	private ResourceBundle resources;
+    @FXML
+    private MenuItem showDescription;
 
-	private PhaseManagerIF phaseManager;
+    @FXML
+    private MenuItem zoomin;
 
-	private EventBus bus;
+    @FXML
+    private MenuItem zoomout;
 
-	@FXML
-	private AnchorPane rootPane;
+    private ResourceBundle resources;
 
-	@FXML
-	private EditorViewController editors;
+    private EventBus bus;
 
-	Logger logger = LoggerFactory.getLogger(RootLayoutController.class);
+    @FXML
+    private AnchorPane rootPane;
 
-	@Override
-	public void initialize(URL location, ResourceBundle resources) {
-		this.resources = resources;
-		enableReset(false);
-		enableShowDescription(false);
-		hideRedBox();
-	}
+    @FXML
+    private EditorViewController editors;
 
-	@Inject
-	public RootLayoutController(FXMLLoader loader, EventBus bus, PhaseManagerIF phaseManager) {
-		this.phaseManager = phaseManager;
-		this.bus = bus;
-		bus.register(this);
-		URL resource = getClass().getResource("RootLayout.fxml");
-		loader.setLocation(resource);
-		loader.setController(this);
-		loader.setRoot(this);
-		try {
-			loader.load();
-		} catch (IOException e) {
-			logger.error("Error loading Root view", e);
-		}
-	}
+    Logger logger = LoggerFactory.getLogger(RootLayoutController.class);
 
-	@Subscribe
-	public void updateTime(TimeEvent event) {
-		long time = event.getTime();
-		Platform.runLater(() -> {
-			timerImage.setVisible(true);
-			timeLabel.setText("" + time);
-			if (time <= 5) {
-				timeLabel.setFont(new Font("System bold", 18.0));
-			} else if (time <= 10) {
-				timeLabel.setFont(new Font("System", 15.0));
-				timeLabel.setStyle("-fx-text-fill: crimson");
-			} else {
-				timeLabel.setFont(new Font("System", 15.0));
-				timeLabel.setStyle("-fx-text-fill: #6f8391");
-			}
-		});
-	}
+    private Exercise exercise;
 
-	@FXML
-	private void changeLanguage(ActionEvent event) {
-		List<String> choices = new ArrayList<>();
-		choices.add("English");
-		choices.add("Deutsch");
+    private final Tracker tracker;
 
-		ChoiceDialog<String> dialog = new ChoiceDialog<>("English", choices);
-		dialog.setTitle(resources.getString("languagedialog.title"));
-		dialog.setHeaderText(resources.getString("languagedialog.headerText"));
-		dialog.setContentText(resources.getString("languagedialog.contentText"));
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resources = resources;
+        enableReset(false);
+        enableShowDescription(false);
+        hideRedBox();
+        setKeyboardAccelerators();
+    }
 
-		Optional<String> result = dialog.showAndWait();
+    private void setKeyboardAccelerators() {
+        zoomin.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, KeyCombination.SHORTCUT_DOWN));
+        zoomout.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT9, KeyCombination.SHORTCUT_DOWN));
+    }
 
-		Locale locale = result.isPresent() && result.get().equals("English") ? new Locale("en", "EN")
-				: result.isPresent() && result.get().equals("Deutsch") ? new Locale("de", "DE") : resources.getLocale();
+    @Inject
+    public RootLayoutController(FXMLLoader loader, EventBus bus, Tracker tracker) {
+        this.bus = bus;
+        this.tracker = tracker;
+        bus.register(this);
+        URL resource = getClass().getResource("RootLayout.fxml");
+        loader.setLocation(resource);
+        loader.setController(this);
+        loader.setRoot(this);
+        try {
+            loader.load();
+        } catch (IOException e) {
+            logger.error("Error loading Root view", e);
+        }
+    }
 
-		if (!resources.getLocale().toString().equals(locale.toString().substring(0, 2))) {
+    @Subscribe
+    public void updateTime(TimeEvent event) {
+        long time = event.getTime();
+        Platform.runLater(() -> {
+            timerImage.setVisible(true);
+            timeLabel.setText("" + time);
+            if (time <= 5) {
+                timeLabel.setFont(new Font("System bold", 18.0));
+            } else if (time <= 10) {
+                timeLabel.setFont(new Font("System", 15.0));
+                timeLabel.setStyle("-fx-text-fill: crimson");
+            } else {
+                timeLabel.setFont(new Font("System", 15.0));
+                timeLabel.setStyle("-fx-text-fill: #6f8391");
+            }
+        });
+    }
 
-			this.resources = ResourceBundle.getBundle("bundles.tddt", locale);
-			bus.post(new LanguageChangeEvent(resources));
-			phaseManager.resetPhase();
-		}
+    @FXML
+    private void changeLanguage(ActionEvent event) {
+        List<String> choices = new ArrayList<>();
+        choices.add("English");
+        choices.add("Deutsch");
 
-	}
+        ChoiceDialog<String> dialog = new ChoiceDialog<>("English", choices);
+        dialog.setTitle(resources.getString("languagedialog.title"));
+        dialog.setHeaderText(resources.getString("languagedialog.headerText"));
+        dialog.setContentText(resources.getString("languagedialog.contentText"));
 
-	@Subscribe
-	void changePhase(PhaseChangeEvent phaseChangeEvent) {
-		Phase phase = phaseChangeEvent.getPhase();
-		switch (phase) {
-		case RED:
-			switchToStatusRed();
-			break;
-		case GREEN:
-			switchToStatusGreen();
-			break;
-		case REFACTOR:
-			switchToStatusRefactor();
-			break;
-		}
-	}
+        Optional<String> result = dialog.showAndWait();
 
-	public void switchToStatusRed() {
-		System.out.println("red");
-		showRedBox();
-		enableReset(true);
-		// statusLabel.setText("red");
-		// statusLabel.getStyleClass().clear();
-		// statusLabel.getStyleClass().add("statuslabel-red");
-	}
+        Locale locale = result.isPresent() && result.get().equals("English") ? new Locale("en", "EN")
+                : result.isPresent() && result.get().equals("Deutsch") ? new Locale("de", "DE") : resources.getLocale();
 
-	public void switchToStatusGreen() {
-		System.out.println("green");
-		enableReset(true);
-		hideRedBox();
-		// statusLabel.setText("green");
-		// statusLabel.getStyleClass().clear();
-		// statusLabel.getStyleClass().add("statuslabel-green");
-	}
+        if (!resources.getLocale().toString().equals(locale.toString().substring(0, 2))) {
 
-	public void switchToStatusRefactor() {
-		System.out.println("refactor");
-		enableReset(false);
-		hideRedBox();
-		timeLabel.setText("");
-		timerImage.setVisible(false);
-		// statusLabel.setText("refactor");
-		// statusLabel.getStyleClass().clear();
-		// statusLabel.getStyleClass().add("statuslabel-refactor");
-	}
+            this.resources = ResourceBundle.getBundle("bundles.tddt", locale);
+            bus.post(new LanguageChangeEvent(resources));
+        }
 
-	@FXML
-	private void selectExercise(ActionEvent event) {
-		phaseManager.selectExercise();
-	}
+    }
 
-	@FXML
-	private void showProgress(ActionEvent event) {
-		phaseManager.displayTracking();
-	}
+    @FXML
+    private void increaseFontSize(ActionEvent event) {
+        editors.zoomIn();
+    }
 
-	@FXML
-	private void reset(ActionEvent event) {
-		phaseManager.resetPhase();
-	}
+    @FXML
+    private void decreaseFontSize(ActionEvent event) {
+        editors.zoomOut();
+    }
 
-	// @FXML
-	// private void handleTutorialMode(ActionEvent event) {
-	// CheckMenuItem item = (CheckMenuItem) event.getSource();
-	// editorViewController.setTutorialMode(item.isSelected());
-	// }
+    @FXML
+    private void resetFontSize(ActionEvent event) {
+        editors.zoomDefault();
+    }
 
-	@FXML
-	private void handleNextStep(ActionEvent event) {
-		Exercise exercise = newExerciseFromCurrentInput();
-		PhaseStatus status = phaseManager.checkPhase(exercise, true);
-		bus.post(new PhaseChangeEvent(status.getPhase()));
-	}
+    @Subscribe
+    public void switchToStatusRed(SwitchedToRedEvent event) {
+        nextStepButton.setText("Switch to phase GREEN");
+        nextStepButton.setStyle("-fx-background-color: green");
+        showRedBox();
+        iRedLabel.setText("Write exactly one failing test");
+        enableReset(false);
+        // statusLabel.setText("red");
+        // statusLabel.getStyleClass().clear();
+        // statusLabel.getStyleClass().add("statuslabel-red");
+    }
 
-	private Exercise newExerciseFromCurrentInput() {
-		Exercise oldExercise = phaseManager.getOriginalExercise();
-		Exercise exercise = new Exercise(oldExercise.getName(), oldExercise.getDescription());
-		exercise.addCode(new JavaClass(oldExercise.getCode(0).getName(), editors.getCode()));
-		exercise.addTest(new JavaClass(oldExercise.getTest(0).getName(), editors.getTest()));
-		return exercise;
-	}
+    @Subscribe
+    public void switchToStatusGreen(SwitchedToGreenEvent event) {
+        nextStepButton.setText("Switch to phase REFACTOR");
+        nextStepButton.setStyle("-fx-background-color: orange");
 
-	@FXML
-	private void showExerciseDescription(ActionEvent event) {
-		String description = phaseManager.getOriginalExercise().getDescription();
-		Alert alert = new Alert(AlertType.INFORMATION);
-		alert.setTitle(resources.getString("description"));
-		alert.setHeaderText(null);
-		alert.setContentText(description);
-		alert.showAndWait();
-	}
+        enableReset(true);
+        hideRedBox();
+        // statusLabel.setText("green");
+        // statusLabel.getStyleClass().clear();
+        // statusLabel.getStyleClass().add("statuslabel-green");
+    }
 
-	@FXML
-	private void showHandbook(ActionEvent event) {
-		try {
-			new Handbook().showPDF();
-		} catch (Exception e) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle(resources.getString("handbook.error.title"));
-			alert.setHeaderText(null);
-			alert.setContentText(resources.getString("handbook.error.message") + "\n" + e.getMessage());
-			alert.showAndWait();
-		}
-	}
+    @Subscribe
+    public void switchToStatusRefactor(SwitchedToRefactorEvent event) {
+        nextStepButton.setText("Switch to phase RED");
+        nextStepButton.setStyle("-fx-background-color: red");
 
-	protected void enableReset(boolean enable) {
-		resetButton.setDisable(!enable);
-	}
+        enableReset(false);
+        showRedBox();
+        iRedLabel.setText("Modify tests, but keep them passing");
+        timeLabel.setText("");
+        timerImage.setVisible(false);
+        // statusLabel.setText("refactor");
+        // statusLabel.getStyleClass().clear();
+        // statusLabel.getStyleClass().add("statuslabel-refactor");
+    }
 
-	protected void enableShowDescription(boolean enable) {
-		showDescription.setDisable(!enable);
-	}
+    @FXML
+    private void selectExercise(ActionEvent event) {
+        bus.post(new ShowSelectDialogRequest());
+    }
 
-	@Subscribe
-	public void showExercise(ExerciseEvent exerciseEvent) {
-		Exercise exercise = exerciseEvent.getExercise();
+    @FXML
+    private void showExerciseDescription(ActionEvent event) {
+        bus.post(Views.VIEWER);
+    }
 
-		if (exercise != null) {
-			exerciseLabel.setText(exercise.getName());
-			exerciseLabel.setTooltip(new Tooltip(exercise.getName()));
-			enableShowDescription(true);
-		}
-		nextStepButton.setDisable(false);
-	}
+    @FXML
+    private void enforceRefactoring(ActionEvent event) {
+        bus.post(new EnforceRefactoringEvent());
+    }
 
-	public void hideRedBox() {
-		iRedBox.setVisible(false);
-	}
+    @FXML
+    private void showProgress(ActionEvent event) {
+        bus.post(Views.RETROSPECT_VIEWER);
+    }
 
-	public void showRedBox() {
-		iRedBox.setVisible(true);
-		iRedBox.toFront();
-	}
+    @FXML
+    private void reset(ActionEvent event) {
+
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Resetting to RED and reverting your code");
+        alert.setHeaderText("Do you really want to reset to RED? This will revert your code!");
+        alert.setContentText(
+                "If you click ok, all recent changes to your code will be reverted.");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() != ButtonType.OK) {
+            return;
+        }
+        bus.post(new ResetPhaseEvent());
+    }
+
+    // @FXML
+    // private void handleTutorialMode(ActionEvent event) {
+    // CheckMenuItem item = (CheckMenuItem) event.getSource();
+    // editorViewController.setTutorialMode(item.isSelected());
+    // }
+
+    @FXML
+    private void handleNextStep(ActionEvent event) {
+        bus.post(new ProceedPhaseRequest());
+    }
+
+    @FXML
+    private void newExerciseWizard(ActionEvent event) {
+        TextInputDialog dialog = new TextInputDialog("MyClass");
+        dialog.setTitle("Enter Class Name");
+        dialog.setHeaderText(
+                "Creating a fresh exercise. Warning, this automatically terminates your current exercise!");
+        dialog.setContentText("Please enter the name of the class (without .java!):");
+
+        // Traditional way to get the response value.
+        Optional<String> result = dialog.showAndWait();
+        if (result.isPresent()) {
+            Exercise ex = new Exercise();
+            String classname = result.get();
+            String testname = classname + "Test";
+            ex.setName("Free Exercise");
+            JavaClass code = new JavaClass(classname, "public class " + classname + "{\n}");
+            JavaClass test = new JavaClass(testname,
+                    "import static org.junit.Assert.*;\nimport org.junit.*;\n\npublic class " + testname
+                            + "{\n    @Test\n    public void failingTest() {\n        fail(\"I fail on purpose\");\n    }\n}");
+
+            ex.setCode(code);
+            ex.setTest(test);
+            ex.setDescription("A free exercise, do whatever you want to do!");
+            ex.setBabyStepsActivated(false);
+            ex.setRetrospective(false);
+            bus.post(new ExerciseEvent(ex));
+
+        }
+
+    }
+
+    @FXML
+    private void showHandbook(ActionEvent event) {
+        try {
+            new Handbook().showPDF();
+        } catch (Exception e) {
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle(resources.getString("handbook.error.title"));
+            alert.setHeaderText(null);
+            alert.setContentText(resources.getString("handbook.error.message") + "\n" + e.getMessage());
+            alert.showAndWait();
+        }
+    }
+
+    protected void enableReset(boolean enable) {
+        resetButton.setDisable(!enable);
+    }
+
+    protected void enableShowDescription(boolean enable) {
+        showDescription.setDisable(!enable);
+    }
+
+    @Subscribe
+    public void setVisible(Views v) {
+        if (v.equals(Views.WORKING)) {
+            setVisible(true);
+        } else {
+            setVisible(false);
+        }
+    }
+
+    @Subscribe
+    public void showExercise(ExerciseEvent exerciseEvent) {
+        exercise = exerciseEvent.getExercise();
+        bus.post(Views.WORKING);
+        if (exercise != null) {
+            exerciseLabel.setText(exercise.getName());
+            exerciseLabel.setTooltip(new Tooltip(exercise.getName()));
+            enableShowDescription(true);
+        }
+        nextStepButton.setDisable(false);
+    }
+
+    @Subscribe
+    public void switchProceedButton(CanProceedEvent event) {
+        nextStepButton.setDisable(!event.canProceed());
+    }
+
+    public void hideRedBox() {
+        iRedBox.setVisible(false);
+    }
+
+    public void showRedBox() {
+        iRedBox.setVisible(true);
+        iRedBox.toFront();
+    }
 
 }

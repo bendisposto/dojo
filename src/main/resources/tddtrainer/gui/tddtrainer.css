@@ -2,19 +2,35 @@
     src: url('/fonts/Swagger/Swagger.ttf'); 
 } 
 
+
+
 .split-pane > .split-pane-divider {
-    -fx-padding: 0 1 0 1;
+    -fx-padding: 0.0 1.0 0.0 1.0;
 
 }
 
 .split-pane:horizontal > .split-pane-divider {
    -fx-background-color: #6f8391;
-   -fx-background-insets: 0;
+   -fx-background-insets: 0.0;
 }
+
+.text-area .content {
+      -fx-border-color: white;
+   -fx-background-color: white;
+}
+.text-area  {
+   -fx-background-color: white;
+      -fx-border-color: white;
+}
+.split-pane  {
+   -fx-background-color: white;
+      -fx-border-color: white;
+}
+
 
 .split-pane:vertical > .split-pane-divider {
    -fx-background-color: #6f8391;
-   -fx-background-insets: 0;
+   -fx-background-insets: 0.0;
 }
 
 .statuslabel-red {
@@ -47,6 +63,8 @@
 
 .instruction {
 	-fx-font-family: 'Swagger';
-	-fx-font-size: 16;
-	-fx-font-weight: bold;
+	-fx-font-size: 16.0;
+	-fx-font-weight: bolder;
+	-fx-text-fill: black;
 }
+

@@ -1,8 +1,7 @@
 package tddtrainer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.util.Optional;
 
 import javax.tools.ToolProvider;
 
@@ -14,18 +13,22 @@ import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import tddtrainer.events.LanguageChangeEvent;
+import tddtrainer.events.Views;
+import tddtrainer.gui.RetrospectViewerController;
+import tddtrainer.gui.RetrospectiveController;
 import tddtrainer.gui.RootLayoutController;
-import tddtrainer.gui.catalog.ExerciseSelector;
-import tddtrainer.logic.PhaseManager;
-import tddtrainer.logic.PhaseManagerIF;
+import tddtrainer.gui.catalog.ExerciseSelectorController;
+import tddtrainer.gui.catalog.ExerciseViewerController;
 
 /**
  * The Main Class to get the Application started.
@@ -33,98 +36,96 @@ import tddtrainer.logic.PhaseManagerIF;
  */
 public class Main extends Application {
 
-	private BorderPane rootLayout;
-	private Stage primaryStage;
-	private final PhaseManagerIF phaseManager;
+    private Stage primaryStage;
 
-	Logger logger = LoggerFactory.getLogger(Main.class);
-	private String location = "https://gist.githubusercontent.com/bendisposto/22c56ad002e562b14beea0449b981b0d/raw/f968a2dbebc4830ed94e4e47beb25e50c9901288/catalog.xml";
-	private final EventBus bus;
-	private FXMLLoader loader;
-	private RootLayoutController root;
+    Logger logger = LoggerFactory.getLogger(Main.class);
+    private final EventBus bus;
+    private final RootLayoutController workingWindow;
+    private final ExerciseSelectorController exerciseSelectionWindow;
+    private final RetrospectiveController retrospect;
 
-	@Inject
-	public Main(FXMLLoader loader, EventBus bus, PhaseManager phaseManager,
-			ExerciseSelector exerciseSelector, RootLayoutController root) {
-		this.loader = loader;
-		this.bus = bus;
-		this.phaseManager = phaseManager;
-		this.root = root;
-		exerciseSelector.getDataSource().setXmlStream(getDatasourceStream());
-		bus.register(exerciseSelector);
-	}
+    private final ExerciseViewerController viewer;
 
-	@Override
-	public void start(Stage primaryStage) {
-		logger.trace("Checking if compiler is present.");
-		checkForJdk();
+    private final RetrospectViewerController retroViewer;
 
-		logger.trace("Setting up event bus.");
-		bus.register(this);
+    @Inject
+    public Main(EventBus bus,
+            ExerciseSelectorController exerciseSelector, RootLayoutController root,
+            RetrospectiveController retrospect, ExerciseViewerController viewer,
+            RetrospectViewerController retroViewer) {
+        this.bus = bus;
+        this.exerciseSelectionWindow = exerciseSelector;
+        this.workingWindow = root;
+        this.viewer = viewer;
+        this.retrospect = retrospect;
+        this.retroViewer = retroViewer;
+        bus.register(exerciseSelector);
+    }
 
-		logger.trace("Setting up primary stage.");
-		this.primaryStage = primaryStage;
-		primaryStage.setTitle("TDDTrainer");
-		primaryStage.getIcons().add(new Image("/tddtrainer/gui/app_icon.png"));
-		primaryStage.setOnCloseRequest((e) -> System.exit(0));
+    @Override
+    public void start(Stage primaryStage) {
+        logger.trace("Checking if compiler is present.");
+        checkForJdk();
 
-		bus.post(new LanguageChangeEvent(null));
-	}
+        logger.trace("Setting up event bus.");
+        bus.register(this);
 
-	private void checkForJdk() {
-		logger.trace("Checking if compiler is present");
-		if (ToolProvider.getSystemJavaCompiler() == null) {
-			logger.error("JDK not present, ToolProvider.getSystemJavaCompiler() returned null");
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error: No Java Compiler");
-			alert.setHeaderText(null);
-			alert.setContentText("Cannot execute application, because a java compiler is required.\n\n"
-					+ "Please run the application with a JDK of version 1.8.0_40 or higher.\n\n");
-			alert.showAndWait();
-			System.exit(-1);
-		}
-	}
+        logger.trace("Setting up primary stage.");
+        this.primaryStage = primaryStage;
+        primaryStage.setTitle("TDD Trainer");
+        primaryStage.getIcons().add(new Image("/tddtrainer/gui/app_icon.png"));
+        primaryStage.setOnCloseRequest((e) -> {
+            e.consume();
+            Alert alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Closing Application");
+            alert.setHeaderText("Do you really want to close the application?");
+            alert.setContentText(
+                    "If you click ok, the application will be closed!");
 
-	private InputStream getDatasourceStream() {
-		InputStream xmlStream = null;
-		try {
-			logger.debug("Fetch Catalog from {}", location);
-			URL url = new URL(location);
-			xmlStream = url.openStream();
-		} catch (IOException e) {
-			showFailedToLoadCatalogAlert(e.getClass().getSimpleName(), e.getLocalizedMessage());
-			System.exit(-1);
-		}
-		return xmlStream;
-	}
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) {
+                primaryStage.close();
+                System.exit(0);
+            }
+        });
 
-	private void showFailedToLoadCatalogAlert(String exceptionName, String excptionMessage) {
-		logger.error("Error fetching catalog. {} : {}", exceptionName, excptionMessage);
-		Alert alert = new Alert(AlertType.ERROR);
-		alert.setTitle("Error fetching catalog");
-		alert.setHeaderText(null);
-		alert.setContentText(String.format(
-				"The catalog could not be downloaded. \n\n"
-						+ "The cause is %s : %s \n\n"
-						+ "Please verify that you are online. "
-						+ "If the problem still occurs please notify the administrator. \n\n"
-						+ "The program will now be terminated.",
-				exceptionName, excptionMessage));
-		alert.showAndWait();
-	}
+        bus.post(new LanguageChangeEvent(null));
+    }
 
-	@Subscribe
-	public void initRootLayout(LanguageChangeEvent event) throws IOException {
-		// loader.setLocation(Main.class.getResource("gui/RootLayout.fxml"));
-		// rootLayout = (BorderPane) loader.load();
-		// RootLayoutController controller = loader.getController();
-		// controller.init(phaseManager, bus);
-		primaryStage.setScene(new Scene(root));
-		primaryStage.show();
-		primaryStage.setWidth(1100);
-		primaryStage.setMinWidth(1100);
-		primaryStage.setHeight(600);
-		primaryStage.setMinHeight(600);
-	}
+    private void checkForJdk() {
+        logger.trace("Checking if compiler is present");
+        if (ToolProvider.getSystemJavaCompiler() == null) {
+            logger.error("JDK not present, ToolProvider.getSystemJavaCompiler() returned null");
+            Alert alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error: No Java Compiler");
+            alert.setHeaderText(null);
+            alert.setContentText("Cannot execute application, because a java compiler is required.\n\n"
+                    + "Please run the application with a JDK of version 1.8.0_40 or higher.\n\n");
+            alert.showAndWait();
+            System.exit(-1);
+        }
+    }
+
+    @Subscribe
+    public void initRootLayout(LanguageChangeEvent event) throws IOException {
+        // loader.setLocation(Main.class.getResource("gui/RootLayout.fxml"));
+        // rootLayout = (BorderPane) loader.load();
+        // RootLayoutController controller = loader.getController();
+        // controller.init(phaseManager, bus);
+
+        StackPane root = new StackPane(workingWindow, exerciseSelectionWindow, retrospect, viewer, retroViewer);
+        bus.post(Views.SELECTOR);
+
+        Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+        int height = (int) Math.max(800, 0.8 * visualBounds.getHeight());
+        int width = (int) Math.max(1100, 0.8 * visualBounds.getWidth());
+
+        primaryStage.setScene(new Scene(root));
+        primaryStage.setWidth(width);
+        primaryStage.setMinWidth(1024);
+        primaryStage.setHeight(height);
+        primaryStage.setMinHeight(600);
+        primaryStage.show();
+    }
 
 }
