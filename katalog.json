@@ -526,5 +526,51 @@
     },
     babyStepsActivated: true,
     retrospective: false
+  },
+  {
+    name: "Tiny Maze",
+    description: "<html><head><meta charset='utf-8'><style>thead th {text-align: left;}td,th {border: 1px solid #ddd;padding: 0.5em;}table {border-collapse: collapse;}</style></head><body><h1>tiny-maze</h1><p>&ldquo;Alice found herself very tiny and wandering around Wonderland. Even the grassaround her seemed like a maze.&rdquo;</p><p><img src='https://bendisposto.github.io/dojo/tiny-maze/alice.gif' alt='alice' /></p><p>In diesem Kata schreiben wir ein Programm, welches uns durch Labyrinthe f�hren kann. Dabei wird ein Labyrinth als 2d-Array repr�sentiert:</p><p><code>new String[][] {<br>&nbsp;&nbsp;&nbsp;&nbsp;{'S', '0', '1'},<br>&nbsp;&nbsp;&nbsp;&nbsp;{'1', '0', '1'},<br>&nbsp;&nbsp;&nbsp;&nbsp;{'1', '0', 'E'}<br>};</code></p><p>Die Symbole haben folgende Bedeutungen:<ul><li><code>S</code>: Eingang ins Labyrinth.</li><li><code>E</code>: Der ersehnte Ausgang.</li><li><code>1</code>: Eine Mauer. Hierdurch k�nnen wir nicht gehen.</li><li><code>0</code>: Ein freier Platz. Hier�ber k�nnen wir gehen.</li></ul></p><p>Ziel ist es vom Anfang des Labyrinths (= <code>S</code>) zum Ausgang (= <code>E</code>) zu kommen. Der Weg soll dabei als neues 2d-Array zur�ckgegeben werden, wobei der Weg mit &ldquo;x&rdquo; markiert wird:</p><p><code>new String[][] {<br>&nbsp;&nbsp;&nbsp;&nbsp;{'x', 'x', '1'},<br>&nbsp;&nbsp;&nbsp;&nbsp;{'1', 'x', '1'},<br>&nbsp;&nbsp;&nbsp;&nbsp;{'1', 'x', 'x'}<br>};</code></p><p>Den ersten Test geben wir vor. Entwickeln Sie das Programm im Stile der testgetriebenen Entwicklung. Gehen Sie kleinschrittig vor und arbeiten Sie mit einem Partner zusammen. Nachdem Sie einen weiteren fehlschlagenden Testgeschrieben haben (= Phase rot), tauschen Driver und Navigator die Rollen biszum n�chsten fehlschlagenden Test.</p><p>Basierend auf <a href='https://github.com/gigasquid/wonderland-clojure-katas/tree/master/tiny-maze'>wonderland-clojure-katas</a></p></body></html>",
+    code: {
+      name: "TinyMaze",
+      code: [
+        "public class TinyMaze {",
+        "    ",
+        "    private final String[][] maze;",
+        "",
+        "    TinyMaze(String[][] maze) {",
+        "        this.maze = maze;",
+        "    }",
+        "",
+        "    public String[][] solve() {",
+        "        return null;",
+        "    }",
+        "",
+        "}"
+      ]
+    },
+    test: {
+      name: "TinyMazeTest",
+      code: [
+        "import static org.junit.Assert.*;",
+        "import org.junit.*;",
+        "",
+        "public class TinyMazeTest {",
+        "    @Test",
+        "    public void singleRowMaze() {",
+        "        String[][] maze = {",
+        "                {'S', 'E'}",
+        "        };",
+        "        TinyMaze tm = new TinyMaze(maze);",
+        "        String[][] solution = {",
+        "                {'x', 'x'}",
+        "        };",
+        "        assertArrayEquals(solution, tm.solve());",
+        "    }",
+        "",
+        "}"
+      ]
+    },
+    babyStepsActivated: false,
+    retrospective: false
   }
 ]
