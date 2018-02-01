@@ -535,7 +535,7 @@
       code: [
         "public class TinyMaze {",
         "    ",
-        "    private final String[][] maze;",
+        "    String[][] maze;",
         "",
         "    TinyMaze(String[][] maze) {",
         "        this.maze = maze;",
