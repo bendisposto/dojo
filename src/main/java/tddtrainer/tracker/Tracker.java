@@ -20,5 +20,4 @@ public class Tracker {
     public List<AbstractStep> getSteps() {
         return Collections.unmodifiableList(tracked);
     }
-
 }

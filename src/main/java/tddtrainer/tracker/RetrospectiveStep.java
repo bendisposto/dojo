@@ -1,8 +1,8 @@
 package tddtrainer.tracker;
 
-import java.time.Duration;
-
 import tddtrainer.automaton.Phase;
+
+import java.time.Duration;
 
 public class RetrospectiveStep extends AbstractStep {
 

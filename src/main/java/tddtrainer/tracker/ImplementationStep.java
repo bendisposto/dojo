@@ -1,9 +1,9 @@
 package tddtrainer.tracker;
 
-import java.time.Duration;
-
 import tddtrainer.automaton.Phase;
 import vk.core.api.CompilationUnit;
+
+import java.time.Duration;
 
 public class ImplementationStep extends AbstractStep {
 
@@ -13,7 +13,7 @@ public class ImplementationStep extends AbstractStep {
     private String consoleOutput;
 
     public ImplementationStep(Phase p, Duration d, CompilationUnit code, CompilationUnit test, String compilerOutput,
-            String consoleOutput) {
+                              String consoleOutput) {
         super(p, d);
         this.code = code.getClassContent();
         this.test = test.getClassContent();

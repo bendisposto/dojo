@@ -5,7 +5,7 @@ public class NoSuchUserException extends Exception {
     private static final long serialVersionUID = 5736242258957390318L;
     private String mail;
 
-    public NoSuchUserException(String mail) {
+    NoSuchUserException(String mail) {
         this.mail = mail;
     }
 
