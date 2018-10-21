@@ -2,10 +2,6 @@ package tddtrainer.events;
 
 public class JavaCodeChangeEvent {
 
-    public static enum CodeType {
-        TEST, CODE;
-    }
-
     private String text;
     private CodeType type;
 
@@ -20,6 +16,10 @@ public class JavaCodeChangeEvent {
 
     public CodeType getType() {
         return type;
+    }
+
+    public enum CodeType {
+        TEST, CODE
     }
 
 }
