@@ -1,17 +1,8 @@
 package tddtrainer;
 
-import java.io.IOException;
-import java.util.Optional;
-
-import javax.tools.ToolProvider;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -22,6 +13,8 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.Views;
 import tddtrainer.gui.RetrospectViewerController;
@@ -30,29 +23,28 @@ import tddtrainer.gui.RootLayoutController;
 import tddtrainer.gui.catalog.ExerciseSelectorController;
 import tddtrainer.gui.catalog.ExerciseViewerController;
 
+import javax.tools.ToolProvider;
+import java.util.Optional;
+
 /**
  * The Main Class to get the Application started.
- *
  */
 public class Main extends Application {
 
-    private Stage primaryStage;
-
-    Logger logger = LoggerFactory.getLogger(Main.class);
     private final EventBus bus;
     private final RootLayoutController workingWindow;
     private final ExerciseSelectorController exerciseSelectionWindow;
     private final RetrospectiveController retrospect;
-
     private final ExerciseViewerController viewer;
-
     private final RetrospectViewerController retroViewer;
+    Logger logger = LoggerFactory.getLogger(Main.class);
+    private Stage primaryStage;
 
     @Inject
     public Main(EventBus bus,
-            ExerciseSelectorController exerciseSelector, RootLayoutController root,
-            RetrospectiveController retrospect, ExerciseViewerController viewer,
-            RetrospectViewerController retroViewer) {
+                ExerciseSelectorController exerciseSelector, RootLayoutController root,
+                RetrospectiveController retrospect, ExerciseViewerController viewer,
+                RetrospectViewerController retroViewer) {
         this.bus = bus;
         this.exerciseSelectionWindow = exerciseSelector;
         this.workingWindow = root;
@@ -107,7 +99,7 @@ public class Main extends Application {
     }
 
     @Subscribe
-    public void initRootLayout(LanguageChangeEvent event) throws IOException {
+    public void initRootLayout(LanguageChangeEvent event) {
         // loader.setLocation(Main.class.getResource("gui/RootLayout.fxml"));
         // rootLayout = (BorderPane) loader.load();
         // RootLayoutController controller = loader.getController();
