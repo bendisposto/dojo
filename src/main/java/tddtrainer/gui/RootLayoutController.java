@@ -1,34 +1,15 @@
 package tddtrainer.gui;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.ResourceBundle;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import com.google.inject.Inject;
-
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ChoiceDialog;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.TextInputDialog;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -37,6 +18,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tddtrainer.automaton.CanProceedEvent;
 import tddtrainer.catalog.Exercise;
 import tddtrainer.catalog.JavaClass;
@@ -44,83 +27,49 @@ import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.LanguageChangeEvent;
 import tddtrainer.events.TimeEvent;
 import tddtrainer.events.Views;
-import tddtrainer.events.automaton.EnforceRefactoringEvent;
-import tddtrainer.events.automaton.ProceedPhaseRequest;
-import tddtrainer.events.automaton.ResetPhaseEvent;
-import tddtrainer.events.automaton.SwitchedToGreenEvent;
-import tddtrainer.events.automaton.SwitchedToRedEvent;
-import tddtrainer.events.automaton.SwitchedToRefactorEvent;
+import tddtrainer.events.automaton.*;
 import tddtrainer.events.gui.ShowSelectDialogRequest;
-import tddtrainer.handbook.Handbook;
 import tddtrainer.tracker.Tracker;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.*;
 
 public class RootLayoutController extends BorderPane implements Initializable {
 
+    private final Tracker tracker;
+    Logger logger = LoggerFactory.getLogger(RootLayoutController.class);
     @FXML
     private BorderPane root;
-
     @FXML
     private Button resetButton;
-
     @FXML
     private Button nextStepButton;
-
     @FXML
     private Label statusLabel;
-
     @FXML
     private Label exerciseLabel;
-
     @FXML
     private Label timeLabel;
-
     @FXML
     private ImageView timerImage;
-
     @FXML
     private HBox iRedBox;
-
     @FXML
     private Label iRedLabel;
-
     @FXML
     private MenuItem showDescription;
-
     @FXML
     private MenuItem zoomin;
-
     @FXML
     private MenuItem zoomout;
-
     private ResourceBundle resources;
-
     private EventBus bus;
-
     @FXML
     private AnchorPane rootPane;
-
     @FXML
     private EditorViewController editors;
-
-    Logger logger = LoggerFactory.getLogger(RootLayoutController.class);
-
     private Exercise exercise;
-
-    private final Tracker tracker;
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        this.resources = resources;
-        enableReset(false);
-        enableShowDescription(false);
-        hideRedBox();
-        setKeyboardAccelerators();
-    }
-
-    private void setKeyboardAccelerators() {
-        zoomin.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, KeyCombination.SHORTCUT_DOWN));
-        zoomout.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT9, KeyCombination.SHORTCUT_DOWN));
-    }
 
     @Inject
     public RootLayoutController(FXMLLoader loader, EventBus bus, Tracker tracker) {
@@ -136,6 +85,20 @@ public class RootLayoutController extends BorderPane implements Initializable {
         } catch (IOException e) {
             logger.error("Error loading Root view", e);
         }
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        this.resources = resources;
+        enableReset(false);
+        enableShowDescription(false);
+        hideRedBox();
+        setKeyboardAccelerators();
+    }
+
+    private void setKeyboardAccelerators() {
+        zoomin.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT0, KeyCombination.SHORTCUT_DOWN));
+        zoomout.setAccelerator(new KeyCodeCombination(KeyCode.DIGIT9, KeyCombination.SHORTCUT_DOWN));
     }
 
     @Subscribe
@@ -310,19 +273,6 @@ public class RootLayoutController extends BorderPane implements Initializable {
 
         }
 
-    }
-
-    @FXML
-    private void showHandbook(ActionEvent event) {
-        try {
-            new Handbook().showPDF();
-        } catch (Exception e) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle(resources.getString("handbook.error.title"));
-            alert.setHeaderText(null);
-            alert.setContentText(resources.getString("handbook.error.message") + "\n" + e.getMessage());
-            alert.showAndWait();
-        }
     }
 
     protected void enableReset(boolean enable) {
