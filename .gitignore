@@ -8,3 +8,5 @@ dojo-0.2.0-SNAPSHOT
 .directory
 .#*
 .idea
+katalog.json
+*.iml
