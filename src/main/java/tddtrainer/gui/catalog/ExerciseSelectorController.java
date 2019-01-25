@@ -159,11 +159,13 @@ public class ExerciseSelectorController extends BorderPane {
                 return;
             }
         }
+        // This shouldn't be null since you shouldn't be able to trigger this
+        // function if no exercise is selected.
         Exercise selectedExercise = exerciseList.getSelectionModel().getSelectedItem();
         if (selectedExercise != null) {
             this.selectedExercise.set(selectedExercise);
+            bus.post(new ExerciseEvent(selectedExercise));
         }
-        bus.post(new ExerciseEvent(selectedExercise));
     }
 
     public void cancelButtonAction() {
