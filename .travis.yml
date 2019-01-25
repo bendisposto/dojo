@@ -4,8 +4,8 @@ jdk:
 - oraclejdk8
 
 script:
-- gradle check
-- gradle distZip
+- ./gradlew check
+- ./gradlew distZip
 
 addons:
   apt:
