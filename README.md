@@ -20,4 +20,4 @@ You can specify your own katalog by calling the binary with this command:
 
 ## Contributions
 
-This tool is based on a student's project by Marcel Käufler, Antonia Pütz, Benedikt Schmeitz, Luisa Schuhmacher & Simon Weber
+This tool is based on a students' project by Marcel Käufler, Antonia Pütz, Benedikt Schmeitz, Luisa Schuhmacher & Simon Weber

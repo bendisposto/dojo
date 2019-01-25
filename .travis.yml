@@ -4,15 +4,15 @@ jdk:
 - oraclejdk8
 
 script:
-- gradle check
-- gradle distZip
+- ./gradlew check
+- ./gradlew distZip
 
 addons:
   apt:
     packages:
     - oracle-java8-installer
 before_install:
-- rvm install 2.0.0
+- rvm install 2.5.1
 - gem install travis-custom-deploy
 
 before_script:
