@@ -1,3 +1,8 @@
+plugins {
+	// The OpenJFX plugin does not work before Java 11, so we apply it conditionally in an if block further below.
+	id "org.openjfx.javafxplugin" version "0.0.6" apply false
+}
+
 apply plugin: "java"
 apply plugin: "application"
 apply plugin: "eclipse"
@@ -31,6 +36,19 @@ dependencies {
 	compile 'org.jsoup:jsoup:1.9.2'
     compile 'com.google.code.gson:gson:2.7'
     
+}
+
+if (JavaVersion.current().java11Compatible) {
+	apply plugin: "org.openjfx.javafxplugin"
+	javafx {
+		modules = [
+			"javafx.base",
+			"javafx.controls",
+			"javafx.fxml",
+			"javafx.graphics",
+			"javafx.web",
+		]
+	}
 }
 
 mainClassName = "tddtrainer.Startup"
