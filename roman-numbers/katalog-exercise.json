@@ -1,0 +1,7 @@
+{
+  "name": "Römische Zahlen Ping Pong",
+  "description": "description",
+  "code": "RomanNumbers",
+  "test": "RomanNumbersTest",
+  "babyStepsActivated": false
+}

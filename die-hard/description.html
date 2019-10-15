@@ -1,0 +1,73 @@
+<html>
+<head>
+    <meta charset='utf-8'>
+    <style> thead th {
+        text-align: left;
+    }
+
+    td, th {
+        border: 1px solid #ddd;
+        padding: 0.5em;
+    }
+
+    table {
+        border-collapse: collapse;
+    } </style>
+</head>
+<body><h1>Die Hard Sale</h1>
+<p>Ein Online Händler möchte die &quot;Stirb langsam&quot; Blu-Rays Discs (BD) promoten und bewirbt daher eine
+    Rabatt-Aktion. Der Grundpreis für jede BD beträgt 8 Euro. Wenn man aber zwei verschiedene Teile der Reihe kauft,
+    bekommt man einen Rabatt von 5% auf den Preis der beiden BDs. Kauft man drei verschiedene Teile bekommt man einen
+    Rabatt von 10%, bei vier Teilen 20% und wenn man alle fünf Teile kauft bekommt man einen Rabatt von 25%. Der Preis
+    wird auf ganze Cents abgerundet.</p>
+<p>Für die Rabatte ist es wichtig, dass es immer verschiedene Teile sind!</p>
+<p>Beispiele:</p>
+<table>
+    <thead>
+    <tr>
+        <th>Warenkorb</th>
+        <th>Preis (€)</th>
+        <td></td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>2 x Teil 1</td>
+        <td>16,00</td>
+        <td>Kein Rabatt, da es der gleiche Teil ist</td>
+    </tr>
+    <tr>
+        <td>Teil 1 + Teil 2</td>
+        <td>15,20</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>2 x Teil 1 + Teil 2</td>
+        <td>23,20</td>
+        <td>Es gibt Rabatt auf Teil 1 + Teil 2, aber nicht auf die zweite BD von Teil 1</td>
+    </tr>
+    <tr>
+        <td>2 x Teil 1 + 2 x Teil 2</td>
+        <td>30,40</td>
+        <td>Es gibt 2 Mal Rabatt auf die beiden Teile (aber keinen 20% Rabatt auf vier BDs)</td>
+    </tr>
+    <tr>
+        <td>Teil 1, 2, 3 und 4</td>
+        <td>25,60</td>
+        <td>20% Rabatt auf die vier BDs</td>
+    </tr>
+    </tbody>
+</table>
+<p>Dieses Kata ist bekannter unter dem Namen Potter Kata, da es entstand, als es 5 Harry Potter Bücher gab.</p>
+<h3>Vorgehensweise</h3>
+<p>Gehen Sie kleinschrittig an die Aufgabe heran und schreiben Sie sinnvolle Tests. Dieses Kata ist sehr anspruchsvoll,
+    aber in kleinen Schritten kommt man gut voran.</p><h4>Ideen für Tests</h4>
+<ol>
+    <li>Eine Blu-Ray egal welchen Teils bekommt keinen Rabatt</li>
+    <li>Mehrere BDs desselben Teils bekommen keinen Rabatt</li>
+    <li>2 / 3 / 4 / 5 verschiedene BDs bekommen Rabatt</li>
+    <li>Kombination von Rabatten</li>
+    <li>Randfälle</li>
+</ol>
+</body>
+</html>

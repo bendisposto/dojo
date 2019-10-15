@@ -1,0 +1,7 @@
+{
+  "name": "Happy Numbers Kata",
+  "description": "description",
+  "code": "Happy",
+  "test": "HappyTest",
+  "babyStepsActivated": false
+}
