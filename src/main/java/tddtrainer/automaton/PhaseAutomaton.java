@@ -18,6 +18,9 @@ import tddtrainer.events.babysteps.Babysteps;
 import tddtrainer.tracker.ImplementationStep;
 import tddtrainer.tracker.Tracker;
 
+/**
+ * This class handles the phases of the TDDT
+ */
 public class PhaseAutomaton {
 
     private Phase currentState = Phase.RED;
@@ -26,13 +29,18 @@ public class PhaseAutomaton {
     private final Tracker tracker;
     private boolean retrospective;
 
+    /**
+     * This method initialises the Exercise when the {@ExerciseEvent} is triggered.
+     * @param event {@link ExerciseEvent}
+     */
     @Subscribe
     private void init(ExerciseEvent event) {
         autoCompiler.compileAndPost();
         currentState = Phase.RED;
         retrospective = event.getExercise().isRetrospective();
-        if (event.getExercise().isBabyStepsActivated())
+        if (event.getExercise().isBabyStepsActivated()) {
             bus.post(new Babysteps(180));
+        }
         bus.post(new SwitchedToRedEvent());
     }
 
@@ -44,6 +52,10 @@ public class PhaseAutomaton {
         bus.register(this);
     }
 
+    /**
+     * The order of the {@link Phase}s is implemented in here. For this, a {@link ProceedPhaseRequest} needs to be triggered.
+     * @param event {@link ProceedPhaseRequest} when this Event is triggered,
+     */
     @Subscribe
     private void next(ProceedPhaseRequest event) {
         AutoCompilerResult compilerResult = autoCompiler.recompile();
@@ -65,6 +77,11 @@ public class PhaseAutomaton {
         canProceed(compilerResult);
     }
 
+    /**
+     * This method is used, when the {@link AutoCompilerResult} is available to be processed.
+     * The compilerResult is used to check, if the user can proceed from the current state to the next one.
+     * @param compilerResult {@link AutoCompilerResult}
+     */
     @Subscribe
     private void canProceed(AutoCompilerResult compilerResult) {
         boolean proceed = false;
@@ -86,18 +103,31 @@ public class PhaseAutomaton {
         bus.post(new CanProceedEvent(proceed));
     }
 
+    /**
+     * This method resets the red phase, if the time is up or the user chooses to do so.
+     * @param event {@link ResetPhaseEvent}
+     */
     @Subscribe
     private void reset(ResetPhaseEvent event) {
         currentState = Phase.RED;
         bus.post(new SwitchedToRedEvent());
     }
 
+    /**
+     * This method resets the refactor phase, if the time is up or the user chooses to do so.
+     * @param event {@link EnforceRefactoringEvent}
+     */
     @Subscribe
     private void enforceRefactor(EnforceRefactoringEvent event) {
         currentState = Phase.REFACTOR;
         bus.post(new SwitchedToRefactorEvent());
     }
 
+    /**
+     * This method is called, when the state can be switched to GREEN.
+     * It is checked that one can proceed and after that the {@link SwitchedToGreenEvent} is posted to the {@link EventBus}.
+     * @param compilerResult {@link AutoCompilerResult} is used to check if the phase can be changed.
+     */
     private void switchToGreen(AutoCompilerResult compilerResult) {
         boolean proceed = compilerResult.aMethodIsMissing()
                 || compilerResult.aSingleTestFails();
@@ -110,6 +140,11 @@ public class PhaseAutomaton {
         }
     }
 
+    /**
+     * This method is called, when the state can be switched to REFACTOR.
+     * It is checked that one can proceed and after that the {@link SwitchedToRefactorEvent} is posted to the {@link EventBus}.
+     * @param compilerResult {@link AutoCompilerResult} is used to check if the phase can be changed.
+     */
     private void switchToRefactor(AutoCompilerResult compilerResult) {
         tracker.addStep(
                 new ImplementationStep(Phase.GREEN, null, compilerResult.getCodeCU(), compilerResult.getTestCU(),
@@ -121,11 +156,19 @@ public class PhaseAutomaton {
         }
     }
 
+    /**
+     * This method switches the phase RED
+     */
     private void switchToRed() {
         currentState = Phase.RED;
         bus.post(new SwitchedToRedEvent());
     }
 
+    /**
+     * This method is called, when the state can be switched to RETROSPECT.
+     * It is checked that one can proceed and after that the {@link SwitchedToRedEvent} is posted to the {@link EventBus}.
+     * @param compilerResult
+     */
     private void switchToRetrospect(AutoCompilerResult compilerResult) {
         tracker.addStep(
                 new ImplementationStep(Phase.REFACTOR, null, compilerResult.getCodeCU(), compilerResult.getTestCU(),
