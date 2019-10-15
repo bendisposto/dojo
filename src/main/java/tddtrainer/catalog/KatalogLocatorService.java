@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 
 public class KatalogLocatorService {
 
-    private static final String DEFAULT_LOCATION = "C:/Users/milve/Desktop/dojo-test/"; // "https://bendisposto.github.io/dojo/";
+    private static final String DEFAULT_LOCATION = "https://bendisposto.github.io/dojo/";
     private static final Pattern NEW_LINE_PATTERN = Pattern.compile("\r\n|[\n\r\u2028\u2029\u0085]");
 
     private final KatalogLocator root;
