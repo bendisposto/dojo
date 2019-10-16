@@ -33,7 +33,7 @@ public class KatalogLocator {
     }
 
     private static String getKatalogLocation() {
-        return System.getProperty("katalog", DEFAULT_LOCATION);
+        return System.getProperty("dojo.katalog.location", DEFAULT_LOCATION);
     }
 
     private <T> T locateAndThen(KatalogPath katalogPath, ThrowingFunction<Path, T, IOException> pathFunction, ThrowingFunction<GetRequest, T, UnirestException> getFunction) {
