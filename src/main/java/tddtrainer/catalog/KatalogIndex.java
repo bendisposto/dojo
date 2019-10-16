@@ -18,8 +18,8 @@ public class KatalogIndex {
 
     public List<Exercise> load(Gson gson, KatalogLocator locator) {
         return exercises.stream()
-                .map(l -> {
-                    KatalogLocator exerciseLocator = locator.append(l);
+                .map(path -> {
+                    KatalogLocator exerciseLocator = locator.append(path);
                     KatalogExercise katalogExercise = exerciseLocator.locateAndReadJson(EXERCISE_JSON_PATH, gson, KatalogExercise.class);
                     return katalogExercise.load(exerciseLocator);
                 })
