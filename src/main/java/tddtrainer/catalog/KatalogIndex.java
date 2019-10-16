@@ -8,19 +8,19 @@ import java.util.stream.Collectors;
 
 public class KatalogIndex {
 
-    private static final KatalogLocator EXERCISE_JSON_LOCATOR = new KatalogLocator("katalog-exercise.json");
+    private static final KatalogPath EXERCISE_JSON_PATH = new KatalogPath("katalog-exercise.json");
 
-    private final List<KatalogLocator> exercises;
+    private final List<KatalogPath> exercises;
 
-    public KatalogIndex(List<KatalogLocator> exercises) {
+    public KatalogIndex(List<KatalogPath> exercises) {
         this.exercises = new ArrayList<>(exercises);
     }
 
-    public List<Exercise> load(Gson gson, KatalogLocatorService locatorService) {
+    public List<Exercise> load(Gson gson, KatalogLocator locator) {
         return exercises.stream()
                 .map(l -> {
-                    KatalogLocatorService exerciseLocator = locatorService.append(l);
-                    KatalogExercise katalogExercise = exerciseLocator.locateAndReadJson(EXERCISE_JSON_LOCATOR, gson, KatalogExercise.class);
+                    KatalogLocator exerciseLocator = locator.append(l);
+                    KatalogExercise katalogExercise = exerciseLocator.locateAndReadJson(EXERCISE_JSON_PATH, gson, KatalogExercise.class);
                     return katalogExercise.load(exerciseLocator);
                 })
                 .collect(Collectors.toList());
