@@ -16,9 +16,8 @@ import tddtrainer.events.automaton.SwitchedToRefactorEvent;
 import tddtrainer.events.babysteps.Babysteps;
 
 /**
- * An implementation of {@link BabystepsManagerIF} to force the user to make
+ * An implementation of the learning method babysteps to force the user to make
  * small tests and less code by limiting the time for editing code and tests.
- *
  */
 public class BabystepsManager {
 
@@ -30,6 +29,10 @@ public class BabystepsManager {
     private int phaseTime;
     private EventBus bus;
 
+    /**
+     * Constructor of the BabystepsManager class, that registers the EventBus.
+     * @param bus EventBus that handles events that should not be executed on the main thread.
+     */
     @Inject
     public BabystepsManager(EventBus bus) {
         this.bus = bus;
@@ -51,6 +54,9 @@ public class BabystepsManager {
         stopped = true;
     }
 
+    /**
+     *
+     */
     private synchronized void start() {
         if (this.enabled) {
             startTime = LocalDateTime.now();
@@ -83,6 +89,10 @@ public class BabystepsManager {
         }
     }
 
+    /**
+     * This method enables the {@link Babysteps} and sets the time.
+     * @param event
+     */
     @Subscribe
     public void switchBabysteps(Babysteps event) {
         this.enabled = event.enabled;
