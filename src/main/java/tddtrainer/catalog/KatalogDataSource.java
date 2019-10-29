@@ -6,6 +6,10 @@ import com.google.gson.GsonBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class fetches the resources for the catalog at the default location and creates the free exercise.
+ * It is used for loading the catalog.
+ */
 public class KatalogDataSource {
 
     private static final KatalogPath INDEX_JSON_PATH = new KatalogPath("katalog-index.json");
@@ -16,6 +20,11 @@ public class KatalogDataSource {
 
     private final KatalogLocator rootLocator = new KatalogLocator();
 
+    /**
+     * Here we load the catalog from previous set DEFAULT_LOCATION.
+     *
+     * @return A list of exercises that represent the catalog
+     */
     public List<Exercise> loadKatalog() {
         KatalogIndex index = rootLocator.locateAndReadJson(INDEX_JSON_PATH, GSON, KatalogIndex.class);
         List<Exercise> exercises = new ArrayList<>(index.load(GSON, rootLocator));
@@ -23,6 +32,12 @@ public class KatalogDataSource {
         return exercises;
     }
 
+    /**
+     * This method creates the free exercise environment for the TDDT,
+     * it starts with a test that fails on purpose.
+     *
+     * @return {@link Exercise} exercise which is a free exercise
+     */
     private Exercise createFreeExercise() {
         Exercise ex = new Exercise();
         ex.setName("Free Exercise");
