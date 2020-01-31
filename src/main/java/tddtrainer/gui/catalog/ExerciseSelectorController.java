@@ -1,20 +1,8 @@
 package tddtrainer.gui.catalog;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
-import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
-import com.mashape.unirest.http.exceptions.UnirestException;
-
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -22,21 +10,25 @@ import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
-import tddtrainer.catalog.CatalogDataSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tddtrainer.catalog.Exercise;
+import tddtrainer.catalog.KatalogDataSource;
 import tddtrainer.events.ExerciseEvent;
 import tddtrainer.events.Views;
 import tddtrainer.events.gui.ShowSelectDialogRequest;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 public class ExerciseSelectorController extends BorderPane {
 
@@ -53,10 +45,10 @@ public class ExerciseSelectorController extends BorderPane {
     private EventBus bus;
 
     Logger logger = LoggerFactory.getLogger(ExerciseSelectorController.class);
-    private final CatalogDataSource datasource;
+    private final KatalogDataSource datasource;
 
     @Inject
-    public ExerciseSelectorController(FXMLLoader loader, EventBus bus, CatalogDataSource datasource) {
+    public ExerciseSelectorController(FXMLLoader loader, EventBus bus, KatalogDataSource datasource) {
         this.bus = bus;
         this.datasource = datasource;
         this.bus.register(this);
@@ -71,18 +63,21 @@ public class ExerciseSelectorController extends BorderPane {
         }
     }
 
-    private void showFailedToLoadCatalogAlert(String exceptionName, String excptionMessage) {
-        logger.error("Error fetching catalog. {} : {}", exceptionName, excptionMessage);
+    private void showFailedToLoadCatalogAlert(Exception e) {
+        logger.error("Error fetching catalog.", e);
         Alert alert = new Alert(AlertType.ERROR);
         alert.setTitle("Error fetching catalog");
         alert.setHeaderText(null);
+
         alert.setContentText(String.format(
                 "The catalog could not be downloaded. \n\n"
-                        + "The cause is %s : %s \n\n"
+                        + "Encountered exception:\n%s\n"
+                        + (e.getCause() != null ? "Caused by: %s\n" : "")
+                        + "\n"
                         + "Please verify that you are online. "
                         + "If the problem still occurs please notify the administrator. \n\n"
                         + "The program will now be terminated.",
-                exceptionName, excptionMessage));
+                e, e.getCause()));
         alert.showAndWait();
         System.exit(-1);
     }
@@ -94,9 +89,9 @@ public class ExerciseSelectorController extends BorderPane {
 
         List<Exercise> catalog;
         try {
-            catalog = datasource.loadCatalog();
-        } catch (JsonSyntaxException | UnirestException e) {
-            showFailedToLoadCatalogAlert(e.getClass().getSimpleName(), e.getMessage());
+            catalog = datasource.loadKatalog();
+        } catch (Exception e) {
+            showFailedToLoadCatalogAlert(e);
             catalog = new ArrayList<>();
         }
         exerciseList.setItems(FXCollections.observableArrayList(catalog));

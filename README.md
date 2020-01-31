@@ -13,7 +13,11 @@ through the typical phases in TDD, i.e. Write failing test --> Pass the test -->
 
 You can specify your own katalog by calling the binary with this command:
 
-    DOJO_OPTS="-Dkatalog=path/to/katalog.json" ./bin/dojo
+    DOJO_OPTS="-Ddojo.katalog.location=path/to/katalog_dir" ./bin/dojo
+    
+Or call the jar via:
+
+    java -Ddojo.katalog.location=path/to/katalog_dir -jar dojo.jar
 
 
 ## Contributions

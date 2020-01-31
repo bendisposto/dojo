@@ -1,9 +1,10 @@
-/bin/
+bin/
 .classpath
 .project
 .gradle/
 .settings/
-/build/
+build/
+out/
 dojo-0.2.0-SNAPSHOT
 .directory
 .#*
