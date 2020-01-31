@@ -1,0 +1,7 @@
+{
+  "name": "Tiny Maze",
+  "description": "description",
+  "code": "TinyMaze",
+  "test": "TinyMazeTest",
+  "babyStepsActivated": false
+}

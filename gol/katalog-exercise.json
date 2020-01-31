@@ -1,0 +1,7 @@
+{
+  "name": "Game of Life Kata",
+  "description": "description",
+  "code": "GameOfLife",
+  "test": "GameOfLifeTest",
+  "babyStepsActivated": false
+}

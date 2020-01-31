@@ -1,0 +1,7 @@
+{
+  "name": "Stirb langsam",
+  "description": "description",
+  "code": "DieHardRabatt",
+  "test": "DieHardRabattTest",
+  "babyStepsActivated": false
+}
