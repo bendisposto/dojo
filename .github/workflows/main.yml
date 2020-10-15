@@ -7,10 +7,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
+        name: Git Clone
       - name: Setup JDK
         uses: actions/setup-java@v1
         with:
-          java-version: 11
+          java-version: ${{ secrets.JavaVersion }} 
       - name: Gradle
         run: ./gradlew build
       
